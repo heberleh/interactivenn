@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="704.4375"
+   height="679"
+   id="diagram"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="3waydiagram_abc.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     id="namedview4137"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.78"
+     inkscape:cx="392.67225"
+     inkscape:cy="343.75641"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs3092" />
+  <metadata
+     id="metadata3095">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     transform="translate(20.625002,-190.9375)">
+    <path
+       d="m 682.62877,428.13014 a 235.92016,235.92016 0 1 1 -471.84031,0 235.92016,235.92016 0 1 1 471.84031,0 z"
+       id="elipseB"
+       style="fill:#a8e9a8;fill-opacity:0.18431373;stroke:#8f8f8f;stroke-width:2.36394739;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:connector-curvature="0"
+       inkscape:label="#path3173" />
+    <path
+       style="fill:#ffbe5c;fill-opacity:0.18431373;stroke:#8f8f8f;stroke-width:2.46011543;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 244 1.34375 A 235.92016 235.92016 0 0 0 1.21875 237.1875 A 235.92016 235.92016 0 0 0 111.25 436.4375 A 235.92016 235.92016 0 0 0 110.96875 441.8125 A 235.92016 235.92016 0 1 0 582.8125 441.8125 A 235.92016 235.92016 0 0 0 472.78125 242.53125 A 235.92016 235.92016 0 0 0 473.0625 237.1875 A 235.92016 235.92016 0 0 0 244 1.34375 z "
+       transform="translate(-20.625002,190.9375)"
+       id="elipseA" />
+    <text
+       x="559.45935"
+       y="383.12802"
+       id="b"
+       xml:space="preserve"
+       style="font-size:31.31055832px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Rekha;-inkscape-font-specification:Rekha Medium"
+       sodipodi:linespacing="125%"
+       inkscape:label="#text4019"><tspan
+         x="559.45935"
+         y="383.12802"
+         id="tspan4021">b</tspan></text>
+    <text
+       x="162.62254"
+       y="601.32013"
+       id="ac"
+       xml:space="preserve"
+       style="font-size:31.31055832px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Rekha;-inkscape-font-specification:Rekha Medium"
+       sodipodi:linespacing="125%"
+       inkscape:label="#text4033"><tspan
+         x="162.62254"
+         y="601.32013"
+         id="tspan4035">ac</tspan></text>
+    <text
+       x="313.99329"
+       y="488.13293"
+       id="abc"
+       xml:space="preserve"
+       style="font-size:31.31055832px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Rekha;-inkscape-font-specification:Rekha Medium"
+       sodipodi:linespacing="125%"
+       inkscape:label="#text4043"><tspan
+         x="313.99329"
+         y="488.13293"
+         id="tspan4045">abc</tspan></text>
+  </g>
+</svg>

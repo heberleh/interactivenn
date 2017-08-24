@@ -1,0 +1,194 @@
+<!-- Author Henry Heberle, 2015 -->
+<!-- henry at icmc . usp . br -->
+
+<!--This file is part of InteractiVenn.
+
+InteractiVenn is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+InteractiVenn is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with InteractiVenn. If not, see <http://www.gnu.org/licenses/>.
+
+
+Those that have employed the tool InteractiVenn should mention:
+
+InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams
+Henry Heberle, Gabriela Vaz Meirelles, Felipe R. da Silva, Guilherme P. Telles and Rosane Minghim
+
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>InteractiVenn - Interactive Venn Diagrams</title>
+        <meta name="description" content="InteractiVenn is an interactive visualization tool for analyzing lists of elements using Venn diagrams. The web tool supports up to six different sets. Moreover, union operations between sets can be made. The union operations are reflected to the Venn diagram. Other interactions are also available, such as color changing and export diagram in SVG and PNG format. We suggests the use of Inkscape to edit the Venn diagrams exported by InteractiVenn." />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <script type="text/javascript" src="d3/d3.v2.js"></script>
+        <script type="text/javascript" src="d3/jPaq-1.0.6.08-mini.js"></script>    
+        <script type="application/ecmascript" async="" src="d3/Blob.js"></script>
+        <script type="application/ecmascript" async="" src="d3/canvas-toBlob.js"></script>
+        <script type="application/ecmascript" async="" src="d3/FileSaver.js"></script>
+        <script type="application/ecmascript" async="" src="//www.google-analytics.com/ga.js"></script>
+        <script type="text/javascript" async="" src="javascript.js"></script>
+        <script type="text/javascript" src="d3/jquery-1.8.2.js"></script>
+
+    </head>
+
+    <body id="index" class="home">
+
+        <header id="banner" class="body">
+            <h1><a href="#"> InteractiVenn<strong>(Help)</strong></a></h1>
+            <nav><ul>
+                    <li><a href="index2.html">Unions by tree</a></li>
+                    <li><a href="index.html">Unions by list</a></li>
+                    <li><a href="citation.html">Citation</a></li>
+                    <li ><a href="contact.html">Contact</a></li>
+                    <li class="active"><a href="help.html">Help</a></li>
+                </ul></nav>
+        </header>
+
+<section id="content" class="body">
+            <!-- style="position:relative;width:85%;margin-top:20px;margin-bottom:20px;margin-left:auto;margin-right:auto" -->
+
+<div>
+  <h3>Building a diagram:</h3>
+  
+  <p>
+    To <b style="color:#C74350">build a diagram</b>, select the number of
+    sets and then fill the lists of elements in each set, one element per
+    line.  Optionally, fill the name of each set and select its color.
+    The diagram will be updated as the set elements are entered, in most
+    browsers.  If that does not happen, clicking on any other window
+    region will trigger the update.  Changing the number of sets will
+    preserve the element lists.</p>
+
+  <h3>Listing the elements in each diagram region:</h3>
+
+  <p>
+    To <b style="color:#C74350">list the elements</b> in each nonempty
+    diagram region, click on the numeric label of a region.  A window
+    containing the list of elements in that region will pop-up.  If you
+    click over multiple regions, multiple windows will be opened.</p>
+
+  <h3>Performing set unions:</h3>
+
+  <p>
+    Unions of sets may be applied to the sets either through a binary tree
+    or through a list of unions.</p>
+
+  <p>With <b style="color:#C74350">Unions by tree</b>, a tree in Newick
+    format has to be given as input.  After typing a tree, click on the
+    "Start Tree" button.  The initial view corresponds to the leaves of
+    the tree, where all sets are distinct.  Clicking on the "Up" button
+    will go up a level in the tree, performing the set unions at that
+    level.  The diagram shape will not change, but regions will be merged
+    and their sizes will reflect such merging.  Similarly, clicking on the
+    "Down" button will go down a level in the tree.  Click "Stop" to
+    restore the original diagram.  If the tree string given as input is
+    malformed, then both Up and Down buttons will be disabled.</p>
+
+  <p>For instance, with three sets A, B and C, navigating through the
+    tree <b>((A,B),C)</b> will show first a diagram where the three sets
+    are distinct.  Clicking "Up" will show a diagram where A and B are
+    merged.  Another click on "Up" will show a tree where sets A, B and
+    C are merged.  </p>
+
+  <p>After the start of the unions, clicking on the "Visualize tree"
+    button will display the tree that was given as input. </p>
+
+  <p>With <b style="color:#C74350">Unions by list</b>, a colon
+  separated list of sets is given as input.  After typing a list,
+  click on the "Start" button. The initial view corresponds to the
+  unions given by the first element in the list. Clicking on the
+  "&gt;" button will perform the next union in the list.  Similarly,
+  Clicking on the "&lt;" button will undo the previous union in the
+  list.</p>
+
+  <p>For instance, with three sets A, B and C, navigating through the
+  list <b>;ab;ca</b> will show first a diagram where the three sets
+  are distinct. Clicking "&gt;" will show a diagram where only A and B
+  are merged.  Another click on "&gt;" will show a diagram where A and
+  C are merged.</p>
+
+  <h3>Changing colors and font size:</h3>
+
+  <p><b style="color:#C74350">Set
+  colors</b>, <b style="color:#C74350">color opacity</b>
+  and <b style="color:#C74350">font size</b> may be changed through
+  the appropriate controls.  The color of a set may be changed
+  clicking on the coloured square close to the set name.  Font size
+  and color opacity may be increased or decreased clicking on the
+  respective "+" or "-" buttons.  Clicking on "Reset diagram" will
+  restore default colors and font size.  Set elements will not be
+  affected.</p>
+
+
+  <h3>Saving and loading:</h3>
+
+  <p>To <b style="color:#C74350">save</b> the sets type a name for a
+  file in the field tagged with the phrase "Write dataset name here"
+  and click on the "Save" button.  The download will start after
+  that.</p>
+
+  <p>To <b style="color:#C74350">load</b> sets previously saved, click
+    on the "Browse..." button right below the "Load Sets:" label, and
+    then select the appropriate file.  The upload will start after
+    that, and the sets fill be filled with data.</p>
+  
+  <h3>Exporting:</h3>
+  
+  <p>To <b style="color:#C74350">export the diagram</b> in SVG vector
+  format, PNG graphic format or text format, type a name for a file in
+  the field tagged with the phrase "Write file name here", right below
+  the "Export current diagram:" label, select the desired format and
+  click on the "Export" button.  The download will start after that.
+  The text format has the elements in each nonempty diagram region.
+  </p>
+  
+  <h3>Example of data sets:</h3>
+  
+  <p>The two data sets below were converted to the InteractiVenn's file format (.ivenn). </p>
+  
+  <p><b>Prostate cancer proteomic dataset</b>: <a  href="prostate_dataset.ivenn" download>prostate_dataset.ivenn</a> </p> 
+  <p>Reference: Kim, Y., Ignatchenko, V., Yao, C. Q., Kalatskaya, I., Nyalwidhe, J. O., 
+      Lance, R. S., … Kislinger, T. (2012, December). Identification of 
+      differentially expressed proteins in direct expressed prostatic 
+      secretions of men with organ-confined versus extracapsular prostate 
+      cancer. Molecular & Cellular Proteomics. 
+      http://doi.org/10.1074/mcp.M112.017889</p>
+   
+  
+  <p><b>Musa acuminata dataset</b>: <a  href="banana_dataset.ivenn" download>banana_dataset.ivenn</a></p>
+  <p>Reference: D’Hont, A., others, Denoeud, F., Aury, J.-M., Baurens, F.-C., Carreel, F.,
+      … Wincker, P. (2012). The banana (Musa acuminata) genome and the 
+      evolution of monocotyledonous plants. Nature, 488(7410), 213–7. 
+      http://doi.org/10.1038/nature11241</p>
+  
+  
+  <h3>Source code:</h3>
+  <a  href="source_code.zip" download>source_code.zip</a>
+  
+
+  </div>
+        </section>
+
+        <footer id="contentinfo" class="body">
+            <address id="about" class="vcard body">
+                <a href="http://vicg.icmc.usp.br/infovis2/InfoVis2">
+                    <img src="images/vicg.png" alt="VICG - Visualization, Imaging and Computer Graphics"  width="234" height="30" align="right" class="photo" /> 
+                </a>
+            </address>
+
+        </footer>
+
+    </body>
+</html>
