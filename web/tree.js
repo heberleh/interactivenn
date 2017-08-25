@@ -15,15 +15,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with InteractiVenn. If not, see <http://www.gnu.org/licenses/>.
-//
-//
+
+
+
 // Those that have employed the tool InteractiVenn should mention:
 //
-// InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams
-// Henry Heberle, Gabriela Vaz Meirelles, Felipe R. da Silva, Guilherme P. Telles and Rosane Minghim
+// Heberle, H.; Meirelles, G. V.; da Silva, F. R.; Telles, G. P.; Minghim, R. InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams. BMC Bioinformatics 16:169 (2015).
+// 
+// http://doi.org/10.1186/s12859-015-0611-3
+// https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0611-3
+// http://www.interactivenn.net/
 
 var importedNode;
-var bigintersectionsset = ["a", "b", "c", "d", "e", "f", "ab", "ac", "ad", "ae", "af", "bc", "bd", "be", "bf", "cd", "ce", "cf", "de", "df", "ef", "abc", "abd", "abe", "abf", "acd", "ace", "acf", "ade", "adf", "aef", "bcd", "bce", "bcf", "bde", "bdf", "bef", "cde", "cdf", "cef", "def", "abcd", "abce", "abcf", "abde", "abdf", "abef", "acde", "acdf", "acef", "adef", "bcde", "bcdf", "bcef", "bdef", "cdef", "abcde", "abcdf", "abcef", "abdef", "acdef", "bcdef"];
+var begintersectionsset = ["a", "b", "c", "d", "e", "f", "ab", "ac", "ad", "ae", "af", "bc", "bd", "be", "bf", "cd", "ce", "cf", "de", "df", "ef", "abc", "abd", "abe", "abf", "acd", "ace", "acf", "ade", "adf", "aef", "bcd", "bce", "bcf", "bde", "bdf", "bef", "cde", "cdf", "cef", "def", "abcd", "abce", "abcf", "abde", "abdf", "abef", "acde", "acdf", "acef", "adef", "bcde", "bcdf", "bcef", "bdef", "cdef", "abcde", "abcdf", "abcef", "abdef", "acdef", "bcdef"];
 var originalAllSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
 var allSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
 var sets = {};
@@ -45,7 +49,9 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
 
 var dendrogramtree = null;
 
-
+/**
+ * @description Checks if a set, the current object, contains an element (argument obj).
+ */
 Array.prototype.contains = function (obj) {
     var i = this.length;
     while (i--) {
@@ -56,6 +62,10 @@ Array.prototype.contains = function (obj) {
     return false;
 };
 
+
+/**
+ * @description Navigates in the possible unions identifiers. For instance a list of [ab, abc, ad...] that represents all unions that will be showed to the user when he navigate through diagrams of unions.
+ */
 function Tree() {
     this.count = 0;
     this.increment = function () {
@@ -159,7 +169,10 @@ function printTreeJSON(node) {
     return str;
 }
 
-
+/**
+ * @description Decodes the string str and identifies the unions. If the web interface is related to "Slider/List" version, the code is similar to this: "ab; cd,ef; abc,de; abcd,ef; ab,cd,ef". If the web interface is related to "Tree" version, the code is similar to this: "((A,((D,(F,E)),C)),B)".
+ * @param {string} str The string given by the user.
+ */
 function decode(str) {
     str = str.toUpperCase();
     var strsize = str.length;
@@ -413,18 +426,29 @@ function Node(tree, root) {
     };
 }
 
+
+/**
+ * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
+ * @param {string} setID The set ID.
+ */
 function updateSetLabel(setID) {
     var text = document.getElementById("name" + setID).value;
     d3.select("#label" + setID).text(text.replace(/:/g, '-'));
     updateDendrogram();
 }
 
+/**
+ * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
+ */
 function updateSetsLabels() {
     for (var i = 0; i < nWay; i++) {
         updateSetLabel(allPossibleSetsNames[i]);
     }
 }
 
+/**
+ * @description Updates the sets names according to the global variable "allSetsNames" and attributes a list of zero elements to it.
+ */
 function updateSetsNames() {
     for (var j = 0; j < allSetsNames.length; j++) {
         sets[allSetsNames[j]] = [];
@@ -439,6 +463,10 @@ var nWay = 6;
 var maxNSets = 6;
 var allPossibleSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
 var merging = false;
+
+/**
+ * @description Resets the allSetsNames global variable and define it as originalAllSetsNames.
+ */
 function updateAllSetsNamesVector() {
     switch (nWay) {
         case 1:
@@ -462,6 +490,9 @@ function updateAllSetsNamesVector() {
     }
 }
 
+/**
+ * @description Updates the sets and sets' labels given the texts inputs in the web interface.
+ */
 function updateActiveSets() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         updateSets(originalAllSetsNames[i]);
@@ -470,6 +501,10 @@ function updateActiveSets() {
 
 }
 
+
+/**
+ * @description Clear the forms of sets input area in the web interface.
+ */
 function clearForms() {
     var alltextarea = d3.selectAll("textarea");
     for (var i in alltextarea) {
@@ -481,7 +516,10 @@ function clearForms() {
     }
 }
 
-
+/**
+ * @description Updates the number of sets in a diagram as well the number of input forms shown in the web interface. Loads a new diagram according to the number of sets. The loaded diagram is updated by the function loadNewDiagram().
+ * @param {integer} newvalue The number of sets.
+ */
 function updateNWay(newvalue) {
     merging = false;
     d3.select("#updateDiagrambutton").style("display", 'none');
@@ -503,6 +541,9 @@ function updateNWay(newvalue) {
     }
 }
 
+/**
+ * @description Updates the values (numbers) that are shown in the diagram. Identifies all the possible intersections and set a new numeric text to it.
+ */
 function updateDiagram() {
     var fontsize = globalfontsize;
     if (nWay == 5) {
@@ -522,6 +563,9 @@ function updateDiagram() {
     }
 }
 
+/**
+ * @description Analyses the sets and rebuild the lists of intersections.
+ */
 function updateIntersections() {
     var totalSet = [];
     var hashtotal = {};
@@ -571,8 +615,10 @@ function updateIntersections() {
     }
 }
 
-//update sets elements/values/intersections/diagram
-//atualiza a variavel sets a partir dos campos de input
+/**
+ * @description Updates the lists of elements of a set and its intersections. Updates the global variable "sets" changing these values. Calls UpdateIntersections() and updateDiagram().
+ * @param {string} s The set that was changed.
+ */
 function updateSets(s) {
     if (!merging) {
         var list = document.getElementById("input" + s).value.split("\n");
@@ -608,7 +654,10 @@ function updateSets(s) {
 
 }
 
-//atualiza os campos de texto a partir da variavel sets                
+/**
+ * @description Updates the input forms of a set based on the values stored in the variable "sets".
+ * @param {string} s The set id that is being updated.
+ */                   
 function updateInputTextSet(s) {
     sets[s] = sets[s].filter(function (x) {
         if (x !== "")
@@ -623,6 +672,9 @@ function updateInputTextSet(s) {
     document.getElementById("name" + s).value = setsLabel[s];
 }
 
+/**
+ * @description Updates the texts that indicates the size of each set.
+ */
 function updateLabelsSizes() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         var s = originalAllSetsNames[i];
@@ -631,6 +683,9 @@ function updateLabelsSizes() {
     }
 }
 
+/**
+ * @description Applies the union operation based on the sequency defined by the Slider or Tree structure.
+ */
 function mergeSetsDown() {
     //document.getElementById("updateMerge").disabled = true;
     //document.getElementById("updateMerge").text("Stop");
@@ -644,6 +699,9 @@ function mergeSetsDown() {
     }
 }
 
+/**
+ * @description Applies the union operation based on the sequency defined by the Slider or Tree structure.
+ */
 function mergeSetsUp() {
     //document.getElementById("updateMerge").disabled = true;
 
@@ -657,6 +715,10 @@ function mergeSetsUp() {
     }
 }
 
+/**
+ * @description Gets the intersection elements.
+ * @param {string} intersectionID The intersection id, for instance "ab"
+ */
 function getIntersection(intersectionID) {
 
     var intersectionsize = intersections[intersectionID.toUpperCase()];
@@ -669,6 +731,10 @@ function getIntersection(intersectionID) {
 
 
 
+/**
+ * @description Loads a diagram and process everything based on it. 
+ * @param {string} path The path of a .svg diagram
+ */
 function loadNewDiagram(path) {
 
     d3.xml(path, "image/svg+xml", function (xml) {
@@ -792,12 +858,19 @@ function loadNewDiagram(path) {
 
 
 
+/**
+ * @description Gets the code written by the user from the web interface.
+ */
 function getCode() {
     var code = document.getElementById("mergeCode").value;
     return code;
 }
 
 
+/**
+ * @description Merges the sets of a given union code. Argument is actually a index of a union code in the union codes list.
+ * @param {numeric} index The index of a union in the list of unions. For instance, if the list is [ab, abc, ad] the index 0 gives you the union code "ab".
+ */
 function mergeSets(level) {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         var s = originalAllSetsNames[i];
