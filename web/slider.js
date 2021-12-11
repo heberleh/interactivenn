@@ -209,6 +209,7 @@ function updateAllSetsNamesVector() {
  */
 function updateActiveSets() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
+        modified = true;
         updateSets(originalAllSetsNames[i]);
         updateSetLabel(originalAllSetsNames[i]);
     }
@@ -351,12 +352,15 @@ function updateSets(s) {
 
         if (modified) {
             //remove duplicated elements
-            var temp = [];
-            $.each(list, function (i, el) {
-                if ($.inArray(el, temp) === -1)
-                    temp.push(el);
-            });
-            list = temp;
+            // var temp = [];
+            // $.each(list, function (i, el) {
+            //     if ($.inArray(el, temp) === -1)
+            //         temp.push(el);
+            // });
+            // list = temp;
+            let old_list = list;
+            list = Array.from(new Set(list));
+            if(list.length !== old_list.length) alert(`Problem in Set ${s}: there are duplicated elements in at least one of your lists. We try and remove duplicates before showing the intersections in the diagram, but we don't remove the duplicates from the input-boxes that are on the right-side. We recommend you to input always sets (lists of unique values). The numbers in the website are respective to the number of unique values that we found, and not the number of elements in your lists when they have duplicates. You can continue the analysis if you are aware of the differences between a set and a list with duplicated elements.`);
             modified = false;
         }
 
