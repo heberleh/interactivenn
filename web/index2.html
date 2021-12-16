@@ -42,6 +42,7 @@ http://www.interactivenn.net/
         <script type="application/ecmascript" async="" src="d3/FileSaver.js"></script>
         <script type="application/ecmascript" async="" src="//www.google-analytics.com/ga.js"></script>
         <script type="text/javascript" src="javascript.js"></script>
+        <script type="text/javascript" src="utils.js"></script>
         <script type="text/javascript" src="d3/jquery-1.8.2.js"></script>
         <script type="text/javascript" src="d3/jscolor/jscolor.js"></script>
 
@@ -102,14 +103,18 @@ http://www.interactivenn.net/
                 <table border="0" cellpadding="0"  cellspacing="5">
                     <tbody >
                         <tr>
-
+                            <td style="text-align: left;padding:0px; margin:0px;">
                             <!--<a style="font-family: sans-serif; font-size: 14px" href="index2.html">Go to slider version.</a><br>-->
                             Tree code: <input id="mergeCode" size="20" maxlength="25" value ="" style="font-weight: bold">
-                    <button type="button" id="updateMerge" onclick="startstop()">Start</button>
-                    <button id="upMerge" onclick="mergeSetsUp();">Down</button>
-                    <button id="downMerge" onclick="mergeSetsDown();">Up</button>
-
-
+                                <button type="button" id="updateMerge" onclick="startstop()">Start</button>
+                                <button id="upMerge" onclick="mergeSetsUp();">Down</button>
+                                <button id="downMerge" onclick="mergeSetsDown();">Up</button>
+                            </td>                            
+                           <!-- <div style="text-align: right;min-width:100px; margin:0px;display: inline;"></div>                                       
+                            </td> -->
+                            <td style="text-align: left;padding:0px; margin:0px;width: 300px;">                                
+                                <span behavior="alternate" style="color: red;font-weight: bold;">New!</span><input type="checkbox" onchange="togglePercentage()"><span>Show <span style="color: tomato;"><b>Percentages</b></span> instead</span></input> 
+                            </td>
 
                     <script>
                         function startstop() {
