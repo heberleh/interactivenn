@@ -25,6 +25,31 @@
 // http://doi.org/10.1186/s12859-015-0611-3
 // https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0611-3
 // http://www.interactivenn.net/
+class SetService{
+
+    getUnionOfAllSets(setsArray) {
+        const totalSet = new Set();
+        setsArray.forEach(vectorSet =>{
+            vectorSet.forEach(element=> totalSet.add(element));
+        })
+        return totalSet;
+    }
+    
+    getUnionOfAllSetsArray(setsArray){
+        return Array.from(this.getUnionOfAllSets(setsArray));
+    }
+
+    getPercentageString(partSize, totalSize){
+        if(totalSize===0||partSize===0){
+            return "0";
+        }
+        return (partSize*100/totalSize).toFixed(2);
+    }
+
+}
+
+
+const setService = new SetService();
 
 var importedNode;
 var begintersectionsset = ["a", "b", "c", "d", "e", "f", "ab", "ac", "ad", "ae", "af", "bc", "bd", "be", "bf", "cd", "ce", "cf", "de", "df", "ef", "abc", "abd", "abe", "abf", "acd", "ace", "acf", "ade", "adf", "aef", "bcd", "bce", "bcf", "bde", "bdf", "bef", "cde", "cdf", "cef", "def", "abcd", "abce", "abcf", "abde", "abdf", "abef", "acde", "acdf", "acef", "adef", "bcde", "bcdf", "bcef", "bdef", "cdef", "abcde", "abcdf", "abcef", "abdef", "acdef", "bcdef"];
@@ -48,6 +73,13 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
 
 
 var dendrogramtree = null;
+
+// Probability?
+var probability = false;
+function togglePercentage (){
+    probability = !probability;
+    updateDiagram();
+}
 
 /**
  * @description Checks if a set, the current object, contains an element (argument obj).
@@ -542,10 +574,11 @@ function updateNWay(newvalue) {
     }
 }
 
+
 /**
  * @description Updates the values (numbers) that are shown in the diagram. Identifies all the possible intersections and set a new numeric text to it.
  */
-function updateDiagram() {
+ function updateDiagram() {
     var fontsize = globalfontsize;
     if (nWay == 5) {
         fontsize = globalfontsize - 5;
@@ -553,13 +586,20 @@ function updateDiagram() {
     if (nWay == 6) {
         fontsize = globalfontsize - 10;
     }
+    const setsVector = allSetsNames.map(name=>sets[name]);
+    const totalSetSize = setService.getUnionOfAllSets(setsVector).size;
     for (var i = 0; i < labelsDiagram.length; i++) {
         var id = "#" + labelsDiagram[i];
-        var str = getIntersection(labelsDiagram[i]);
+        var size = getIntersection(labelsDiagram[i]);
         selected = d3.select(id);
 //        if (selected.node().textContent != str) {
         //.style("font-size","4").transition().delay(function(){i*5}).duration(50)
-        selected.text(" " + str + " ").style("font-size", fontsize.toString() + "px");
+        if(probability && !isNaN(new Number(size)) ){
+            selected.text(" " + setService.getPercentageString(size, totalSetSize) + " ").style("font-size", fontsize.toString() + "px").style("text-anchor","start");
+        }else{
+            selected.text(" " + size + " ").style("font-size", fontsize.toString() + "px");
+        }
+       
 //        }
     }
 }
@@ -568,18 +608,10 @@ function updateDiagram() {
  * @description Analyses the sets and rebuild the lists of intersections.
  */
 function updateIntersections() {
-    var totalSet = [];
-    var hashtotal = {};
-    //UNION of sets
-    for (var i = 0; i < allSetsNames.length; i++) {
-        for (var j = 0; j < sets[allSetsNames[i]].length; j++) {
-            if (hashtotal[sets[allSetsNames[i]][j]] != true) {
-                hashtotal[sets[allSetsNames[i]][j]] = true;
-                totalSet.push(sets[allSetsNames[i]][j]);
-            }
-        }
-    }
-
+    //Union of all sets
+    const setsVector = allSetsNames.map(name=>sets[name]);
+    var totalSet = setService.getUnionOfAllSetsArray(setsVector);
+    
     //Hash of sets; easy way to know if an element is in a set or not
     var hash = {};
     for (var i = 0; i < allSetsNames.length; i++) {
