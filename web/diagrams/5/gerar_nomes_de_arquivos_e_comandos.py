@@ -31,6 +31,7 @@ for name in names:
             
         
     #inkscape -f 5waydiagram.svg --select=elipseA --select=elipseB --       verb=SelectionUnion --verb=FileSave --verb=FileClose
+    # inkscape 0.5. Elipses must be path and not <elipse>
     command = "inkscape -f "+newname+" --verb=EditDeselect "
     for part in union:
         for e in part:
@@ -39,4 +40,4 @@ for name in names:
     command = command + "--verb=FileSave --verb=FileClose"
     
     os.system(command)
-    print newname +" saved"
+    print(name)

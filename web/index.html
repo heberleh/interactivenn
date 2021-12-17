@@ -81,11 +81,11 @@ http://www.interactivenn.net/
         <header id="banner" class="body">
     
             <!-- Thanks to Tom Preston-Werner for the Github ribbons -->
-            <a href="https://github.com/heberleh/interactivenn" target="_blank">
+            <!-- <a href="https://github.com/heberleh/interactivenn" target="_blank">
                 <img width="149" height="149" 
                     src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149" 
                     class="attachment-full size-full" alt="You can contribute to this project and help the World!" style="position: absolute;top: 0px; right: 0px;" data-recalc-dims="1">
-            </a>
+            </a> -->
     
             <h1><a href="#"> InteractiVenn<strong>(Unions by list)</strong></a></h1>
             <nav><ul>
@@ -115,8 +115,15 @@ http://www.interactivenn.net/
                             <button id="upMerge" onclick="mergeSetsUp();"> > </button>  
                             <!-- <div style="text-align: right;min-width:100px; margin:0px;display: inline;"></div>                                       
                             </td> -->
-                            <td style="text-align: left;padding:0px; margin:0px;width: 300px;">                                
-                                <span behavior="alternate" style="color: red;font-weight: bold;">New!</span><input type="checkbox" onchange="togglePercentage()"><span>Show <span style="color: tomato;"><b>Percentages</b></span> instead</span></input> 
+                            <td style="font-size:10px;text-align: left;padding:0px; margin:0px;width: 300px;">                                
+                                <input type="checkbox" onchange="togglePercentage()">
+                                    <span style="font-size:12px !important;">   Show <span style="color: tomato;">
+                                    <b>Percentages</b></span> instead</span>
+                                    <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
+                                </input> 
+                                <br>
+                                 Mouse-over numbers highlight their sets</input>
+                                <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
                             </td>
                     <script>                                              
                         function startstop() {

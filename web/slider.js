@@ -45,9 +45,9 @@ class SetService{
 
     getPercentageString(partSize, totalSize){
         if(totalSize===0||partSize===0){
-            return "0";
+            return "0.0";
         }
-        return (partSize*100/totalSize).toFixed(2);
+        return (partSize*100/totalSize).toFixed(1);
     }
 
 }
@@ -308,24 +308,32 @@ function updateDiagram() {
     }
     const setsVector = allSetsNames.map(name=>sets[name]);
     const totalSetSize = setService.getUnionOfAllSets(setsVector).size;
-    var sum = 0;
+    
     for (var i = 0; i < labelsDiagram.length; i++) {
         var id = "#" + labelsDiagram[i];
         var size = getIntersection(labelsDiagram[i]);
         selected = d3.select(id);
 //        if (selected.node().textContent != str) {
         //.style("font-size","4").transition().delay(function(){i*5}).duration(50)
-        if(probability && !isNaN(new Number(size)) ){
-            selected.text(" " + setService.getPercentageString(size, totalSetSize) + " ").style("font-size", fontsize.toString() + "px").style("text-anchor","start");
+        let translateX = 7;
+        if(nWay===5) translateX += 3;
+        if(probability && !isNaN(new Number(size)) ){           
+            translateX +=3;
+            selected.text(" " + setService.getPercentageString(size, totalSetSize) + " ")
+                    .attr("transform",`translate(${translateX},0)`)
+                    .style("font-size", fontsize.toString() + "px")
+                    .style("text-anchor","middle");
         }else{
-            selected.text(" " + size + " ").style("font-size", fontsize.toString() + "px");
+            selected.text(" " + size + " ")
+                    .attr("transform",`translate(${translateX},0)`)
+                    .style("font-size", fontsize.toString() + "px")
+                    .style("text-anchor","middle");
+                      
         }
-        sum+=(size/totalSetSize);
+       
        
 //        }
     }
-    console.log("---")
-    console.log("SUM", sum);
 }
 
 
@@ -486,6 +494,49 @@ function getIntersection(intersectionID) {
     return intersectionsize;
 }
 
+
+function setMouseOverIntersectionsLabels(){
+    for (var i = 0; i < labelsDiagram.length; i++) {        
+        const label =  labelsDiagram[i];  
+        selected = d3.select("#"+label);
+        
+        selected.on('mouseover', function (d) {
+            allSetsNames.forEach(setName=>{
+                d3.select("#elipse"+setName.toUpperCase())
+                    .style({"fill-opacity": 0})
+                    .style({"padding": "5px"})
+                d3.select("#label"+setName.toUpperCase())
+                    .style({"fill-opacity": 0.2}); 
+                d3.select("#total"+setName.toUpperCase())
+                    .style({"fill-opacity": 0.2});   
+            });      
+            
+            label.split("").forEach(setName=>{
+                d3.select("#elipse"+setName.toUpperCase()).style({"fill-opacity": globalOpacity + 0.2});
+                d3.select("#label"+setName.toUpperCase())
+                    .style({"fill-opacity": 1}); 
+                d3.select("#total"+setName.toUpperCase())
+                    .style({"fill-opacity": 1});   
+
+            })                  
+        }).attr("title",label);
+        
+        selected.on('mouseout', function (d) { 
+            allSetsNames.forEach(setName=>{
+                d3.select("#elipse"+setName.toUpperCase()).style({"fill-opacity": globalOpacity})
+                d3.select("#label"+setName.toUpperCase())
+                    .style({"fill-opacity": 1}); 
+                d3.select("#total"+setName.toUpperCase())
+                    .style({"fill-opacity": 1});   
+            });         
+        })
+
+        
+
+    }
+}
+
+
 /**
  * @description Loads a diagram and process everything based on it. 
  * @param {string} path The path of a .svg diagram
@@ -603,13 +654,17 @@ function loadNewDiagram(path) {
         $(document).ready(updateColors());
         $(document).ready(updateOpacity());
         
-        d3.selectAll("path").on('mouseover', function (d) {
-            d3.select(this).style({"fill-opacity": globalOpacity + 0.2});
-        })
-        d3.selectAll("path").on('mouseout', function (d) {
-            d3.select(this).style({"fill-opacity": globalOpacity});
-        })
+        // d3.selectAll("path").on('mouseover', function (d) {
+        //     console.log("mouseover", d);
+        //     d3.select(this).style({"fill-opacity": globalOpacity + 0.2});
+        // })
+        // d3.selectAll("path").on('mouseout', function (d) {
+        //     d3.select(this).style({"fill-opacity": globalOpacity});
+        // })
+        setMouseOverIntersectionsLabels();
     });
+
+   
 }
 
 
