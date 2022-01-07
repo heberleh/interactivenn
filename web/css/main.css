@@ -24,7 +24,7 @@ path:hover
 		background: #F5F4EF;
 		color: #000305;
 		font-size: 87.5%; /* Base font size: 14px */
-		font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+		font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif!important;
 		line-height: 1.429;
 		margin: 0;
 		padding: 0;
@@ -83,6 +83,16 @@ ol {
 dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
+
+/* Forms */
+
+input {
+	margin: 4px 2px;
+}
+
+button {
+	margin: 4px 2px;
+}
 
 /* Quotes */
 blockquote {font-style: italic;}
