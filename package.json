@@ -1,0 +1,24 @@
+{
+  "name": "interactivenn",
+  "version": "1.0.0",
+  "description": "A web-based tool for the analysis of sets through Venn diagrams",
+  "main": "index.js",
+  "scripts": {
+    "serve": "cd web && http-server",
+    "develop": "cd web && http-server -c-1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heberleh/interactivenn.git"
+  },
+  "author": "",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/jayeclark/interactivenn/issues"
+  },
+  "homepage": "https://github.com/jayeclark/interactivenn/web/",
+  "dependencies": {
+    "http-server": "^14.0.0"
+  }
+}

@@ -9,6 +9,17 @@ Heberle, H.; Meirelles, G. V.; da Silva, F. R.; Telles, G. P.; Minghim, R. *Inte
 ## Webpage:
 http://www.interactivenn.net/
 
+## Accessing Locally:
+To access the tool on your local machine, you will need a recent version of Node installed.
+
+Install project dependencies (http-server).
+
+```
+npm install
+```
+
+To serve the website, run `npm run serve` (for using the tool) or `npm run develop` (runs the server without caching so your changes are visible upon reload)
+
 ## Examples:
 
 ![Home](https://media.springernature.com/full/springer-static/image/art%3A10.1186%2Fs12859-015-0611-3/MediaObjects/12859_2015_611_Fig1_HTML.gif)
