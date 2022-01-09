@@ -29,6 +29,7 @@ path:hover
 		margin: 0;
 		padding: 0;
 		text-align: left;
+		box-sizing: border-box;
 	}
 
 /* Headings */
@@ -86,28 +87,7 @@ dd {margin-left: 1.5em;}
 
 /* Quotes */
 blockquote {font-style: italic;}
-cite {}
-
-q {}
-
-/* Tables */
-table {margin: .5em auto 1.5em auto; width: 98%;}
-	
-	/* Thead */
-	thead th {padding: .5em .4em; text-align: left;}
-	thead td {}
-
-	/* Tbody */
-	tbody td {padding: .5em .4em;}
-	tbody th {}
-	
-	tbody .alt td {}
-	tbody .alt th {}
-	
-	/* Tfoot */
-	tfoot th {}
-	tfoot td {}
-	
+ 
 /* HTML5 tags */
 header, section, footer,
 aside, nav, article, figure {
@@ -162,7 +142,7 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 	}
 	
 	#banner nav ul {list-style: none; margin: 0 auto; width: 1000px;}
-	#banner nav li {float: left; display: inline; margin: 0;}
+	#banner nav li {float: left; display: inline;}
 	
 	#banner nav a:link, #banner nav a:visited {
 		color: #fff;
@@ -177,16 +157,7 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 		color: #fff;
 		text-shadow: none !important;
 	}
-	
-	#banner nav li:first-child a {
-		border-top-left-radius: 5px;
-		-moz-border-radius-topleft: 5px;
-		-webkit-border-top-left-radius: 5px;
-		
-		border-bottom-left-radius: 5px;
-		-moz-border-radius-bottomleft: 5px;
-		-webkit-border-bottom-left-radius: 5px;
-	}
+ 
 
 /*
 	Featured
@@ -232,6 +203,71 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 }
+
+/* 
+  Forms
+*****************/
+
+input {
+	padding: 5px;
+	margin: 2px;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+}
+
+input[type="file"] {
+	border: none;
+}
+
+textarea {
+	border: 1px solid #aaa;
+	border-radius: 4px;
+}
+
+button {
+	padding: 5px 10px;
+	margin: 2px;
+	border: 1px solid rgb(118,118,118);
+	border-radius: 4px;
+	background-color: #ccc;
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+button:hover, button:active {
+	background-color: #bbb;
+}
+
+button.danger {
+	color: white;
+	background-color: rgb(199, 68, 81);
+	border: 1px solid rgb(199, 68, 81);
+	font-weight: bold;
+}
+
+button.success {
+	color: white;
+	background-color: rgb(0, 100, 0);
+	border: 1px solid rgb(0, 100, 0);
+	font-weight: bold;
+}
+
+button.danger:hover,
+button.danger:active {
+	background-color: rgb(187, 34, 49);
+}
+
+button.success:hover,
+button.success:active {
+	background-color: rgb(0, 73, 0);
+}
+
+button.success:disabled,
+button.danger:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
 
 /*
 	Extras
@@ -367,3 +403,230 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 	
 	#about-author .photo {border: 1px solid #ddd; float: left; margin: 5px 1em 0 0;}
 	
+	#mergeMenu {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		padding-bottom: 15px;
+		text-align: left; 
+		padding:0px; 
+		margin-bottom: 20px;
+	}
+
+	#mergeMenu .title {
+		display: inline-block; 
+		width: 125px;
+	}
+
+	#mergeCode {
+		font-weight: bold;
+	}
+
+	#contentContainer {
+		display: flex; 
+		justify-content: space-between; 
+		width: 100%;
+	}
+
+	#imageContainer {
+		background-color: #efefef;
+		border-radius: 10px;
+	}
+
+	#imageContainer form {
+		padding: 16px 0px; 
+		margin: 0px 16px 8px 16px; 
+		border-top: 1px solid #ccc; 
+		border-bottom: 1px solid #ccc;
+		font-family: sans-serif;
+		font-size: 12pzx;
+	}
+
+	#imageContainer form span,
+	#imageContainer form p {
+		font-family: sans-serif; 
+		font-size: 11px;
+	}
+
+	#imageContainer #fontsizedown,
+	#imageContainer #fontsizeup,
+	#imageContainer #opacitydown,
+	#imageContainer #opacityup {
+		width: 28px;
+	}
+	
+	span .separator {
+		margin: 8px;
+	}
+
+	#newFeatures {
+		font-size:10px;
+		text-align: left; 
+		margin-bottom: 16px; 
+		padding-bottom: 16px; 
+		border-bottom: 1px solid #ddd;
+	}
+
+	#newFeatures input {
+		margin-bottom: 16px;
+	}
+
+	.text-red {
+		color: red;
+		font-weight: bold;
+	}
+
+	.text-sm {
+		font-size: 12px;
+	}
+
+	.text-xs {
+		font-size: 11px;
+	}
+
+	#displayOptions {
+		font-size: 12px; 
+		padding-top: 8px; 
+		padding-bottom: 20px;
+	}
+
+	#leftColumn {
+		width: calc(71% - 32px);
+		max-width: calc(70% - 20px);
+		flex-grow: 0;
+		flex-shrink: 1;
+		text-align: center;
+	}
+
+	#diagramFrame {
+		position: relative; 
+		left: 0pt; 
+		top: 0pt; 
+		width: 578px; 
+		height: 578px; 
+		border-radius: 8px;
+	}
+
+	#rightColumn {
+		font-family: sans-serif; 
+		font-size: 12px; 
+		width: 30%; 
+		padding:0px;
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+
+	.rightColMargin {
+		margin-left: 17px;
+	}
+
+	#nWayMenu {
+		display:flex; 
+		align-items: center; 
+		margin-bottom: 16px;
+	}
+
+	#nWayMenu form {
+		display: flex; 
+		align-items: center;
+	}
+
+	#rightColumn input[type="radio"] {
+		margin-bottom: 4px;
+		margin-left: 8px;
+	}
+
+	#dataMenu .divLabel {
+		display: inline-block; 
+		width: 12px;
+	}
+
+	#dataMenu .elementsN {
+		display: inline-block;
+	}
+
+	#dataMenu input {
+		margin-top: 8px;
+		font-weight: bold;
+	}
+	
+	#dataMenu .color {
+		width: 18px;
+		height: 18px;
+	}
+	#dataMenu .elementsN {
+		margin-left: 5px;
+		background-color: #eee;
+		padding: 3px 6px;
+		border-radius: 4px;
+	}
+
+
+	#dataMenu textarea {
+		margin-left: 17px;
+		width: calc(100% - 17px);
+		box-sizing: border-box;
+	}
+
+	#dataMenu input.color {
+		border-radius: 100%;
+		width: 13px!important;
+		height: 13px!important;
+		margin: 3px 0px;
+		border: 1px solid rgb(118, 118, 118);
+	}
+
+	#clearSets {
+		width: calc(100% - 17px);
+		margin-left: 17px;
+		margin-top: 8px;
+	}
+
+	#saveSets {
+		width: calc(100% - 17px);
+		margin-left: 17px;
+	}
+
+	#saveSetsInput {
+		margin-top: 16px; 
+		margin-left: 11px; 
+		padding-top: 3px; 
+		border-top: 1px solid #ddd;
+	}
+
+	#loadSetsInput {
+		margin-top: 16px; 
+		margin-left: 11px; 
+		padding-top: 3px; 
+		border-top: 1px solid #ddd;
+	}
+
+	#loadSetsInput input {
+		margin-bottom: 0px;
+	}
+
+	#loadSets {
+		width: calc(100% - 17px);
+		margin-left: 17px;
+		margin-top: 0px;
+	}
+
+	#sampleData {
+		margin: 16px 0px 0px 17px; 
+		padding-bottom: 0px;
+	}
+
+	#citation {
+		display:flex;
+		text-align: left; 
+		padding: 15px; 
+		border:1px solid #ddd; 
+		border-radius: 10px; 
+		margin-top: 20px;
+	}
+
+	#citation .title {
+		width: 100px;
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
