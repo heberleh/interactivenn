@@ -42,6 +42,7 @@ var firstLoad = true;
    * @param {string} inputName The input ID related to a set.
    */
 function hideInput(inputName) {
+    document.getElementById("divlabel" + inputName).style.display = 'none';
     document.getElementById("name" + inputName).style.display = 'none';
     document.getElementById("elements" + inputName).style.display = 'none';
     document.getElementById("input" + inputName).style.display = 'none';
@@ -53,6 +54,7 @@ function hideInput(inputName) {
    * @param {string} inputName The input ID related to a set.
    */
 function showInput(inputName) {
+    document.getElementById("divlabel" + inputName).style.display = 'inline-block';
     document.getElementById("name" + inputName).style.display = 'inline';
     document.getElementById("elements" + inputName).style.display = 'inline';
     document.getElementById("input" + inputName).style.display = 'inline';
