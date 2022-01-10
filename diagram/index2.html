@@ -100,8 +100,8 @@ http://www.interactivenn.net/
                             <!--<a style="font-family: sans-serif; font-size: 14px" href="index2.html">Go to slider version.</a><br>-->
                             Tree code: <input id="mergeCode" size="20" maxlength="25" value ="" style="font-weight: bold">
                                 <button type="button" id="updateMerge" onclick="startstop()">Start</button>
-                                <button id="upMerge" onclick="mergeSetsUp();">Down</button>
-                                <button id="downMerge" onclick="mergeSetsDown();">Up</button>
+                                <button id="upMerge" onclick="mergeSetsUpTree();">Down</button>
+                                <button id="downMerge" onclick="mergeSetsDownTree();">Up</button>
                             </td>                            
                            <!-- <div style="text-align: right;min-width:100px; margin:0px;display: inline;"></div>                                       
                             </td> -->
@@ -131,7 +131,7 @@ http://www.interactivenn.net/
                                 document.getElementById('nway6').disabled = true;
                                 merging = false;
                                 currentLevel = 0;
-                                mergeSets(currentLevel);
+                                mergeSetsTree(currentLevel);
                                 updateLabelsSizes();
                             } else {
                                 // merging será falso e tudo será reiniciado...
@@ -312,7 +312,7 @@ http://www.interactivenn.net/
                                 allElementsN[i].textContent = "size: 0";
                             }
                             modified = true;
-                            updateActiveSets();
+                            updateActiveSetsTree();
                         }
         </script>
         <script>
@@ -363,7 +363,7 @@ http://www.interactivenn.net/
                         original_sets = list;
                         updateInputTextSet(setName);
                     }
-                    updateActiveSets();
+                    updateActiveSetsTree();
                 };
                 reader.readAsText(f);
             }

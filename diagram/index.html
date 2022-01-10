@@ -37,7 +37,7 @@ http://www.interactivenn.net/
         <meta name="description" content="InteractiVenn is an interactive visualization tool for analyzing lists of elements using Venn diagrams. The web tool supports up to six different sets. Moreover, union operations between sets can be made. The union operations are reflected to the Venn diagram. Other interactions are also available, such as color changing and export diagram in SVG and PNG format. We suggests the use of Inkscape to edit the Venn diagrams exported by InteractiVenn." />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
-        <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <link rel="stylesheet" href="../web/css/main.css" type="text/css" />
         <script type="text/javascript" src="d3/d3.v2.js"></script>
         <script type="text/javascript" src="d3/jPaq-1.0.6.08-mini.js"></script>
         <script type="application/ecmascript" async="" src="d3/Blob.js"></script>
@@ -112,8 +112,8 @@ http://www.interactivenn.net/
                             </div>
                             <div>
                                 <button type="button" class="success" id="updateMerge" onclick="startstop()">Start</button>
-                                <button id="downMerge" class="success" onclick="mergeSetsDown();"> < </button>
-                                <button id="upMerge" class="success" onclick="mergeSetsUp();"> > </button>      
+                                <button id="downMerge" class="success" onclick="mergeSetsDownList();"> < </button>
+                                <button id="upMerge" class="success" onclick="mergeSetsUpList();"> > </button>      
                             </div>                                 
                     <script>                                              
                         function startstop() {
@@ -132,7 +132,7 @@ http://www.interactivenn.net/
 
                                 merging = false;
                                 currentIndex = 0;
-                                mergeSets(currentIndex);
+                                mergeSetsList(currentIndex);
                                 updateLabelsSizes();
                             } else {
                                 // merging será falso e tudo será reiniciado...
@@ -297,7 +297,7 @@ http://www.interactivenn.net/
                                 allElementsN[i].textContent = "size: 0";
                             }
                             modified = true;
-                            updateActiveSets();
+                            updateActiveSetsList();
                         }
         </script>
         <script>
@@ -348,7 +348,7 @@ http://www.interactivenn.net/
                         original_sets = list;
                         updateInputTextSet(setName);
                     }
-                    updateActiveSets();
+                    updateActiveSetsList();
                 };
                 reader.readAsText(f);
             }

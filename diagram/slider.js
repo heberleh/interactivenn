@@ -67,12 +67,12 @@ var activesets = {};
 var slide = null;
 var maxIndex = 0;
 var currentIndex = maxIndex;
-var exampletree = [];
-exampletree["2"] = "ab";
-exampletree["3"] = "ab;ca";
-exampletree["4"] = "ca,db; ab";
-exampletree["5"] = "ab; cd; be,ac";
-exampletree["6"] = "ab; cd,ef; abc,de; abcd,ef";
+var examplelist = [];
+examplelist["2"] = "ab";
+examplelist["3"] = "ab;ca";
+examplelist["4"] = "ca,db; ab";
+examplelist["5"] = "ab; cd; be,ac";
+examplelist["6"] = "ab; cd,ef; abc,de; abcd,ef";
 var firstLoad = true;
 
 // Probability?
@@ -145,7 +145,7 @@ function Slide() {
  * @description Decodes the string str and identifies the unions. If the web interface is related to "Slider/List" version, the code is similar to this: "ab; cd,ef; abc,de; abcd,ef; ab,cd,ef". If the web interface is related to "Tree" version, the code is similar to this: "((A,((D,(F,E)),C)),B)".
  * @param {string} str The string given by the user.
  */
-function decode(str) {
+function decodeList(str) {
     str = str.toUpperCase();
     //var dict = [',',')','('].concat(originalAllSetsNames);
     slide = new Slide();
@@ -180,18 +180,20 @@ function decode(str) {
  * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
  * @param {string} setID The set ID.
  */
-function updateSetLabel(setID) {
+function updateSetLabelList(setID) {
     var text = document.getElementById("name" + setID).value;
     d3.select("#label" + setID).text(text.replace(/:/g, '-'));
+    //console.log(updateDendrogram, typeof updateDendrogram);
+    //if (typeof updateDendrogram !== undefined) { updateDendrogram();}
 }
 
 
 /**
  * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
  */
-function updateSetsLabels() {
+function updateSetsLabelsList() {
     for (var i = 0; i < nWay; i++) {
-        updateSetLabel(allPossibleSetsNames[i]);
+        updateSetLabelList(allPossibleSetsNames[i]);
     }
 }
 
@@ -243,11 +245,11 @@ function updateAllSetsNamesVector() {
 /**
  * @description Updates the sets and sets' labels given the texts inputs in the web interface.
  */
-function updateActiveSets() {
+function updateActiveSetsList() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         modified = true;
         updateSets(originalAllSetsNames[i]);
-        updateSetLabel(originalAllSetsNames[i]);
+        updateSetLabelList(originalAllSetsNames[i]);
     }
 }
 
@@ -282,11 +284,11 @@ function updateNWay(newvalue) {
     for (var i = nWay; i < maxNSets; i++) {
         hideInput(allPossibleSetsNames[i]);
     }
-    loadNewDiagram("./diagrams/" + nWay + "/" + nWay + "waydiagram.svg");
+    loadNewDiagramList("./diagrams/" + nWay + "/" + nWay + "waydiagram.svg");
     document.getElementById("nway" + nWay).checked = true;
 
     if (old_nWay != newvalue || firstLoad) {
-        document.getElementById("mergeCode").value = exampletree[newvalue];
+        document.getElementById("mergeCode").value = examplelist[newvalue];
         firstLoad = false;
     }
     if (old_nWay != newvalue) {
@@ -457,26 +459,26 @@ function updateLabelsSizes() {
 /**
  * @description Applies the union operation based on the sequency defined by the Slider or Tree structure.
  */
-function mergeSetsDown() {
+function mergeSetsDownList() {
 //    document.getElementById("updateMerge").disabled = true;
 //    document.getElementById("downMerge").disabled = true;
 //    document.getElementById("upMerge").disabled = true;
     if (currentIndex > 0) {
         currentIndex--;
-        mergeSets(currentIndex);
+        mergeSetsList(currentIndex);
     }
 }
 
 /**
  * @description Applies the union operation based on the sequency defined by the Slider or Tree structure.
  */
-function mergeSetsUp() {
+function mergeSetsUpList() {
 //    document.getElementById("updateMerge").disabled = true;
 //    document.getElementById("downMerge").disabled = true;
 //    document.getElementById("upMerge").disabled = true;
     if (currentIndex < slide.getSize() - 1) {
         currentIndex++;
-        mergeSets(currentIndex);
+        mergeSetsList(currentIndex);
     }
 }
 
@@ -541,7 +543,7 @@ function setMouseOverIntersectionsLabels(){
  * @description Loads a diagram and process everything based on it. 
  * @param {string} path The path of a .svg diagram
  */
-function loadNewDiagram(path) {
+function loadNewDiagramList(path) {
 
     d3.xml(path, "image/svg+xml", function (xml) {
 
@@ -609,7 +611,7 @@ function loadNewDiagram(path) {
             ;
         }
 
-        updateActiveSets();
+        updateActiveSetsList();
 
         if (merging) {
             updateDiagram();
@@ -644,7 +646,7 @@ function loadNewDiagram(path) {
             document.getElementById("downMerge").disabled = true;
         }
         updateLabelsSizes();
-        updateSetsLabels();
+        updateSetsLabelsList();
         $(document).ready(updateDiagram());
         if (!merging) {
             $(document).ready(updateColorBox());
@@ -680,7 +682,7 @@ function getCode() {
  * @description Merges the sets of a given union code. Argument is actually a index of a union code in the union codes list.
  * @param {numeric} index The index of a union in the list of unions. For instance, if the list is [ab, abc, ad] the index 0 gives you the union code "ab".
  */
-function mergeSets(index) {
+function mergeSetsList(index) {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         var s = originalAllSetsNames[i];
         var list = document.getElementById("input" + s).value.split("\n");
@@ -696,7 +698,7 @@ function mergeSets(index) {
 
     if (!merging) {
         var code = getCode();
-        decode(code);
+        decodeList(code);
         maxIndex = slide.getSize();
         merging = true;
     }
@@ -739,7 +741,7 @@ function mergeSets(index) {
     //document.getElementById("downMerge").disabled = false;
     //document.getElementById("upMerge").disabled = false;
 
-    loadNewDiagram(path);
+    loadNewDiagramList(path);
 
 }
 
