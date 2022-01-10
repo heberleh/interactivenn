@@ -331,11 +331,6 @@ button.danger:active {
 	background-color: rgb(170, 157, 159);
 }
 
-button.success:hover,
-button.success:active {
-	background-color: rgb(0, 73, 0);
-}
-
 button.success:disabled,
 button.danger:disabled {
 	opacity: 0.5;
