@@ -54,7 +54,8 @@ function hideInput(inputName) {
    * @param {string} inputName The input ID related to a set.
    */
 function showInput(inputName) {
-    document.getElementById("divlabel" + inputName).style.display = 'inline-block';
+    const divLabel = document.getElementById("divlabel" + inputName);
+    if (divLabel) divLabel.style.display = 'inline-block';
     document.getElementById("name" + inputName).style.display = 'inline';
     document.getElementById("elements" + inputName).style.display = 'inline';
     document.getElementById("input" + inputName).style.display = 'inline';
