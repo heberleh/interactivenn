@@ -35,15 +35,8 @@ http://www.interactivenn.net/
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="description" content="InteractiVenn is an interactive visualization tool for analyzing lists of elements using Venn diagrams. The web tool supports up to six different sets. Moreover, union operations between sets can be made. The union operations are reflected to the Venn diagram. Other interactions are also available, such as color changing and export diagram in SVG and PNG format. We suggests the use of Inkscape to edit the Venn diagrams exported by InteractiVenn." />
         <link rel="stylesheet" href="css/main.css" type="text/css" />
-        <script type="text/javascript" src="d3/d3.v2.js"></script>
-        <script type="text/javascript" src="d3/jPaq-1.0.6.08-mini.js"></script>    
-        <script type="application/ecmascript" async="" src="d3/Blob.js"></script>
-        <script type="application/ecmascript" async="" src="d3/canvas-toBlob.js"></script>
-        <script type="application/ecmascript" async="" src="d3/FileSaver.js"></script>
         <script type="application/ecmascript" async="" src="//www.google-analytics.com/ga.js"></script>
-        <script type="text/javascript" src="javascript.js"></script>
-        <script type="text/javascript" src="d3/jquery-1.8.2.js"></script>
-        <script type="text/javascript" src="d3/jscolor/jscolor.js"></script>
+        <script type="module" src="javascript.js"></script>
     </head>
 
     <body id="index" class="home">
@@ -114,42 +107,6 @@ http://www.interactivenn.net/
                                  Mouse-over numbers highlight their sets</input>
                                 <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
                             </td>
-
-                    <script>
-                        function startstop() {
-                            if (started == false) {
-                                //troca o botão start por stop
-                                started = true;
-                                document.getElementById('updateMerge').textContent = "Stop";
-                                document.getElementById('mergeCode').disabled = true;
-                                document.getElementById('clearSets').disabled = true;
-                                document.getElementById('nway2').disabled = true;
-                                document.getElementById('nway3').disabled = true;
-                                document.getElementById('nway4').disabled = true;
-                                document.getElementById('nway5').disabled = true;
-                                document.getElementById('nway6').disabled = true;
-                                merging = false;
-                                currentLevel = 0;
-                                mergeSetsTree(currentLevel);
-                                updateLabelsSizes();
-                            } else {
-                                // merging será falso e tudo será reiniciado...
-                                started = false;
-                                document.getElementById('updateMerge').textContent = "Start";
-                                document.getElementById('mergeCode').disabled = false;
-                                document.getElementById('clearSets').disabled = false;
-                                document.getElementById('nway2').disabled = false;
-                                document.getElementById('nway3').disabled = false;
-                                document.getElementById('nway4').disabled = false;
-                                document.getElementById('nway5').disabled = false;
-                                document.getElementById('nway6').disabled = false;
-                                d3.select("#dendrogram").html("");
-                                dendrogramtree = null;
-                                updateNWay(nWay);
-                            }
-                        }
-                    </script>
-
                     </tr>
 
                     <tr>
@@ -296,80 +253,6 @@ http://www.interactivenn.net/
 <p><b>DOI</b>: <a href="http://doi.org/10.1186/s12859-015-0611-3">10.1186/s12859-015-0611-3</a></p>
 </div>		             
         </section>
-
-        <script type="text/javascript" src="slider.js"></script>
-        <script>
-                        function clearSets() {
-
-                            alltextarea = d3.selectAll("textarea")[0];
-                            for (var i = 0; i < alltextarea.length; i++) {
-                                alltextarea[i].value = "";
-                            }
-
-                            allElementsN = d3.selectAll(".elementsN")[0];
-                            for (var i = 0; i < allElementsN.length; i++) {
-                                allElementsN[i].textContent = "size: 0";
-                            }
-                            modified = true;
-                            updateActiveSetsTree();
-                        }
-        </script>
-        <script>
-            var globalFile;
-            function handleFileSelect(evt) {
-                var files = evt.target.files; // FileList object
-                // files is a FileList of File objects. List some properties.           
-                for (var i = 0, f; f = files[i]; i++) {
-                    loadSets(f);
-                }
-            }
-
-            document.getElementById('files').addEventListener('change', handleFileSelect, false);
-
-            function loadSets(f) {
-                var reader = new FileReader();
-                // Closure to capture the file information
-
-                reader.onload = function (e) {
-                    var str = e.target.result.replace(/\n/g, "");
-                    var setsList = str.split(";");
-                    setsList = setsList.filter(function (x) {
-                        if (x != "")
-                            return true;
-                    });
-
-                    updateNWay(setsList.length);
-                    for (var i = 0; i < setsList.length; i++) {
-                        var setName = allPossibleSetsNames[i];
-                        var setlist = setsList[i].split(":");
-                        setsLabel[setName] = setlist[0];
-                        setlist[1] = setlist[1].split(",");
-                        var list = setlist[1].filter(function (x) {
-                            if (x != "")
-                                return true;
-                        });
-
-                        //remove duplicated
-//                                            var temp = [];
-//                                            $.each(list, function(i, el) {
-//                                                if ($.inArray(el, temp) === -1)
-//                                                    temp.push(el);
-//                                            });
-//                                            sets[setName] = temp;
-//                                            original_sets = temp;
-                        //assuming there is no duplicated element as the program check it after again
-                        sets[setName] = list;
-                        original_sets = list;
-                        updateInputTextSet(setName);
-                    }
-                    updateActiveSetsTree();
-                };
-                reader.readAsText(f);
-            }
-
-        </script>
-
-
 
         <style>
             .node circle {     
