@@ -1,0 +1,405 @@
+<!-- Author Henry Heberle, 2015 -->
+<!-- henry at icmc . usp . br -->
+
+<!--This file is part of InteractiVenn.
+
+InteractiVenn is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+InteractiVenn is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with InteractiVenn. If not, see <http://www.gnu.org/licenses/>.
+
+
+
+Those that have employed the tool InteractiVenn should mention:
+
+Heberle, H.; Meirelles, G. V.; da Silva, F. R.; Telles, G. P.; Minghim, R. InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams. BMC Bioinformatics 16:169 (2015).
+ 
+http://doi.org/10.1186/s12859-015-0611-3
+https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0611-3
+http://www.interactivenn.net/
+
+-->
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>InteractiVenn - Interactive Venn Diagrams</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="description" content="InteractiVenn is an interactive visualization tool for analyzing lists of elements using Venn diagrams. The web tool supports up to six different sets. Moreover, union operations between sets can be made. The union operations are reflected to the Venn diagram. Other interactions are also available, such as color changing and export diagram in SVG and PNG format. We suggests the use of Inkscape to edit the Venn diagrams exported by InteractiVenn." />
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <script type="text/javascript" src="d3/d3.v2.js"></script>
+        <script type="text/javascript" src="d3/jPaq-1.0.6.08-mini.js"></script>    
+        <script type="application/ecmascript" async="" src="d3/Blob.js"></script>
+        <script type="application/ecmascript" async="" src="d3/canvas-toBlob.js"></script>
+        <script type="application/ecmascript" async="" src="d3/FileSaver.js"></script>
+        <script type="application/ecmascript" async="" src="//www.google-analytics.com/ga.js"></script>
+        <script type="text/javascript" src="javascript.js"></script>
+        <script type="text/javascript" src="utils.js"></script>
+        <script type="text/javascript" src="d3/jquery-1.8.2.js"></script>
+        <script type="text/javascript" src="d3/jscolor/jscolor.js"></script>
+    </head>
+
+    <body id="index" class="home">
+
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-47547171-1', 'interactivenn.net');
+            ga('send', 'pageview');
+
+            var modified = false; //used to decide if will check if there are duplicated values or not...
+            var started = false; //used to decide the execution of button start/stop tree
+
+        </script>
+
+        <header id="banner" class="body">
+            <!-- Thanks to Tom Preston-Werner for the Github ribbons -->
+            <!-- <a href="https://github.com/heberleh/interactivenn" target="_blank">
+                <img width="149" height="149" 
+                    src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149" 
+                    class="attachment-full size-full" alt="You can contribute to this project and help the World!" style="position: absolute;top: 0px; right: 0px;" data-recalc-dims="1">
+            </a>         -->
+            <h1><a href="#"> InteractiVenn<strong>(Unions by tree)</strong></a></h1>
+            <nav><ul>
+                    <li class="active"><a href="index2.html">Unions by tree</a></li>
+                    <li><a href="index.html">Unions by list</a></li>
+                    <li><a href="citation.html">Citation</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="help.html">Help</a></li>
+                </ul></nav>
+        </header>
+
+        <section id="content" class="body">
+
+            <div id="diagramDiv">               
+
+
+
+                <table border="0" cellpadding="0"  cellspacing="5">
+                    <tbody >
+                        <tr>
+                            <td style="text-align: left;padding:0px; margin:0px;">
+                            <!--<a style="font-family: sans-serif; font-size: 14px" href="index2.html">Go to slider version.</a><br>-->
+                            Tree code: <input id="mergeCode" size="20" maxlength="25" value ="" style="font-weight: bold">
+                                <button type="button" id="updateMerge" onclick="startstop()">Start</button>
+                                <button id="upMerge" onclick="mergeSetsUp();">Down</button>
+                                <button id="downMerge" onclick="mergeSetsDown();">Up</button>
+                            </td>                            
+                           <!-- <div style="text-align: right;min-width:100px; margin:0px;display: inline;"></div>                                       
+                            </td> -->
+                            <td style="font-size:10px;text-align: left;padding:0px; margin:0px;width: 300px;">                                
+                                <input type="checkbox" onchange="togglePercentage()">
+                                    <span style="font-size:12px !important;">   Show <span style="color: tomato;">
+                                    <b>Percentages</b></span> instead</span>
+                                    <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
+                                </input> 
+                                <br>
+                                 Mouse-over numbers highlight their sets</input>
+                                <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
+                            </td>
+
+                    <script>
+                        function startstop() {
+                            if (started == false) {
+                                //troca o botão start por stop
+                                started = true;
+                                document.getElementById('updateMerge').textContent = "Stop";
+                                document.getElementById('mergeCode').disabled = true;
+                                document.getElementById('clearSets').disabled = true;
+                                document.getElementById('nway2').disabled = true;
+                                document.getElementById('nway3').disabled = true;
+                                document.getElementById('nway4').disabled = true;
+                                document.getElementById('nway5').disabled = true;
+                                document.getElementById('nway6').disabled = true;
+                                merging = false;
+                                currentLevel = 0;
+                                mergeSets(currentLevel);
+                                updateLabelsSizes();
+                            } else {
+                                // merging será falso e tudo será reiniciado...
+                                started = false;
+                                document.getElementById('updateMerge').textContent = "Start";
+                                document.getElementById('mergeCode').disabled = false;
+                                document.getElementById('clearSets').disabled = false;
+                                document.getElementById('nway2').disabled = false;
+                                document.getElementById('nway3').disabled = false;
+                                document.getElementById('nway4').disabled = false;
+                                document.getElementById('nway5').disabled = false;
+                                document.getElementById('nway6').disabled = false;
+                                d3.select("#dendrogram").html("");
+                                dendrogramtree = null;
+                                updateNWay(nWay);
+                            }
+                        }
+                    </script>
+
+                    </tr>
+
+                    <tr>
+                        <td valign="top" height="641px"  style="padding:0px; width: 70%">
+                            <table cellpadding="0" cellspacing="3" border="0" bgcolor="#EEEEEE" style="width:100%;height:100%;">
+                                <tbody>
+
+                                    <tr>
+                                        <td colspan="4" height="100%" valign="middle" bgcolor="#FFFFFF">    
+                                            <!-- <div align="Right"><a style="font-family: Sans-serif; font-size: 9px;" href="javascript:updateActiveSets();">Update Diagram</a></div>-->
+                                            <div id="diagramframe" style="position: relative; left: 0pt; top: 0pt; width: 600px; height: 578px; " >
+                                            </div>
+
+                                <center>
+                                    <!--<a style="font-family: Sans-serif; font-size: 9px;" href="javascript:getPicture();">download (works only on Firefox)</a>-->
+                                    <form id="svg-options">
+                                        <p style="font-family: Sans-serif; font-size: 11px;">Export current diagram:</p>
+                                        <label style="font-family: Sans-serif; font-size: 12px;">
+                                            <input style="font-family: Sans-serif; font-size: 12px;" type="text" class="filename" id="svg-name" size="23" placeholder="Write file name here"/>
+                                            <select id="figureformat" name="format" form="format" style="font-size: 12px;">
+                                                <option value=".svg">.svg</option>
+                                                <option value=".png">.png</option>
+                                                <option value=".txt">.txt</option>
+                                            </select>
+                                        </label>                                            
+                                        <button style="font-family: Sans-serif; font-size: 12px;"  value="Save" type="button" onclick="getPicture()">Export</button></br>
+                                        <p style="font-family: Sans-serif; font-size: 11px;">
+                                        Try opening the <b>.svg</b> diagram using <a href="https://inkscape.org/release/" target="_blank">Inkscape</a> to move shapes, resize, change font, colors and more.</p>
+                                    </form>
+                                </center>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td colspan="4" valign="middle" bgcolor="#FFFFFF" style="font-size: 12px;">
+                            Font-size:
+                            <button id="fontsizedown" style="font-size: 12px; height:24px; width:24px"  onclick="fontsizedown();"> - </button> 
+                            <button id="fontsizeup" style="font-size: 12px; height:24px; width:24px" onclick="fontsizeup();"> + </button>
+                            <!--                            |
+                                                        <button type="button" id="resetFontSize" onclick="resetFontSize()">Reset font-size</button>  -->
+                            |      
+                            Color-opacity:
+                            <button id="fontsizedown" style=" font-size: 12px; height:24px; width:24px"  onclick="opacityDown();"> - </button> 
+                            <button id="fontsizeup" style="font-size: 12px; height:24px; width:24px" onclick="opacityUp();"> + </button>
+                            |
+                            <button type="button" style="font-size: 12px;" id="resetDiagram" onclick="resetDiagram()">Reset diagram</button> 
+                            |
+                            <button type="button" style="font-size: 12px;" id="resetDiagram"  onclick="showHideDendrogram()">Visualize tree</button> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" valign="middle" bgcolor="#FFFFFF">
+                            <div id="dendrogram"></div>
+                            <div id="exportDendrogram"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                </td>
+                <td style="font-family: Serif; font-size: 12px; padding:0px; width: 30%" valign="top" >
+                    <div> Number of Sets: 
+                        <form>
+                            <!--<input type="radio" name="nway" value="1">1-->
+                            <input id="nway2" type="radio" name="nwayRadio" value="2" onclick="firstLoad = true;updateNWay(2);">2
+                            <input id="nway3" type="radio" name="nwayRadio" value="3" onclick="firstLoad = true;updateNWay(3);">3
+                            <input id="nway4" type="radio" name="nwayRadio" value="4" onclick="firstLoad = true;updateNWay(4);">4            
+                            <input id="nway5" type="radio" name="nwayRadio" value="5" onclick="firstLoad = true;updateNWay(5);">5
+                            <input id="nway6" type="radio" name="nwayRadio" value="6" onclick="firstLoad = true;updateNWay(6);">6
+                        </form>                         
+                        <!--<div id="updateDiagrambutton"><a style="font-family: Sans-serif; font-size: 9px;" href="javascript:updateActiveSets();">Update Diagram</a> - for wrong diagram or save/load problem</div>-->
+                    </div>
+
+                    <!--<a href="javascript:setExample();">Example</a>.<br><br>-->
+                    <br>A: <input id="nameA" size="15" maxlength="15" value ="Set A" style="font-weight: bold"  oninput="updateSetLabel('A');">
+                    <div style="display: inline" ><input id=colorA class="color" style="width:18px" onchange="changeColor('A')"></div>
+                    <div style="display: inline;" id="elementsA" class="elementsN"></div>                                        
+                    <br>
+                    <textarea id="inputA" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            updateSets('A');" ></textarea>
+
+
+                    <br>B: <input id="nameB" size="15" maxlength="15" value ="Set B" style="font-weight: bold"   oninput="updateSetLabel('B');">          
+                    <div style="display: inline" ><input id=colorB class="color" style="width:18px" onchange="changeColor('B')"></div>
+                    <div style="display: inline;" id="elementsB" class="elementsN"></div>                                        
+                    <br>
+                    <textarea id="inputB" class="input" style="width: 90%;" rows="3" onfocus="" onchange="modified = true;
+                            updateSets('B');" onblur=""></textarea>
+
+                    <br>C: <input id="nameC" size="15" maxlength="15" value ="Set C" style="font-weight: bold"  oninput="updateSetLabel('C');">
+                    <div style="display: inline" ><input id=colorC class="color" style="width:18px" onchange="changeColor('C')"></div>
+                    <div style="display: inline;" id="elementsC" class="elementsN"></div>                                                             <br>
+                    <textarea id="inputC" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            updateSets('C');" ></textarea>
+
+                    <br>D: <input id="nameD" size="15" maxlength="15" value ="Set D" style="font-weight: bold"  oninput="updateSetLabel('D');">
+                    <div style="display: inline" ><input id=colorD class="color" style="width:18px" onchange="changeColor('D')"></div>
+                    <div style="display: inline;" id="elementsD" class="elementsN"></div>                                        
+                    <br>
+                    <textarea id="inputD" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            updateSets('D');" onfocus="" onblur=""></textarea>                                        
+
+
+                    <br>E: <input id="nameE" size="15" maxlength="15" value ="Set E" style="font-weight: bold" oninput="updateSetLabel('E');">
+                    <div style="display: inline" ><input id=colorE class="color" style="width:18px" onchange="changeColor('E')"></div>
+                    <div style="display: inline;" id="elementsE" class="elementsN"></div>                                        
+                    <br>
+                    <textarea id="inputE" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            updateSets('E');" onfocus="" onblur=""></textarea>                     
+
+                    <br>F: <input id="nameF" size="15" maxlength="15" value ="Set F" style="font-weight: bold"  oninput="updateSetLabel('F');">
+                    <div style="display: inline" ><input id=colorF class="color" style="width:18px" onchange="changeColor('F')"></div>
+                    <div style="display: inline;" id="elementsF" class="elementsN"></div>                                        
+                    <br>
+                    <textarea id="inputF" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            updateSets('F');" onfocus="" onblur=""></textarea> 
+                    <br>
+                    <!--nameA:e1,e2...; nameB:e1,e2...; nameC:e1,e2...-->
+                    <button type="button" id="clearSets" onclick="clearSets()">Clear sets</button>
+                    <br/>
+                    <p>Save sets:</p>
+                    <!--                    <form id="text-options">-->
+                    <label><input type="text" class="filename" id="dataset-name" size="23" placeholder="Write dataset name here"/>.ivenn</label>                        
+                    <!--                    </form>-->
+                    <button  value="Save" type="button" onclick="saveDataset()">Save</button>
+                    <br/>
+
+                    <input type="hidden" lang="en-US" id="data_set_content"/>
+                    <p>Load Sets:<input type="file" id="files" name="files" lang="en-US" text="Load dataset"></p>
+                    <br/> 
+                    <p><b>Sample data set</b>: <br/>         
+                        <a style="font-family: Sans-serif; font-size: 12px;" href="test_model.ivenn" download>Simple Model</a><br/> 
+                        <!--<a style="font-family: Sans-serif; font-size: 12px;" href="test_eucalipto.ivenn">Eucalyptus Dataset</a>-->
+                    </p>  
+                    <!--<output id="list"></output>-->
+                </td>
+                </tr>
+                </tbody>
+                </table>
+            </div>
+<div>
+<p>Please cite:<br> Heberle, H.; Meirelles, G. V.; da Silva, F. R.; Telles, G. P.; Minghim, R. <em><b>InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams</b></em>. BMC Bioinformatics 16:169 (2015).</p>
+<p><b>DOI</b>: <a href="http://doi.org/10.1186/s12859-015-0611-3">10.1186/s12859-015-0611-3</a></p>
+</div>		             
+        </section>
+
+        <script type="text/javascript" src="tree.js"></script>
+        <script>
+                        function clearSets() {
+
+                            alltextarea = d3.selectAll("textarea")[0];
+                            for (var i = 0; i < alltextarea.length; i++) {
+                                alltextarea[i].value = "";
+                            }
+
+                            allElementsN = d3.selectAll(".elementsN")[0];
+                            for (var i = 0; i < allElementsN.length; i++) {
+                                allElementsN[i].textContent = "size: 0";
+                            }
+                            modified = true;
+                            updateActiveSets();
+                        }
+        </script>
+        <script>
+            var globalFile;
+            function handleFileSelect(evt) {
+                var files = evt.target.files; // FileList object
+                // files is a FileList of File objects. List some properties.           
+                for (var i = 0, f; f = files[i]; i++) {
+                    loadSets(f);
+                }
+            }
+
+            document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+            function loadSets(f) {
+                var reader = new FileReader();
+                // Closure to capture the file information
+
+                reader.onload = function (e) {
+                    var str = e.target.result.replace(/\n/g, "");
+                    var setsList = str.split(";");
+                    setsList = setsList.filter(function (x) {
+                        if (x != "")
+                            return true;
+                    });
+
+                    updateNWay(setsList.length);
+                    for (var i = 0; i < setsList.length; i++) {
+                        var setName = allPossibleSetsNames[i];
+                        var setlist = setsList[i].split(":");
+                        setsLabel[setName] = setlist[0];
+                        setlist[1] = setlist[1].split(",");
+                        var list = setlist[1].filter(function (x) {
+                            if (x != "")
+                                return true;
+                        });
+
+                        //remove duplicated
+//                                            var temp = [];
+//                                            $.each(list, function(i, el) {
+//                                                if ($.inArray(el, temp) === -1)
+//                                                    temp.push(el);
+//                                            });
+//                                            sets[setName] = temp;
+//                                            original_sets = temp;
+                        //assuming there is no duplicated element as the program check it after again
+                        sets[setName] = list;
+                        original_sets = list;
+                        updateInputTextSet(setName);
+                    }
+                    updateActiveSets();
+                };
+                reader.readAsText(f);
+            }
+
+        </script>
+
+
+
+        <style>
+            .node circle {     
+                fill: #fff;    
+                stroke: #B8B8B8;    
+                stroke-width: 1.5px; 
+            } 
+            .node {    
+                font: 20px sans-serif; 
+            } 
+            .link {    
+                fill: none;    
+                stroke: #ccc;    
+                stroke-width: 1.5px; 
+            }
+        </style> 
+
+
+
+
+
+        <footer id="contentinfo" class="body">
+            <address id="about" class="vcard body">
+                <a href="http://vicg.icmc.usp.br/infovis2/InfoVis2">
+                    <img src="images/vicg.png" alt="VICG - Visualization, Imaging and Computer Graphics"  width="234" height="30" align="right" class="photo" /> 
+                </a>
+            </address>
+
+        </footer>
+
+    </body>
+</html>
