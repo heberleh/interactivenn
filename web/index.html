@@ -87,7 +87,7 @@ http://www.interactivenn.net/
                     class="attachment-full size-full" alt="You can contribute to this project and help the World!" style="position: absolute;top: 0px; right: 0px;" data-recalc-dims="1">
             </a> -->
     
-            <h1><a href="#"> InteractiVenn<strong>(Unions by list)</strong></a></h1>
+            <h1><a href="#"> InteractiVenn</a></h1>
             <nav><ul>
                     <li><a href="index2.html">Unions by tree</a></li>
                     <li class="active"><a href="index.html">Unions by list</a></li>
@@ -103,28 +103,18 @@ http://www.interactivenn.net/
 
 
 
-                <table border="0" cellpadding="0" cellspacing="5">
-                    <tbody>
-                        <tr>
-                            <td style="text-align: left;padding:0px; margin:0px;">
-
-                            <!-- <a style="font-family: sans-serif; font-size: 14px" href="index.html">Go to tree version</a><br> -->
-                            List code: <input id="mergeCode" size="45" maxlength="200" value ="" style="font-weight: bold">
-                            <button type="button" id="updateMerge" onclick="startstop()">Start</button>
-                            <button id="downMerge" onclick="mergeSetsDown();"> < </button>
-                            <button id="upMerge" onclick="mergeSetsUp();"> > </button>  
-                            <!-- <div style="text-align: right;min-width:100px; margin:0px;display: inline;"></div>                                       
-                            </td> -->
-                            <td style="font-size:10px;text-align: left;padding:0px; margin:0px;width: 300px;">                                
-                                <input type="checkbox" onchange="togglePercentage()">
-                                    <span style="font-size:12px !important;">   Show <span style="color: tomato;">
-                                    <b>Percentages</b></span> instead</span>
-                                    <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
-                                </input> 
-                                <br>
-                                 Mouse-over numbers highlight their sets</input>
-                                <span behavior="alternate" style="color: red;font-weight: bold;"> (new feature!)</span>
-                            </td>
+                <div id="contentContainer">
+                    <div id="leftColumn">    
+                        <div id="mergeMenu">
+                            <div>
+                                <span class="title">List merging code: </span>
+                                <input id="mergeCode" size="48" maxlength="200" value ="">    
+                            </div>
+                            <div>
+                                <button type="button" class="success" id="updateMerge" onclick="startstop()">Start</button>
+                                <button id="downMerge" class="success" onclick="mergeSetsDown();"> < </button>
+                                <button id="upMerge" class="success" onclick="mergeSetsUp();"> > </button>      
+                            </div>                                 
                     <script>                                              
                         function startstop() {
                             if (started == false) {
@@ -161,58 +151,51 @@ http://www.interactivenn.net/
                     </script>                
               
                 
-                    <tr>
-                        <td valign="top"  style="padding:0px; height: 641px; width: 70%">
-                            <table cellpadding="0" cellspacing="3" border="0" bgcolor="#EEEEEE" style="width:98%;height:100%;">
-                                <tbody>
-
-                                    <tr>
-                                        <td colspan="4" height="100%" valign="middle" bgcolor="#FFFFFF">      
-                                            <!-- <div align="Right"><a style="font-family: Sans-serif; font-size: 9px;" href="javascript:updateActiveSets();">Update Diagram</a></div>-->
-                                            <div id="diagramframe" style="position: relative; left: 0pt; top: 0pt; width: 600px; height: 578px; " >
-                                            </div>
+                        </div>
+                        <div id="imageContainer">
+                            <div id="diagramframe" ></div>
 
 
-                                <center>
                                     <!--<a style="font-family: Sans-serif; font-size: 9px;" href="javascript:getPicture();">download (works only on Firefox)</a>-->
                                     <form id="svg-options">
-                                        <p style="font-family: Sans-serif; font-size: 11px;">Export current diagram:</p>
-                                        <label style="font-family: Sans-serif; font-size: 12px;">
-                                            <input style="font-family: Sans-serif; font-size: 12px;" type="text" class="filename" id="svg-name" size="23" placeholder="Write file name here"/>
-                                            <select id="figureformat" name="format" form="format" style="font-size: 12px;">
+                                        <span>Export current diagram:</span>
+                                        <label>
+                                            <input type="text" class="filename" id="svg-name" size="23" placeholder="Write file name here"/>
+                                            <select id="figureformat" name="format" form="format">
                                                 <option value=".svg">.svg</option>
                                                 <option value=".png">.png</option>
                                                 <option value=".txt">.txt</option>
                                             </select>
-                                        </label>                                            
-                                        <button style="font-family: Sans-serif; font-size: 12px;"  value="Save" type="button" onclick="getPicture()">Export</button></br>
-                                        <p style="font-family: Sans-serif; font-size: 11px;">
+                                        </label>
+                                        <button class="success" value="Save" type="button" onclick="getPicture()">Export</button></br>
+                                        <p>
                                         Try opening the <b>.svg</b> diagram using <a href="https://inkscape.org/release/" target="_blank">Inkscape</a> to move shapes, resize, change font, colors and more.</p>
                                     </form>
-                                </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" valign="middle" bgcolor="#FFFFFF" style="font-size: 12px;">
-                            Font-size:
-                            <button id="fontsizedown" style="font-size: 12px; height:24px; width:24px"  onclick="fontsizedown();"> - </button> 
-                            <button id="fontsizeup" style=" font-size: 12px;  height:24px; width:24px" onclick="fontsizeup();"> + </button>
-                            <!--                            |
-                                                        <button type="button" id="resetFontSize" onclick="resetFontSize()">Reset font-size</button>  -->
-                            |      
-                            Color-opacity:
-                            <button id="fontsizedown" style="font-size: 12px; height:24px; width:24px"  onclick="opacityDown();"> - </button> 
-                            <button id="fontsizeup" style="font-size: 12px; height:24px; width:24px" onclick="opacityUp();"> + </button>
-                            |
-                            <button type="button" style="font-size: 12px;" id="resetDiagram" onclick="resetDiagram()">Reset diagram</button> 
-
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                </td>
-                <td style="font-family: Serif; font-size: 12px; width:030%; padding:0px;" valign="top" >
-                    <div> Number of Sets: 
+                            <div id="displayOptions">
+                                <button id="fontsizedown"  onclick="fontsizedown();">-</button> 
+                                Font-size
+                                <button id="fontsizeup" onclick="fontsizeup();">+</button>
+                                <span class="separator">|</span>
+                                <button id="fontsizedown" onclick="opacityDown();">-</button> 
+                                Color-opacity
+                                <button id="fontsizeup" onclick="opacityUp();">+</button>
+                                <span class="separator">|</span>
+                                <button type="button" class="danger" id="resetDiagram" onclick="resetDiagram()">Reset diagram</button> 
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rightColumn">
+                        <div id="newFeatures">                                
+                            <input type="checkbox" onchange="togglePercentage()">
+                                <span class="text-sm">Show <b>percentages</b> instead of size</span>
+                                <span behavior="alternate" class="text-red"> (new feature!)</span>
+                            </input> 
+                            <br>
+                            <span style="margin-left:21px; margin-top: 4px;">Mouse-over numbers highlights their sets</span>
+                            <span behavior="alternate" class="text-red"> (new feature!)</span>
+                        </div>
+                        <div id="nWayMenu"> 
+                            <div class="rightColMargin"><strong>Number of Sets: </strong></div>
                         <form>
                             <!--<input type="radio" name="nway" value="1">1-->
                             <input id="nway2" type="radio" name="nwayRadio" value="2" onclick="firstLoad = true;updateNWay(2);">2
@@ -225,79 +208,79 @@ http://www.interactivenn.net/
                     </div>
 
                     <!--<a href="javascript:setExample();">Example</a>.<br><br>-->
-                    <br>A: <input id="nameA" size="15" maxlength="15" value ="Set A" style="font-weight: bold"  oninput="updateSetLabel('A');">
-                    <div style="display: inline" ><input id=colorA class="color" style="width:18px" onchange="changeColor('A')"></div>
-                    <div style="display: inline;" id="elementsA" class="elementsN"></div>                                        
-                    <br>
-                    <textarea id="inputA" class="input" style="width: 90%;" rows="3" onchange="modified = true;
-                            updateSets('A');" ></textarea>
+                        <div id="dataMenu">
+                            <span id="divlabelA" class="divLabel">A:</span>
+                            <input id="nameA" size="15" maxlength="15" value ="Set A" oninput="updateSetLabel('A');">
+                            <input class="color" id="colorA" onchange="changeColor('A')">
+                            <div id="elementsA" class="elementsN"></div>                                        
+                            <textarea id="inputA" class="input" rows="3" onchange="modified = true;
+                                    updateSets('A');" ></textarea>
 
 
-                    <br>B: <input id="nameB" size="15" maxlength="15" value ="Set B" style="font-weight: bold"   oninput="updateSetLabel('B');">
-                    <div style="display: inline" ><input id=colorB class="color" style="width:18px" onchange="changeColor('B')"></div>
-                    <div style="display: inline;" id="elementsB" class="elementsN"></div>                                        
-                    <br>
-                    <textarea id="inputB" class="input" style="width: 90%;" rows="3" onfocus="" onchange="modified = true;
+                            <span id="divlabelB" class="divLabel">B:</span>
+                            <input id="nameB" size="15" maxlength="15" value ="Set B" oninput="updateSetLabel('B');">
+                            <input id="colorB" class="color" onchange="changeColor('B')">
+                            <div id="elementsB" class="elementsN"></div>                                        
+                            <textarea id="inputB" class="input" rows="3" onfocus="" onchange="modified = true;
                             updateSets('B');" onblur=""></textarea>
-
-                   <br> C: <input id="nameC" size="15" maxlength="15" value ="Set C" style="font-weight: bold"  oninput="updateSetLabel('C');">
-                    <div style="display: inline" ><input id=colorC class="color" style="width:18px" onchange="changeColor('C')"></div>
-                    <div style="display: inline;" id="elementsC" class="elementsN"></div>                                        
-                    <br>
-                    <textarea id="inputC" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+    
+                            <span id="divlabelC" class="divLabel">C:</span>
+                            <input id="nameC" size="15" maxlength="15" value ="Set C" oninput="updateSetLabel('C');">
+                            <input id="colorC" class="color" onchange="changeColor('C')">
+                            <div id="elementsC" class="elementsN"></div>                                        
+                            <textarea id="inputC" class="input" rows="3" onchange="modified = true;
                             updateSets('C');" ></textarea>
-
-                    <br>D: <input id="nameD" size="15" maxlength="15" value ="Set D" style="font-weight: bold"  oninput="updateSetLabel('D');">
-                    <div style="display: inline" ><input id=colorD class="color" style="width:18px" onchange="changeColor('D')"></div>
-                    <div style="display: inline;" id="elementsD" class="elementsN"></div>                                        
-                    <br>
-                    <textarea id="inputD" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            
+                            <span id="divlabelD" class="divLabel">D:</span>
+                            <input id="nameD" size="15" maxlength="15" value ="Set D" oninput="updateSetLabel('D');">
+                            <input id="colorD" class="color" onchange="changeColor('D')">
+                            <div id="elementsD" class="elementsN"></div>                                        
+                            <textarea id="inputD" class="input" rows="3" onchange="modified = true;
                             updateSets('D');" onfocus="" onblur=""></textarea>                                        
 
 
-                    <br>E: <input id="nameE" size="15" maxlength="15" value ="Set E" style="font-weight: bold" oninput="updateSetLabel('E');">
-                    <div style="display: inline" ><input id=colorE class="color" style="width:18px" onchange="changeColor('E')"></div>
-                    <div style="display: inline;" id="elementsE" class="elementsN"></div>                                        
-                    <br>
-                    <textarea id="inputE" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+                            <span id="divlabelE" class="divLabel">E:</span>
+                            <input id="nameE" size="15" maxlength="15" value ="Set E" oninput="updateSetLabel('E');">
+                            <input id="colorE" class="color" onchange="changeColor('E')">
+                            <div id="elementsE" class="elementsN"></div>                                        
+                            <textarea id="inputE" class="input" rows="3" onchange="modified = true;
                             updateSets('E');" onfocus="" onblur=""></textarea>                     
-
-                    <br>F: <input id="nameF" size="15" maxlength="15" value ="Set F" style="font-weight: bold"  oninput="updateSetLabel('F');">
-                    <div style="display: inline" ><input id=colorF class="color" style="width:18px" onchange="changeColor('F')"></div>
-                    <div style="display: inline;" id="elementsF" class="elementsN"></div>                                        
-                    <br>
-                    <textarea id="inputF" class="input" style="width: 90%;" rows="3" onchange="modified = true;
+    
+                            <span id="divlabelF" class="divLabel">F:</span>
+                            <input id="nameF" size="15" maxlength="15" value ="Set F" oninput="updateSetLabel('F');">
+                            <input id="colorF" class="color" onchange="changeColor('F')">
+                            <div id="elementsF" class="elementsN"></div>                                        
+                            <textarea id="inputF" class="input" rows="3" onchange="modified = true;
                             updateSets('F');" onfocus="" onblur=""></textarea> 
-                    <br>
                     <!--nameA:e1,e2...; nameB:e1,e2...; nameC:e1,e2...-->
+                            <button type="button" id="clearSets" class="danger" onclick="clearSets()">Clear sets</button>
 
-                    <button type="button" id="clearSets" onclick="clearSets()">Clear sets</button>
+                            <div id="saveSetsInput">
+                                <label><input type="text" class="filename" id="dataset-name" size="30" style="font-weight: normal; margin-left: 7px" placeholder="Write dataset name here"/>.ivenn</label>                        
+                            </div>
+                            <button id="saveSets" class="success" value="Save" type="button" onclick="saveDataset()">Save Sets</button>
 
-                    <br/>
-                    <p>Save sets:</p>
-                    <!--                    <form id="text-options">-->
-                    <label><input type="text" class="filename" id="dataset-name" size="23" placeholder="Write dataset name here"/>.ivenn</label>                        
-                    <!--                    </form>-->
-                    <button  value="Save"  type="button" onclick="saveDataset()">Save</button>
-                    <br/>
+                            <div id="loadSetsInput">
+                                <input type="file" id="files" name="files" lang="en-US"  text="Load dataset">
+                            </div>
+                            <button id="loadSets" class="success" value="Load" type="button" onclick="handleFileSelect()">Load Sets</button>
 
-                    <input type="hidden" lang="en-US" id="data_set_content"/>
-                    <p>Load Sets:<input type="file" id="files" name="files" lang="en-US" text="Load dataset"></p>
-                    <br/> 
-                    <p><b>Sample data set</b>: <br/>         
-                        <a style="font-family: Sans-serif; font-size: 12px;" href="test_model.ivenn" download>Simple Model</a><br/> 
-                        <!--<a style="font-family: Sans-serif; font-size: 12px;" href="test_eucalipto.ivenn">Eucalyptus Dataset</a>-->
-                    </p>  
-                    <!--<output id="list"></output>-->
-                </td>
-                </tr>
-                </tbody>
-                </table>
+                            <input type="hidden" lang="en-US" id="data_set_content"/>
+                            <br/> 
+                            <p id="sampleData"><b>Sample data set</b>:        
+                                <a href="test_model.ivenn" download>Simple Model</a><br/> 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="citation">
+                    <div class="title">Please cite:</div>
+                    <div>
+                        Heberle, H.; Meirelles, G. V.; da Silva, F. R.; Telles, G. P.; Minghim, R. <em><b>InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams</b></em>. BMC Bioinformatics 16:169 (2015).
+                        <p><b>DOI</b>: <a href="http://doi.org/10.1186/s12859-015-0611-3">10.1186/s12859-015-0611-3</a></p>
+                    </div>
+                </div>	
             </div>
-<div>
-<p>Please cite:<br> Heberle, H.; Meirelles, G. V.; da Silva, F. R.; Telles, G. P.; Minghim, R. <em><b>InteractiVenn: a web-based tool for the analysis of sets through Venn diagrams</b></em>. BMC Bioinformatics 16:169 (2015).</p>
-<p><b>DOI</b>: <a href="http://doi.org/10.1186/s12859-015-0611-3">10.1186/s12859-015-0611-3</a></p>
-</div>	
         </section>
 
         <script type="text/javascript" src="slider.js"></script>
