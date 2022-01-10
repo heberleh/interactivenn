@@ -252,6 +252,7 @@ function updateColorBox() {
         var myPicker = new jscolor.color(document.getElementById(boxname), {});
         var color = d3.rgb(d3.select("#elipse" + setname).style("fill")).toString();
         myPicker.fromString(color);
+        document.getElementById(boxname).style.opacity = globalOpacity;
     }
 }
 
@@ -310,6 +311,7 @@ function opacityUp() {
         var setname = originalAllSetsNames[i];
         d3.select("#elipse" + setname).style("fill-opacity", globalOpacity);
     }
+    updateColorBox();
 }
 
 
@@ -325,6 +327,7 @@ function opacityDown() {
         var setname = originalAllSetsNames[i];
         d3.select("#elipse" + setname).style("fill-opacity", globalOpacity);
     }
+    updateColorBox();
 }
 
 
@@ -341,8 +344,8 @@ function resetColor() {
     document.getElementById('nway4').disabled = false;
     document.getElementById('nway5').disabled = false;
     document.getElementById('nway6').disabled = false;
-    updateNWay(nWay);
     globalOpacity = defaultGlobalOpacity;
+    updateNWay(nWay);
 }
 
 
