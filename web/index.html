@@ -112,8 +112,8 @@ http://www.interactivenn.net/
                             </div>
                             <div>
                                 <button type="button" class="success" id="updateMerge" onclick="startstop()">Start</button>
-                                <button id="downMerge" class="success" onclick="mergeSetsDown();"> < </button>
-                                <button id="upMerge" class="success" onclick="mergeSetsUp();"> > </button>      
+                                <button id="downMerge" class="success" onclick="mergeSetsDown();"> &lt; </button>
+                                <button id="upMerge" class="success" onclick="mergeSetsUp();"> &gt; </button>      
                             </div>                                 
                     <script>                                              
                         function startstop() {
@@ -185,24 +185,24 @@ http://www.interactivenn.net/
                         </div>
                     </div>
                     <div id="rightColumn">
-                        <div id="newFeatures">                                
-                            <input type="checkbox" onchange="togglePercentage()">
-                                <span class="text-sm">Show <b>percentages</b> instead of size</span>
-                                <span behavior="alternate" class="text-red"> (new feature!)</span>
+                        <div id="newFeatures">   
+                            <span class="checkbox">
+                                <input class="checkbox" type="checkbox" onchange="togglePercentage()">
+                                <span class="text-sm">Show <b>percentages</b> instead of size <span class="text-highlight">new feature!</span></span>
                             </input> 
-                            <br>
-                            <span style="margin-left:21px; margin-top: 4px;">Mouse-over numbers highlights their sets</span>
-                            <span behavior="alternate" class="text-red"> (new feature!)</span>
+                            </span>                             
+                            <span style="margin-left:21px; margin-top: 4px;">Mouse-over numbers highlights their sets </span>
+                            <span class="text-highlight">new feature!</span>
                         </div>
                         <div id="nWayMenu"> 
                             <div class="rightColMargin"><strong>Number of Sets: </strong></div>
                         <form>
                             <!--<input type="radio" name="nway" value="1">1-->
-                            <input id="nway2" type="radio" name="nwayRadio" value="2" onclick="firstLoad = true;updateNWay(2);">2
-                            <input id="nway3" type="radio" name="nwayRadio" value="3" onclick="firstLoad = true;updateNWay(3);">3
-                            <input id="nway4" type="radio" name="nwayRadio" value="4" onclick="firstLoad = true;updateNWay(4);">4            
-                            <input id="nway5" type="radio" name="nwayRadio" value="5" onclick="firstLoad = true;updateNWay(5);">5
-                            <input id="nway6" type="radio" name="nwayRadio" value="6" onclick="firstLoad = true;updateNWay(6);">6
+                            <div class="radio"><input id="nway2" type="radio" name="nwayRadio" value="2" onclick="firstLoad = true;updateNWay(2);">2</div>
+                            <div class="radio"><input id="nway3" type="radio" name="nwayRadio" value="3" onclick="firstLoad = true;updateNWay(3);">3</div>
+                            <div class="radio"><input id="nway4" type="radio" name="nwayRadio" value="4" onclick="firstLoad = true;updateNWay(4);">4</div>
+                            <div class="radio"><input id="nway5" type="radio" name="nwayRadio" value="5" onclick="firstLoad = true;updateNWay(5);">5</div>
+                            <div class="radio"><input id="nway6" type="radio" name="nwayRadio" value="6" onclick="firstLoad = true;updateNWay(6);">6</div>
                         </form>
 
                     </div>
@@ -211,7 +211,7 @@ http://www.interactivenn.net/
                         <div id="dataMenu">
                             <span id="divlabelA" class="divLabel">A:</span>
                             <input id="nameA" size="15" maxlength="15" value ="Set A" oninput="updateSetLabel('A');">
-                            <input class="color" id="colorA" onchange="changeColor('A')">
+                            <div class="colorContainer"><input class="color" id="colorA" onchange="changeColor('A')"></div>
                             <div id="elementsA" class="elementsN"></div>                                        
                             <textarea id="inputA" class="input" rows="3" onchange="modified = true;
                                     updateSets('A');" ></textarea>
@@ -219,21 +219,21 @@ http://www.interactivenn.net/
 
                             <span id="divlabelB" class="divLabel">B:</span>
                             <input id="nameB" size="15" maxlength="15" value ="Set B" oninput="updateSetLabel('B');">
-                            <input id="colorB" class="color" onchange="changeColor('B')">
+                            <div class="colorContainer"><input id="colorB" class="color" onchange="changeColor('B')"></div>
                             <div id="elementsB" class="elementsN"></div>                                        
                             <textarea id="inputB" class="input" rows="3" onfocus="" onchange="modified = true;
                             updateSets('B');" onblur=""></textarea>
     
                             <span id="divlabelC" class="divLabel">C:</span>
                             <input id="nameC" size="15" maxlength="15" value ="Set C" oninput="updateSetLabel('C');">
-                            <input id="colorC" class="color" onchange="changeColor('C')">
+                            <div class="colorContainer"><input id="colorC" class="color" onchange="changeColor('C')"></div>
                             <div id="elementsC" class="elementsN"></div>                                        
                             <textarea id="inputC" class="input" rows="3" onchange="modified = true;
                             updateSets('C');" ></textarea>
                             
                             <span id="divlabelD" class="divLabel">D:</span>
                             <input id="nameD" size="15" maxlength="15" value ="Set D" oninput="updateSetLabel('D');">
-                            <input id="colorD" class="color" onchange="changeColor('D')">
+                            <div class="colorContainer"><input id="colorD" class="color" onchange="changeColor('D')"></div>
                             <div id="elementsD" class="elementsN"></div>                                        
                             <textarea id="inputD" class="input" rows="3" onchange="modified = true;
                             updateSets('D');" onfocus="" onblur=""></textarea>                                        
@@ -241,14 +241,14 @@ http://www.interactivenn.net/
 
                             <span id="divlabelE" class="divLabel">E:</span>
                             <input id="nameE" size="15" maxlength="15" value ="Set E" oninput="updateSetLabel('E');">
-                            <input id="colorE" class="color" onchange="changeColor('E')">
+                            <div class="colorContainer"><input id="colorE" class="color" onchange="changeColor('E')"></div>
                             <div id="elementsE" class="elementsN"></div>                                        
                             <textarea id="inputE" class="input" rows="3" onchange="modified = true;
                             updateSets('E');" onfocus="" onblur=""></textarea>                     
     
                             <span id="divlabelF" class="divLabel">F:</span>
                             <input id="nameF" size="15" maxlength="15" value ="Set F" oninput="updateSetLabel('F');">
-                            <input id="colorF" class="color" onchange="changeColor('F')">
+                            <div class="colorContainer"><input id="colorF" class="color" onchange="changeColor('F')"></div>
                             <div id="elementsF" class="elementsN"></div>                                        
                             <textarea id="inputF" class="input" rows="3" onchange="modified = true;
                             updateSets('F');" onfocus="" onblur=""></textarea> 
