@@ -25,41 +25,7 @@
 // http://doi.org/10.1186/s12859-015-0611-3
 // https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0611-3
 // http://www.interactivenn.net/
-class SetService{
 
-    getUnionOfAllSets(setsArray) {
-        const totalSet = new Set();
-        setsArray.forEach(vectorSet =>{
-            vectorSet.forEach(element=> totalSet.add(element));
-        })
-        return totalSet;
-    }
-    
-    getUnionOfAllSetsArray(setsArray){
-        return Array.from(this.getUnionOfAllSets(setsArray));
-    }
-
-    getPercentageString(partSize, totalSize){
-        if(totalSize===0||partSize===0){
-            return "0.0";
-        }
-        return (partSize*100/totalSize).toFixed(1);
-    }
-
-}
-
-
-const setService = new SetService();
-
-var importedNode;
-var begintersectionsset = ["a", "b", "c", "d", "e", "f", "ab", "ac", "ad", "ae", "af", "bc", "bd", "be", "bf", "cd", "ce", "cf", "de", "df", "ef", "abc", "abd", "abe", "abf", "acd", "ace", "acf", "ade", "adf", "aef", "bcd", "bce", "bcf", "bde", "bdf", "bef", "cde", "cdf", "cef", "def", "abcd", "abce", "abcf", "abde", "abdf", "abef", "acde", "acdf", "acef", "adef", "bcde", "bcdf", "bcef", "bdef", "cdef", "abcde", "abcdf", "abcef", "abdef", "acdef", "bcdef"];
-var originalAllSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
-var allSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
-var sets = {};
-var original_sets = {};
-var setsLabel = {};
-var diagramReady = false;
-var activesets = {};
 var tree = null;
 var maxLevel = 0;
 var currentLevel = maxLevel;
@@ -73,27 +39,6 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
 
 
 var dendrogramtree = null;
-
-// Probability?
-var probability = false;
-function togglePercentage (){
-    probability = !probability;
-    updateDiagram();
-}
-
-/**
- * @description Checks if a set, the current object, contains an element (argument obj).
- */
-Array.prototype.contains = function (obj) {
-    var i = this.length;
-    while (i--) {
-        if (this[i] == obj) {
-            return true;
-        }
-    }
-    return false;
-};
-
 
 /**
  * @description Navigates in the possible unions identifiers. For instance a list of [ab, abc, ad...] that represents all unions that will be showed to the user when he navigate through diagrams of unions.
@@ -180,9 +125,7 @@ function Tree() {
     };
 }
 
-
 var jsonTree = {};
-
 
 function printTreeJSON(node) {
     var str = '{\"name\": \"' + node.name + '\"';
@@ -205,7 +148,7 @@ function printTreeJSON(node) {
  * @description Decodes the string str and identifies the unions. If the web interface is related to "Slider/List" version, the code is similar to this: "ab; cd,ef; abc,de; abcd,ef; ab,cd,ef". If the web interface is related to "Tree" version, the code is similar to this: "((A,((D,(F,E)),C)),B)".
  * @param {string} str The string given by the user.
  */
-function decode(str) {
+function decodeTree(str) {
     str = str.toUpperCase();
     var strsize = str.length;
     var dict = [',', ')', '('].concat(originalAllSetsNames);
@@ -293,7 +236,7 @@ placeholder=\"Write file name here\"/>\n\
 }
 
 function updateDendrogram() {
-    if (d3.select("#dendrogram").html() != "") {
+    if (d3.select("#dendrogram").length > 0 && d3.select("#dendrogram").html() != "") {
         if (dendrogramtree != null) {
             dendrogram(dendrogramtree);
         }
@@ -463,7 +406,7 @@ function Node(tree, root) {
  * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
  * @param {string} setID The set ID.
  */
-function updateSetLabel(setID) {
+function updateSetLabelTree(setID) {
     var text = document.getElementById("name" + setID).value;
     d3.select("#label" + setID).text(text.replace(/:/g, '-'));
     updateDendrogram();
@@ -472,60 +415,17 @@ function updateSetLabel(setID) {
 /**
  * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
  */
-function updateSetsLabels() {
+function updateSetsLabelsTree() {
     for (var i = 0; i < nWay; i++) {
         updateSetLabel(allPossibleSetsNames[i]);
     }
 }
 
-/**
- * @description Updates the sets names according to the global variable "allSetsNames" and attributes a list of zero elements to it.
- */
-function updateSetsNames() {
-    for (var j = 0; j < allSetsNames.length; j++) {
-        sets[allSetsNames[j]] = [];
-    }
-}
-
-updateSetsNames();
-var intersections = {}; //[a:0,b:0,c:0...]  
-var intersectionsSet = {}; //{ab:[gene1,gene2],bc:[gene3,gene4]}
-var labelsDiagram = new Array();
-var nWay = 6;
-var maxNSets = 6;
-var allPossibleSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
-var merging = false;
-
-/**
- * @description Resets the allSetsNames global variable and define it as originalAllSetsNames.
- */
-function updateAllSetsNamesVector() {
-    switch (nWay) {
-        case 1:
-            originalAllSetsNames = allSetsNames = ['A'];
-            break;
-        case 2:
-            originalAllSetsNames = allSetsNames = ['A', 'B'];
-            break;
-        case 3:
-            originalAllSetsNames = allSetsNames = ['A', 'B', 'C'];
-            break;
-        case 4:
-            originalAllSetsNames = allSetsNames = ['A', 'B', 'C', 'D'];
-            break;
-        case 5:
-            originalAllSetsNames = allSetsNames = ['A', 'B', 'C', 'D', 'E'];
-            break;
-        case 6:
-            originalAllSetsNames = allSetsNames = ['A', 'B', 'C', 'D', 'E', 'F'];
-            break;
-    }
-}
 
 /**
  * @description Updates the sets and sets' labels given the texts inputs in the web interface.
  */
-function updateActiveSets() {
+function updateActiveSetsTree() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         modified = true;
         updateSets(originalAllSetsNames[i]);
@@ -533,208 +433,10 @@ function updateActiveSets() {
     }
 
 }
-
-
-/**
- * @description Clear the forms of sets input area in the web interface.
- */
-function clearForms() {
-    var alltextarea = d3.selectAll("textarea");
-    for (var i in alltextarea) {
-        alltextarea[i].value = "";
-    }
-    var allElementsN = d3.selectAll("elementsN");
-    for (var i in allElementsN) {
-        allElementsN[i].textContent = "size: 0";
-    }
-}
-
-/**
- * @description Updates the number of sets in a diagram as well the number of input forms shown in the web interface. Loads a new diagram according to the number of sets. The loaded diagram is updated by the function loadNewDiagram().
- * @param {integer} newvalue The number of sets.
- */
-function updateNWay(newvalue) {
-    merging = false;
-    d3.select("#updateDiagrambutton").style("display", 'none');
-    var old_nWay = nWay;
-    nWay = newvalue;
-    updateAllSetsNamesVector();
-    updateSetsNames();
-    for (var i = 0; i < nWay; i++) {
-        showInput(originalAllSetsNames[i]);
-    }
-    for (var i = nWay; i < maxNSets; i++) {
-        hideInput(allPossibleSetsNames[i]);
-    }
-    loadNewDiagram("./diagrams/" + nWay + "/" + nWay + "waydiagram.svg");
-    document.getElementById("nway" + nWay).checked = true;
-    if (firstLoad == true) {
-        document.getElementById("mergeCode").value = exampletree[newvalue];
-        firstLoad = false;
-    }
-}
-
-
-/**
- * @description Updates the values (numbers) that are shown in the diagram. Identifies all the possible intersections and set a new numeric text to it.
- */
- function updateDiagram() {
-    var fontsize = globalfontsize;
-    if (nWay == 5) {
-        fontsize = globalfontsize - 5;
-    }
-    if (nWay == 6) {
-        fontsize = globalfontsize - 10;
-    }
-    const setsVector = allSetsNames.map(name=>sets[name]);
-    const totalSetSize = setService.getUnionOfAllSets(setsVector).size;
-    
-    for (var i = 0; i < labelsDiagram.length; i++) {
-        var id = "#" + labelsDiagram[i];
-        var size = getIntersection(labelsDiagram[i]);
-        selected = d3.select(id);
-//        if (selected.node().textContent != str) {
-        //.style("font-size","4").transition().delay(function(){i*5}).duration(50)
-        let translateX = 7;
-        if(nWay===5) translateX += 3;
-        if(probability && !isNaN(new Number(size)) ){           
-            translateX +=3;
-            selected.text(" " + setService.getPercentageString(size, totalSetSize) + " ")
-                    .attr("transform",`translate(${translateX},0)`)
-                    .style("font-size", fontsize.toString() + "px")
-                    .style("text-anchor","middle");
-        }else{
-            selected.text(" " + size + " ")
-                    .attr("transform",`translate(${translateX},0)`)
-                    .style("font-size", fontsize.toString() + "px")
-                    .style("text-anchor","middle");
-         
-        }
-       
-       
-//        }
-    }
-}
-
-/**
- * @description Analyses the sets and rebuild the lists of intersections.
- */
-function updateIntersections() {
-    //Union of all sets
-    const setsVector = allSetsNames.map(name=>sets[name]);
-    var totalSet = setService.getUnionOfAllSetsArray(setsVector);
-    
-    //Hash of sets; easy way to know if an element is in a set or not
-    var hash = {};
-    for (var i = 0; i < allSetsNames.length; i++) {
-        hash[allSetsNames[i]] = {};
-    }
-
-    for (var i = 0; i < allSetsNames.length; i++) {
-        for (var j = 0; j < sets[allSetsNames[i]].length; j++) {
-            hash[allSetsNames[i]][sets[allSetsNames[i]][j]] = true;
-        }
-    }
-
-    intersections = {};
-    intersectionsSet = {};
-    //computes all possible intersections
-    for (var j = 0; j < totalSet.length; j++) {
-        var intersectionID = "";
-        var currentElement = totalSet[j];
-        for (var k = 0; k < allSetsNames.length; k++) {
-            if (hash[allSetsNames[k]][currentElement] == true) {
-                intersectionID = intersectionID + allSetsNames[k];
-            }
-        }
-
-        if (intersectionsSet[intersectionID] == null) {
-            intersectionsSet[intersectionID] = [];
-        }
-        intersectionsSet[intersectionID].push(currentElement);
-        if (intersections[intersectionID] == null) {
-            intersections[intersectionID] = 1;
-        } else {
-            intersections[intersectionID]++;
-        }
-    }
-}
-
-/**
- * @description Updates the lists of elements of a set and its intersections. Updates the global variable "sets" changing these values. Calls UpdateIntersections() and updateDiagram().
- * @param {string} s The set that was changed.
- */
-function updateSets(s) {
-    if (!merging) {
-        var list = document.getElementById("input" + s).value.split("\n");
-        for (var t = 0; t < list.length; t++)
-        {
-            list[t] = list[t].replace(/^\s+/g, "");
-            list[t] = list[t].replace(/\s+$/g, "");
-        }
-        list = list.subtract(["", "\n", " ", "  ", "   "]);
-        list = list.filter(function (x) {
-            if (x !== "")
-                return true;
-        });
-
-        if (modified) {
-            // var temp = [];
-            // $.each(list, function (i, el) {
-            //     if ($.inArray(el, temp) === -1)
-            //         temp.push(el);
-            // });
-            // list = temp;
-            let old_list = list;
-            list = Array.from(new Set(list));
-            if(list.length !== old_list.length) alert(`Problem in Set ${s}: there are duplicated elements in at least one of your lists. We try and remove duplicates before showing the intersections in the diagram, but we don't remove the duplicates from the input-boxes that are on the right-side. We recommend you to input always sets (lists of unique values). The numbers in the website are respective to the number of unique values that we found, and not the number of elements in your lists when they have duplicates. You can continue the analysis if you are aware of the differences between a set and a list with duplicated elements.`);
-            modified = false;
-        }
-        sets[s] = list;
-        original_sets[s] = list;
-        var size = list.length;
-        d3.select("#elements" + s).text("size: " + size);
-        d3.select("#total" + s).text("(" + size + ")");
-
-    }
-    updateIntersections();
-    updateDiagram();
-
-}
-
-/**
- * @description Updates the input forms of a set based on the values stored in the variable "sets".
- * @param {string} s The set id that is being updated.
- */                   
-function updateInputTextSet(s) {
-    sets[s] = sets[s].filter(function (x) {
-        if (x !== "")
-            return true;
-    });
-    var size = sets[s].length;
-    var str_set = "";
-    for (var i = 0; i < size; i++) {
-        str_set = str_set + sets[s][i] + "\n";
-    }
-    document.getElementById("input" + s).value = str_set;
-    document.getElementById("name" + s).value = setsLabel[s];
-}
-
-/**
- * @description Updates the texts that indicates the size of each set.
- */
-function updateLabelsSizes() {
-    for (var i = 0; i < originalAllSetsNames.length; i++) {
-        var s = originalAllSetsNames[i];
-        var size = sets[s].length;
-        d3.select("#total" + s).text("(" + size + ")");
-    }
-}
-
 /**
  * @description Applies the union operation based on the sequency defined by the Slider or Tree structure.
  */
-function mergeSetsDown() {
+function mergeSetsDownTree() {
     //document.getElementById("updateMerge").disabled = true;
     //document.getElementById("updateMerge").text("Stop");
     //started=true;
@@ -743,14 +445,14 @@ function mergeSetsDown() {
     document.getElementById("upMerge").disabled = true;
     if (currentLevel < tree.getMaxLevel()) {
         currentLevel++;
-        mergeSets(currentLevel);
+        mergeSetsTree(currentLevel);
     }
 }
 
 /**
  * @description Applies the union operation based on the sequency defined by the Slider or Tree structure.
  */
-function mergeSetsUp() {
+function mergeSetsUpTree() {
     //document.getElementById("updateMerge").disabled = true;
 
     //document.getElementById("updateMerge").text("Stop");
@@ -759,71 +461,15 @@ function mergeSetsUp() {
     document.getElementById("upMerge").disabled = true;
     if (currentLevel > 0) {
         currentLevel--;
-        mergeSets(currentLevel);
+        mergeSetsTree(currentLevel);
     }
 }
-
-/**
- * @description Gets the intersection elements.
- * @param {string} intersectionID The intersection id, for instance "ab"
- */
-function getIntersection(intersectionID) {
-
-    var intersectionsize = intersections[intersectionID.toUpperCase()];
-    if (intersectionsize == null) {
-        intersectionsize = 0;
-    }
-
-    return intersectionsize;
-}
-
-function setMouseOverIntersectionsLabels(){
-    for (var i = 0; i < labelsDiagram.length; i++) {        
-        const label =  labelsDiagram[i];  
-        selected = d3.select("#"+label);
-        
-        selected.on('mouseover', function (d) {
-            allSetsNames.forEach(setName=>{
-                d3.select("#elipse"+setName.toUpperCase())
-                    .style({"fill-opacity": 0})
-                    .style({"padding": "5px"})
-                d3.select("#label"+setName.toUpperCase())
-                    .style({"fill-opacity": 0.2}); 
-                d3.select("#total"+setName.toUpperCase())
-                    .style({"fill-opacity": 0.2});   
-            });      
-            
-            label.split("").forEach(setName=>{
-                d3.select("#elipse"+setName.toUpperCase()).style({"fill-opacity": globalOpacity + 0.2});
-                d3.select("#label"+setName.toUpperCase())
-                    .style({"fill-opacity": 1}); 
-                d3.select("#total"+setName.toUpperCase())
-                    .style({"fill-opacity": 1});   
-
-            })                  
-        }).attr("title",label);
-        
-        selected.on('mouseout', function (d) { 
-            allSetsNames.forEach(setName=>{
-                d3.select("#elipse"+setName.toUpperCase()).style({"fill-opacity": globalOpacity})
-                d3.select("#label"+setName.toUpperCase())
-                    .style({"fill-opacity": 1}); 
-                d3.select("#total"+setName.toUpperCase())
-                    .style({"fill-opacity": 1});   
-            });         
-        })
-
-        
-
-    }
-}
-
 
 /**
  * @description Loads a diagram and process everything based on it. 
  * @param {string} path The path of a .svg diagram
  */
-function loadNewDiagram(path) {
+function loadNewDiagramTree(path) {
 
     d3.xml(path, "image/svg+xml", function (xml) {
 
@@ -892,7 +538,7 @@ function loadNewDiagram(path) {
             ;
         }
 
-        updateActiveSets();
+        updateActiveSetsTree();
         if (merging) {
             updateDiagram();
         } else {
@@ -946,21 +592,11 @@ function loadNewDiagram(path) {
 }
 
 
-
-/**
- * @description Gets the code written by the user from the web interface.
- */
-function getCode() {
-    var code = document.getElementById("mergeCode").value;
-    return code;
-}
-
-
 /**
  * @description Merges the sets of a given union code. Argument is actually a index of a union code in the union codes list.
  * @param {numeric} index The index of a union in the list of unions. For instance, if the list is [ab, abc, ad] the index 0 gives you the union code "ab".
  */
-function mergeSets(level) {
+function mergeSetsTree(level) {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
         var s = originalAllSetsNames[i];
         var list = document.getElementById("input" + s).value.split("\n");
@@ -976,7 +612,7 @@ function mergeSets(level) {
 
     if (!merging) {
         var code = getCode();
-        decode(code);
+        decodeTree(code);
         maxLevel = tree.getMaxLevel();
         tree.levelsSearch();
         merging = true;
@@ -1017,16 +653,7 @@ function mergeSets(level) {
     //document.getElementById("downMerge").disabled = false;
     //document.getElementById("upMerge").disabled = false;
 
-    loadNewDiagram(path);
+    loadNewDiagramTree(path);
 
-}
-
-updateNWay(nWay);
-
-// Check for the various File API support.
-if (window.File && window.FileReader && window.FileList && window.Blob) {
-    // Great success! All the File APIs are supported.
-} else {
-    alert('The File APIs are not fully supported in this browser.');
 }
 
