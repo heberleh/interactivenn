@@ -42,7 +42,6 @@ http://www.interactivenn.net/
         <script type="application/ecmascript" async="" src="d3/FileSaver.js"></script>
         <script type="application/ecmascript" async="" src="//www.google-analytics.com/ga.js"></script>
         <script type="text/javascript" src="javascript.js"></script>
-        <script type="text/javascript" src="utils.js"></script>
         <script type="text/javascript" src="d3/jquery-1.8.2.js"></script>
         <script type="text/javascript" src="d3/jscolor/jscolor.js"></script>
     </head>
@@ -226,7 +225,7 @@ http://www.interactivenn.net/
                     </div>
 
                     <!--<a href="javascript:setExample();">Example</a>.<br><br>-->
-                    <br>A: <input id="nameA" size="15" maxlength="15" value ="Set A" style="font-weight: bold"  oninput="updateSetLabel('A');">
+                    <br>A: <input id="nameA" size="15" maxlength="15" value ="Set A" style="font-weight: bold"  oninput="updateSetLabelTree('A');">
                     <div style="display: inline" ><input id=colorA class="color" style="width:18px" onchange="changeColor('A')"></div>
                     <div style="display: inline;" id="elementsA" class="elementsN"></div>                                        
                     <br>
@@ -234,20 +233,20 @@ http://www.interactivenn.net/
                             updateSets('A');" ></textarea>
 
 
-                    <br>B: <input id="nameB" size="15" maxlength="15" value ="Set B" style="font-weight: bold"   oninput="updateSetLabel('B');">          
+                    <br>B: <input id="nameB" size="15" maxlength="15" value ="Set B" style="font-weight: bold"   oninput="updateSetLabelTree('B');">          
                     <div style="display: inline" ><input id=colorB class="color" style="width:18px" onchange="changeColor('B')"></div>
                     <div style="display: inline;" id="elementsB" class="elementsN"></div>                                        
                     <br>
                     <textarea id="inputB" class="input" style="width: 90%;" rows="3" onfocus="" onchange="modified = true;
                             updateSets('B');" onblur=""></textarea>
 
-                    <br>C: <input id="nameC" size="15" maxlength="15" value ="Set C" style="font-weight: bold"  oninput="updateSetLabel('C');">
+                    <br>C: <input id="nameC" size="15" maxlength="15" value ="Set C" style="font-weight: bold"  oninput="updateSetLabelTree('C');">
                     <div style="display: inline" ><input id=colorC class="color" style="width:18px" onchange="changeColor('C')"></div>
                     <div style="display: inline;" id="elementsC" class="elementsN"></div>                                                             <br>
                     <textarea id="inputC" class="input" style="width: 90%;" rows="3" onchange="modified = true;
                             updateSets('C');" ></textarea>
 
-                    <br>D: <input id="nameD" size="15" maxlength="15" value ="Set D" style="font-weight: bold"  oninput="updateSetLabel('D');">
+                    <br>D: <input id="nameD" size="15" maxlength="15" value ="Set D" style="font-weight: bold"  oninput="updateSetLabelTree('D');">
                     <div style="display: inline" ><input id=colorD class="color" style="width:18px" onchange="changeColor('D')"></div>
                     <div style="display: inline;" id="elementsD" class="elementsN"></div>                                        
                     <br>
@@ -255,14 +254,14 @@ http://www.interactivenn.net/
                             updateSets('D');" onfocus="" onblur=""></textarea>                                        
 
 
-                    <br>E: <input id="nameE" size="15" maxlength="15" value ="Set E" style="font-weight: bold" oninput="updateSetLabel('E');">
+                    <br>E: <input id="nameE" size="15" maxlength="15" value ="Set E" style="font-weight: bold" oninput="updateSetLabelTree('E');">
                     <div style="display: inline" ><input id=colorE class="color" style="width:18px" onchange="changeColor('E')"></div>
                     <div style="display: inline;" id="elementsE" class="elementsN"></div>                                        
                     <br>
                     <textarea id="inputE" class="input" style="width: 90%;" rows="3" onchange="modified = true;
                             updateSets('E');" onfocus="" onblur=""></textarea>                     
 
-                    <br>F: <input id="nameF" size="15" maxlength="15" value ="Set F" style="font-weight: bold"  oninput="updateSetLabel('F');">
+                    <br>F: <input id="nameF" size="15" maxlength="15" value ="Set F" style="font-weight: bold"  oninput="updateSetLabelTree('F');">
                     <div style="display: inline" ><input id=colorF class="color" style="width:18px" onchange="changeColor('F')"></div>
                     <div style="display: inline;" id="elementsF" class="elementsN"></div>                                        
                     <br>
@@ -298,7 +297,7 @@ http://www.interactivenn.net/
 </div>		             
         </section>
 
-        <script type="text/javascript" src="tree.js"></script>
+        <script type="text/javascript" src="slider.js"></script>
         <script>
                         function clearSets() {
 
