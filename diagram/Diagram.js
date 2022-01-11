@@ -1,46 +1,17 @@
 import setService from "./SetService.js";
+import { d3 } from "./d3/d3.v2.js";
 
-var importedNode;
-var originalAllSetsNames = ["A", "B", "C", "D", "E", "F"];
-var allSetsNames = ["A", "B", "C", "D", "E", "F"]; //currently selected!! depends on nWays
-var sets = {};
-var slide = null;
-var maxIndex = 0;
-var currentIndex = maxIndex;
-var examplelist = [];
-examplelist["2"] = "ab";
-examplelist["3"] = "ab;ca";
-examplelist["4"] = "ca,db; ab";
-examplelist["5"] = "ab; cd; be,ac";
-examplelist["6"] = "ab; cd,ef; abc,de; abcd,ef";
-
-var tree = null;
-var maxLevel = 0;
-var currentLevel = maxLevel;
-var exampletree = [];
-exampletree["2"] = "(A,B)";
-exampletree["3"] = "((A,B),C)";
-exampletree["4"] = "((A,(B,C)),D)";
-exampletree["5"] = "((A,((D,E),C)),B)";
-exampletree["6"] = "((A,((D,(F,E)),C)),B)";
-
-// TODO: refactor to an exportable class
-// TODO: refactor so that only svg elements are manipulated by loadDiagram and javascript .js manipulates the dom elements
-// TODO: remove merging logic and migrate to javascript.js
-// TODO: separate out dendrogram maintenance/creation - this should be a separate function
 /**
  * TODO: refactor Diagram constructor to accept three input objects, sets: Array, unions: Array, and config: Object, and remove dependencies on global variables and merging
  *
  * Sample input formats:
  *
  * sets: [
- *  'A': { id: 'A', data: [], label: 'My Set Label'},
- *  'B': { id: 'B', data: [], label: 'Another Set Label'},
- *  'C': { id: 'C', data: [], label: 'Third Label'},
- *  'D': { id: 'D', data: [], label: 'Fourth Label'},
+ *  { data: [], label: 'My Set Label'},
+ *  { data: [], label: 'Another Set Label'},
+ *  { data: [], label: 'Third Label'},
+ *  { data: [], label: 'Fourth Label'},
  * ]
- *
- * unions: [ ca, db ]
  *
  * config: {
  *   nWay: 6,
@@ -48,524 +19,395 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
  *   fontOpacity: 1,
  *   opacity: 0.2,
  *   showPercentage: false,
- *
+ *   unions: ['ab', 'cd'],
+ *   colors: [],
  * }
  *
  * */
-// TODO: build path parser to parse unions
 // TODO: refactor Diagram to export an SVGElement
-// TODO: consolidate list and tree methods
 
-/**
- * @description Loads a diagram and process everything based on it.
- * @param {string} path The path of a .svg diagram
- */
-export function loadNewDiagramList(path) {
-  d3.xml(path, "image/svg+xml", function (xml) {
-    try {
-      importedNode = document.importNode(xml.documentElement, true);
-    } catch (err) {
-      alert(
-        "\nDiagram not found: " +
-          path +
-          "\n\n Error: " +
-          err.message +
-          ". Please report it to henry at icmc.usp.br\n\n"
-      );
+export default class Diagram {
+
+  constructor(sets, config) {
+    this.config = {
+      nWay: 6,
+      fontSize: 20, 
+      fontOpacity: 1, 
+      opacity: 0.2,
+      showPercentage: false, 
+      unions: [],
+      colors: [],
+      ...config
     }
+    this.sets = sets.map((setObject, index) => {
+      setObject.id = this.setIDs[index];
+      setObject.set = Array.from(new Set(setObject.data));
+      return setObject;
+    }) || [];
+    this.labelsDiagram = [];
+    this.importedNode = {};
+    this.config.unions = config.unions.map(x => x.toUpperCase());
+    
+    this.mergeSets();
 
-    diagramReady = false;
-
-    var node = document.getElementById("diagram");
-
-    if (node != null) {
-      node.parentNode.removeChild(node);
-    }
-
-    d3.select("#diagramframe").node().appendChild(importedNode);
-    diagramReady = true;
-
-    d3.select(importedNode)
-      .attr("viewBox", "0 0 700 700")
-      .attr("align", "center")
-      .attr("width", "600")
-      .attr("height", "578");
-
-    var vtemp = d3.selectAll("text")[0];
-
-    labelsDiagram = [];
-    for (var j = 0; j < vtemp.length; j++) {
-      var str = vtemp[j].textContent;
-      if (
-        vtemp[j].id.substring(0, 5) != "label" &&
-        vtemp[j].id.substring(0, 5) != "total" &&
-        str != "(total)"
-      ) {
-        labelsDiagram.push(str);
-
-        var el = document.getElementById(str);
-        el.onclick = function (e) {
-          var node = e.target;
-          var id = node.id.toUpperCase();
-
-          var textName = "<b>[";
-          textName = textName + document.getElementById("name" + id[0]).value;
-          for (var i = 1; i < id.length; i++) {
-            textName =
-              textName +
-              "] and [" +
-              document.getElementById("name" + id[i]).value;
-          }
-          textName = textName + "]";
-          textName = textName.replace(/:/g, "-");
-          var strIntersection = textName + ":</b></br>";
-
-          for (var t = 0; t < intersectionsSet[id].length; t++) {
-            strIntersection =
-              strIntersection + intersectionsSet[id][t] + "</br>";
-          }
-
-          var htmlp = "<p>" + strIntersection + "</p>";
-
-          var newWindow = window.open(
-            "",
-            id,
-            "scrollbars=yes,toolbar=no,menubar=no,status=no,directories=no,location=no,width=400,height=400"
-          );
-          newWindow.document.write(htmlp);
-        };
-      }
-    }
-
-    updateActiveSetsList();
-
-    if (merging) {
-      updateDiagram();
-    } else {
-      d3.selectAll(".elipse").attr("visibility", "hidden");
-      d3.selectAll("text").attr("visibility", "hidden");
-    }
-    var delay = 0;
-    var duration = 0;
-
-    d3.selectAll(".elipse")
-      .transition()
-      .delay(delay)
-      .duration(duration)
-      .attr("visibility", "visible");
-    d3.selectAll("text")
-      .transition()
-      .delay(delay)
-      .attr("visibility", "visible")
-      .style("font-family", "Arial");
-
-    d3.select("#updateDiagrambutton")
-      .transition()
-      .delay(delay)
-      .style("display", "inline");
-
-    //document.getElementById("updateMerge").disabled = false;
-
-    if (merging) {
-      //alert("merging");
-      if (currentIndex >= slide.getSize() - 1) {
-        document.getElementById("upMerge").disabled = true;
-      } else {
-        document.getElementById("upMerge").disabled = false;
-      }
-      if (currentIndex <= 0) {
-        document.getElementById("downMerge").disabled = true;
-      } else {
-        document.getElementById("downMerge").disabled = false;
-      }
-    } else {
-      document.getElementById("upMerge").disabled = true;
-      document.getElementById("downMerge").disabled = true;
-    }
-    updateLabelsSizes();
-    updateSetsLabelsList();
-    $(document).ready(updateDiagram());
-    if (!merging) {
-      $(document).ready(updateColorBox());
-    }
-
-    $(document).ready(updateColors());
-    $(document).ready(updateOpacity());
-
-    // d3.selectAll("path").on('mouseover', function (d) {
-    //     console.log("mouseover", d);
-    //     d3.select(this).style({"fill-opacity": globalOpacity + 0.2});
-    // })
-    // d3.selectAll("path").on('mouseout', function (d) {
-    //     d3.select(this).style({"fill-opacity": globalOpacity});
-    // })
-    setMouseOverIntersectionsLabels();
-  });
-}
-
-/**
- * @description Updates the sets and sets' labels given the texts inputs in the web interface.
- */
-function updateActiveSetsList() {
-  for (var i = 0; i < originalAllSetsNames.length; i++) {
-    modified = true;
-    updateSets(originalAllSetsNames[i]);
-    updateSetLabelList(originalAllSetsNames[i]);
+    console.log('Diagram loaded from data:');
+    this.sets.forEach(x => console.log(x.set));
+    return this.loadNewDiagram(this.path);
   }
-}
 
-/**
- * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
- * @param {string} setID The set ID.
- */
-function updateSetLabelList(setID) {
-  var text = document.getElementById("name" + setID).value;
-  d3.select("#label" + setID).text(text.replace(/:/g, "-"));
-  //console.log(updateDendrogram, typeof updateDendrogram);
-  //if (typeof updateDendrogram !== undefined) { updateDendrogram();}
-}
-
-/**
- * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
- */
-function updateSetsLabelsList() {
-  for (var i = 0; i < nWay; i++) {
-    updateSetLabelList(allPossibleSetsNames[i]);
+  get setIDs() {
+    return ['A','B','C','D','E','F'];
   }
-}
 
-/**
- * @description Loads a diagram and process everything based on it.
- * @param {string} path The path of a .svg diagram
- */
-export function loadNewDiagramTree(path) {
-  d3.xml(path, "image/svg+xml", function (xml) {
-    try {
-      importedNode = document.importNode(xml.documentElement, true);
-    } catch (err) {
-      alert(
-        "\nDiagram not found: " +
-          path +
-          "\n\n Error: " +
-          err.message +
-          ". Please report it to henry at icmc.usp.br\n\n"
-      );
+  get path() {
+    const { unions, nWay } = this.config;
+    if (unions.length === 0) {
+      return `../diagram/${nWay}/${nWay}waydiagram.svg`;
+    } 
+    return `../diagrams/${nWay}/${nWay}waydiagram_${unions.sort().join('_')}.svg`;
+  }
+
+  mergeSets() {
+    const { sets, config: { unions }} = this;
+    this.validateUnions();
+    if (unions.length > 0) {
+        unions.forEach(union => {
+          const lastSetID = union.split('').sort().reverse()[0];
+          const newSet = setService.getUnionOfAllSetsArray(sets.map(data => union.includes(data.id) ? data.set : []));
+          const setToUpdate = sets.filter(set => set.id === lastSetID)[0];
+          setToUpdate.set = newSet;
+        })
+    } 
+  }
+
+  validateUnions() {
+    const { unions } = this.config;
+    const validElements = unions.every(x => new Set(x.split('')).size === x.length);
+    const allLetters = unions.join('').split('');
+    const noRepeats = new Set(allLetters).size === allLetters.length;
+    const validLetters = allLetters.every(x => this.setIDs.includes(x.toUpperCase()));
+
+    // TODO: Determine alert/error behavior if an invalid unions array is provided e.g. [ab, cd, qrs]
+    if (!validElements || !noRepeats || !validLetters) {
+      this.config.unions = [];
     }
+    return unions.length > 0 && validElements && noRepeats && validLetters;
+  }
 
-    diagramReady = false;
+  /**
+   * @description Loads a diagram and process everything based on it.
+   * @param {string} path The path of a .svg diagram
+   */
+  loadNewDiagram(path) {
 
-    var node = document.getElementById("diagram");
+    const handleAddLabel = (str) => this.labelsDiagram.push(str);
+    const diagram = this;
+    const { setIDs } = diagram;
+    let { importedNode } = this;
 
-    if (node != null) {
-      node.parentNode.removeChild(node);
-    }
-
-    d3.select("#diagramframe").node().appendChild(importedNode);
-    diagramReady = true;
-
-    d3.select(importedNode)
-      .attr("viewBox", "0 0 700 700")
-      .attr("align", "center")
-      .attr("width", "600")
-      .attr("height", "578");
-
-    var vtemp = d3.selectAll("text")[0];
-
-    labelsDiagram = [];
-    for (var j = 0; j < vtemp.length; j++) {
-      var str = vtemp[j].textContent;
-      console.log(vtemp[j].class);
-      if (
-        vtemp[j].id != null &&
-        vtemp[j].id != "" &&
-        vtemp[j].id.substring(0, 5) != "label" &&
-        vtemp[j].id.substring(0, 5) != "total" &&
-        str != "(total)"
-      ) {
-        labelsDiagram.push(str);
-
-        var el = document.getElementById(str);
-        el.onclick = function (e) {
-          var node = e.target;
-          var id = node.id.toUpperCase();
-
-          var textName = "<b>[";
-          textName = textName + document.getElementById("name" + id[0]).value;
-          for (var i = 1; i < id.length; i++) {
-            textName =
-              textName +
-              "] and [" +
-              document.getElementById("name" + id[i]).value;
-          }
-          textName = textName + "]";
-          textName = textName.replace(/:/g, "-");
-          var strIntersection = textName + ":</b></br>";
-
-          for (var t = 0; t < intersectionsSet[id].length; t++) {
-            strIntersection =
-              strIntersection + intersectionsSet[id][t] + "</br>";
-          }
-
-          var htmlp = "<p>" + strIntersection + "</p>";
-
-          var newWindow = window.open(
-            "",
-            id,
-            "scrollbars=yes,toolbar=no,menubar=no,status=no,directories=no,location=no,width=400,height=400"
-          );
-          newWindow.document.write(htmlp);
-        };
+    d3.xml(path, "image/svg+xml", function (xml) {
+      try {
+        importedNode = document.importNode(xml.documentElement, true);
+      } catch (err) {
+        alert(
+          "\nDiagram not found: " +
+            path +
+            "\n\n Error: " +
+            err.message +
+            ". Please report it to henry at icmc.usp.br\n\n"
+        );
       }
-    }
 
-    updateActiveSetsTree();
-    if (merging) {
-      updateDiagram();
-    } else {
-      d3.selectAll(".elipse").attr("visibility", "hidden");
-      d3.selectAll("text").attr("visibility", "hidden");
-    }
-    var delay = 0;
-    var duration = 0;
+      var node = document.getElementById("diagram");
 
-    d3.selectAll(".elipse")
-      .transition()
-      .delay(delay)
-      .duration(duration)
-      .attr("visibility", "visible");
-    d3.selectAll("text")
-      .transition()
-      .delay(delay)
-      .attr("visibility", "visible")
-      .style("font-family", "Arial");
-
-    d3.select("#updateDiagrambutton")
-      .transition()
-      .delay(delay)
-      .style("display", "inline");
-
-    //document.getElementById("updateMerge").disabled = false;
-
-    if (merging) {
-      if (currentLevel >= tree.getMaxLevel()) {
-        document.getElementById("downMerge").disabled = true;
-      } else {
-        document.getElementById("downMerge").disabled = false;
+      if (node != null) {
+        node.parentNode.removeChild(node);
       }
-      if (currentLevel <= 0) {
-        document.getElementById("upMerge").disabled = true;
-      } else {
-        document.getElementById("upMerge").disabled = false;
+
+      d3.select("#diagramframe").node().appendChild(importedNode);
+
+      d3.select(importedNode)
+        .attr("viewBox", "0 0 700 700")
+        .attr("align", "center")
+        .attr("width", "600")
+        .attr("height", "578");
+
+      var vtemp = d3.selectAll("text")[0];
+
+      for (var j = 0; j < vtemp.length; j++) {
+        var str = vtemp[j].textContent;
+        if (
+          vtemp[j].id.substring(0, 5) != "label" &&
+          vtemp[j].id.substring(0, 5) != "total" &&
+          str != "(total)"
+        ) {
+          handleAddLabel(str);
+
+          var el = document.getElementById(str);
+          el.onclick = function (e) {
+            var node = e.target;
+            var id = node.id.toUpperCase();
+
+            var textName = "<b>[";
+            textName = textName + id[0];
+            for (var i = 1; i < id.length; i++) {
+              textName =
+                textName +
+                "] and [" +
+                setIDs[i];
+            }
+            textName = textName + "]";
+            textName = textName.replace(/:/g, "-");
+            var strIntersection = textName + ":</b></br>";
+
+            const length = diagram.intersectionsSet[id]?.length || 0;
+            for (var t = 0; t < length; t++) {
+              strIntersection =
+                strIntersection + diagram.intersectionsSet[id][t] + "</br>";
+            }
+
+            var htmlp = "<p>" + strIntersection + "</p>";
+
+            var newWindow = window.open(
+              "",
+              id,
+              "scrollbars=yes,toolbar=no,menubar=no,status=no,directories=no,location=no,width=400,height=400"
+            );
+            newWindow.document.write(htmlp);
+          };
+        }
       }
-    } else {
-      document.getElementById("upMerge").disabled = true;
-      document.getElementById("downMerge").disabled = true;
-    }
-    updateLabelsSizes();
-    updateSetsLabelsTree();
-    $(document).ready(updateDiagram());
-    if (!merging) {
-      $(document).ready(updateColorBox());
-    }
-    $(document).ready(updateColors());
-    $(document).ready(updateOpacity());
+      diagram.updateLabelsSizes();
+      diagram.updateSetsLabels();
+      diagram.updateDiagram();
+      diagram.updateColors();
+      diagram.updateOpacity();
 
-    // d3.selectAll("path").on('mouseover', function (d) {
-    //     d3.select(this).style({"fill-opacity": globalOpacity + 0.2});
-    // })
-    // d3.selectAll("path").on('mouseout', function (d) {
-    //     d3.select(this).style({"fill-opacity": globalOpacity});
-    // })
-    setMouseOverIntersectionsLabels();
-  });
-}
-
-function setMouseOverIntersectionsLabels() {
-  for (var i = 0; i < labelsDiagram.length; i++) {
-    const label = labelsDiagram[i];
-    selected = d3.select("#" + label);
-
-    selected
-      .on("mouseover", function (d) {
-        allSetsNames.forEach((setName) => {
-          d3.select("#elipse" + setName.toUpperCase())
-            .style({ "fill-opacity": 0 })
-            .style({ padding: "5px" });
-          d3.select("#label" + setName.toUpperCase()).style({
-            "fill-opacity": 0.2,
-          });
-          d3.select("#total" + setName.toUpperCase()).style({
-            "fill-opacity": 0.2,
-          });
-        });
-
-        label.split("").forEach((setName) => {
-          d3.select("#elipse" + setName.toUpperCase()).style({
-            "fill-opacity": globalOpacity + 0.2,
-          });
-          d3.select("#label" + setName.toUpperCase()).style({
-            "fill-opacity": 1,
-          });
-          d3.select("#total" + setName.toUpperCase()).style({
-            "fill-opacity": 1,
-          });
-        });
-      })
-      .attr("title", label);
-
-    selected.on("mouseout", function (d) {
-      allSetsNames.forEach((setName) => {
-        d3.select("#elipse" + setName.toUpperCase()).style({
-          "fill-opacity": globalOpacity,
-        });
-        d3.select("#label" + setName.toUpperCase()).style({
-          "fill-opacity": 1,
-        });
-        d3.select("#total" + setName.toUpperCase()).style({
-          "fill-opacity": 1,
-        });
-      });
+      diagram.setMouseOverIntersectionsLabels();
     });
   }
-}
 
-/**
- * @description Applies the global opacity on ellipses and texts.
- */
-function updateOpacity() {
-  for (var i = 0; i < nWay; i++) {
-    var setname = originalAllSetsNames[i];
-    d3.select("#elipse" + setname).style("fill-opacity", globalOpacity);
-    d3.select("#label" + setname).style("fill-opacity", globalFontOpacity);
-    d3.select("#total" + setname).style("fill-opacity", globalFontOpacity);
+  /**
+   * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
+   * @param {string} setID The set ID.
+   */
+  updateSetLabel(index) {
+    var text = this.sets[index]?.label || `Set ${this.setIDs[index]}`;
+    d3.select("#label" + this.setIDs[index]).text(text.replace(/:/g, "-"));
   }
-}
 
-/**
- * @description Updates all colorPickers' colors.
- */
-function updateColorBox() {
-  for (var i = 0; i < nWay; i++) {
-    var setname = originalAllSetsNames[i];
-    var boxname = "color" + setname;
-    var myPicker = new jscolor.color(document.getElementById(boxname), {});
-    var color = d3.rgb(d3.select("#elipse" + setname).style("fill")).toString();
-    myPicker.fromString(color);
-  }
-}
-
-/**
- * @description Applies the function changeColor(setname) to all shapes of the diagram.
- */
-function updateColors() {
-  for (var i = 0; i < nWay; i++) {
-    var setname = originalAllSetsNames[i];
-    var ellipse = d3.select("#elipse" + setname);
-    if (ellipse != null) {
-      changeColor(setname);
+  /**
+   * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
+   */
+  updateSetsLabels() {
+    for (var i = 0; i < this.config.nWay; i++) {
+      this.updateSetLabel(i);
     }
   }
-}
 
-/**
- * @description Changes the color of a shape, that represents "setname", based on the color selected by the user in the website (color picker).
- * @param {string} setname The name (id) of a set.
- */
-function changeColor(setname) {
-  var myPicker = new jscolor.color(
-    document.getElementById("color" + setname),
-    {}
-  );
-  d3.select("#elipse" + setname)
-    .style("fill", d3.rgb("#" + myPicker.toString()))
-    .style("fill-opacity", globalOpacity);
-  var darker = d3.rgb("#" + myPicker.toString()).darker(globalDarker);
-  var black = d3.rgb(0, 0, 0);
-  d3.select("#label" + setname)
-    .style("fill", darker)
-    .style("fill-opacity", globalFontOpacity);
-  d3.select("#total" + setname)
-    .style("fill", darker)
-    .style("fill-opacity", globalFontOpacity);
-}
+  setMouseOverIntersectionsLabels() {
+    const allSetsNames = this.setIDs;
+    const globalOpacity = this.config.opacity;
 
-/**
- * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
- * @param {string} setID The set ID.
- */
-function updateSetLabelTree(setID) {
-  var text = document.getElementById("name" + setID).value;
-  d3.select("#label" + setID).text(text.replace(/:/g, "-"));
-}
+    for (var i = 0; i < this.labelsDiagram.length; i++) {
+      const label = this.labelsDiagram[i];
+      const selected = d3.select("#" + label);
 
-/**
- * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
- */
-function updateSetsLabelsTree() {
-  for (var i = 0; i < nWay; i++) {
-    updateSetLabelTree(allPossibleSetsNames[i]);
-  }
-}
-
-/**
- * @description Updates the values (numbers) that are shown in the diagram. Identifies all the possible intersections and set a new numeric text to it.
- */
-function updateDiagram() {
-  var fontsize = globalfontsize;
-  if (nWay == 5) {
-    fontsize = globalfontsize - 5;
-  }
-  if (nWay == 6) {
-    fontsize = globalfontsize - 10;
-  }
-  const setsVector = allSetsNames.map((name) => sets[name]);
-  const totalSetSize = setService.getUnionOfAllSets(setsVector).size;
-
-  for (var i = 0; i < labelsDiagram.length; i++) {
-    var id = "#" + labelsDiagram[i];
-    var size = getIntersection(labelsDiagram[i]);
-    selected = d3.select(id);
-    //        if (selected.node().textContent != str) {
-    //.style("font-size","4").transition().delay(function(){i*5}).duration(50)
-    let translateX = 7;
-    if (nWay === 5) translateX += 3;
-    if (probability && !isNaN(new Number(size))) {
-      translateX += 3;
       selected
-        .text(" " + setService.getPercentageString(size, totalSetSize) + " ")
-        .attr("transform", `translate(${translateX},0)`)
-        .style("font-size", fontsize.toString() + "px")
-        .style("text-anchor", "middle");
-    } else {
-      selected
-        .text(" " + size + " ")
-        .attr("transform", `translate(${translateX},0)`)
-        .style("font-size", fontsize.toString() + "px")
-        .style("text-anchor", "middle");
+        .on("mouseover", function (d) {
+          allSetsNames.forEach((setName) => {
+            d3.select("#elipse" + setName.toUpperCase())
+              .style({ "fill-opacity": 0 })
+              .style({ padding: "5px" });
+            d3.select("#label" + setName.toUpperCase()).style({
+              "fill-opacity": 0.2,
+            });
+            d3.select("#total" + setName.toUpperCase()).style({
+              "fill-opacity": 0.2,
+            });
+          });
+
+          label.split("").forEach((setName) => {
+            d3.select("#elipse" + setName.toUpperCase()).style({
+              "fill-opacity": globalOpacity + 0.2,
+            });
+            d3.select("#label" + setName.toUpperCase()).style({
+              "fill-opacity": 1,
+            });
+            d3.select("#total" + setName.toUpperCase()).style({
+              "fill-opacity": 1,
+            });
+          });
+        })
+        .attr("title", label);
+
+      selected.on("mouseout", function (d) {
+        allSetsNames.forEach((setName) => {
+          d3.select("#elipse" + setName.toUpperCase()).style({
+            "fill-opacity": globalOpacity,
+          });
+          d3.select("#label" + setName.toUpperCase()).style({
+            "fill-opacity": 1,
+          });
+          d3.select("#total" + setName.toUpperCase()).style({
+            "fill-opacity": 1,
+          });
+        });
+      });
+    }
+  }
+
+  /**
+   * @description Applies the global opacity on ellipses and texts.
+   */
+  updateOpacity() {
+    const { nWay, opacity: globalOpacity, fontOpacity: globalFontOpacity } = this.config;
+    for (var i = 0; i < nWay; i++) {
+      var setname = this.setIDs[i];
+      d3.select("#elipse" + setname).style("fill-opacity", globalOpacity);
+      d3.select("#label" + setname).style("fill-opacity", globalFontOpacity);
+      d3.select("#total" + setname).style("fill-opacity", globalFontOpacity);
+    }
+  }
+
+  /**
+   * @description Applies the function changeColor(setname) to all shapes of the diagram.
+   */
+  updateColors() {
+    for (var i = 0; i < this.config.nWay; i++) {
+      var setname = this.setIDs[i];
+      var ellipse = d3.select("#elipse" + setname);
+      if (ellipse != null) {
+        this.changeColor(setname);
+      }
+    }
+  }
+
+  /**
+   * @description Changes the color of a shape, that represents "setname", based on the color selected by the user in the website (color picker).
+   * @param {string} setname The name (id) of a set.
+   */
+  changeColor(setname) {
+    const { colors, fontOpacity: globalFontOpacity, opacity: globalOpacity} = this.config;
+
+    let color = colors.length > 0 ? d3.rgb('#' + colors[this.setIDs.findIndex(x => x === setname)]) : false;
+
+    if (this.config.unions.length > 0) {
+      const union = this.config.unions.find(x => x.includes(setname));
+      union?.split('').forEach((setID, i) => {
+        if (!colors[i] && d3.select(('#elipse' + setID))[0][0]) {
+          color = d3.select(('#elipse' + setID)).style("fill");
+        }
+      })
     }
 
-    //        }
-  }
-}
+    let darker = d3.rgb(color)?.darker(0.3);
 
-/**
- * @description Updates the texts that indicates the size of each set.
- */
-function updateLabelsSizes() {
-  for (var i = 0; i < originalAllSetsNames.length; i++) {
-    var s = originalAllSetsNames[i];
-    var size = sets[s].length;
-    d3.select("#total" + s).text("(" + size + ")");
-  }
-}
+    if (color) {
+      d3.select("#elipse" + setname)
+      .style("fill", color.toString())
+      .style("fill-opacity", globalOpacity);
 
-/**
- * @description Updates the sets and sets' labels given the texts inputs in the web interface.
- */
-function updateActiveSetsTree() {
-  for (var i = 0; i < originalAllSetsNames.length; i++) {
-    modified = true;
-    updateSets(originalAllSetsNames[i]);
-    updateSetLabelTree(originalAllSetsNames[i]);
+      d3.select("#label" + setname)
+      .style("fill", darker.toString())
+      .style("fill-opacity", globalFontOpacity);
+
+      d3.select("#total" + setname)
+        .style("fill", darker.toString())
+        .style("fill-opacity", globalFontOpacity);
+    }
+
   }
+
+  /**
+   * @description Updates the values (numbers) that are shown in the diagram. Identifies all the possible intersections and set a new numeric text to it.
+   */
+  updateDiagram() {
+    const { fontSize: globalfontsize, nWay, showPercentage: probability } = this.config
+    var fontsize = globalfontsize;
+    if (nWay == 5) {
+      fontsize = globalfontsize - 5;
+    }
+    if (nWay == 6) {
+      fontsize = globalfontsize - 10;
+    }
+    const setsVector = this.sets.map(obj => obj.set);
+    const totalSetSize = setService.getUnionOfAllSets(setsVector).size;
+
+    for (var i = 0; i < this.labelsDiagram.length; i++) {
+      var id = "#" + this.labelsDiagram[i];
+      var size = this.intersectionsSet[this.labelsDiagram[i].toUpperCase()]?.length || 0;
+      const selected = d3.select(id);
+
+      let translateX = 7;
+      if (nWay === 5) translateX += 3;
+      if (probability && !isNaN(new Number(size))) {
+        translateX += 3;
+        selected
+          .text(" " + setService.getPercentageString(size, totalSetSize) + " ")
+          .attr("transform", `translate(${translateX},0)`)
+          .style("font-size", fontsize.toString() + "px")
+          .style("text-anchor", "middle");
+      } else {
+        selected
+          .text(" " + size + " ")
+          .attr("transform", `translate(${translateX},0)`)
+          .style("font-size", fontsize.toString() + "px")
+          .style("text-anchor", "middle");
+      }
+
+      //        }
+    }
+  }
+
+  /**
+   * @description Updates the texts that indicates the size of each set.
+   */
+  updateLabelsSizes() {
+    for (var i = 0; i < this.config.nWay; i++) {
+      var s = this.setIDs[i];
+      var size = this.sets[i]?.set.length || 0;
+      d3.select("#total" + s).text("(" + size + ")");
+    }
+  }
+
+  get intersectionsSet() {
+
+    const intersectionsSet = {};
+    //Union of all sets
+    const sets = [];
+    this.sets.forEach(x => sets.push(...x.set));
+    var totalSet = Array.from(new Set(sets));
+
+    //Hash of sets; easy way to know if an element is in a set or not
+    var hash = {};
+    for (var i = 0; i < this.config.nWay; i++) {
+      const id = this.setIDs[i];
+      hash[id] = {};
+    }
+
+    for (var i = 0; i < this.sets.length; i++) {
+        for (var j = 0; j < this.sets[i].set.length; j++) {
+            hash[this.sets[i].id][this.sets[i].set[j]] = true;
+        }
+    }
+
+    //computes all possible intersections
+    for (var j = 0; j < totalSet.length; j++) {
+        var intersectionID = "";
+        var currentElement = totalSet[j];
+        for (var k = 0; k < this.sets.length; k++) {
+            if (hash[this.sets[k].id][currentElement] == true) {
+                intersectionID = intersectionID + this.sets[k].id;
+            }
+        }
+        if (intersectionsSet[intersectionID] == null) {
+            intersectionsSet[intersectionID] = [];
+        }
+        intersectionsSet[intersectionID].push(currentElement);
+    }
+    return intersectionsSet;
+
+  }
+
 }

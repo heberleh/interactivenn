@@ -33,6 +33,7 @@ import '../d3/FileSaver.js';
 import '../d3/jquery-1.8.2.js';
 import { jscolor } from '../d3/jscolor/jscolor.js';
 import setService from './SetService.js';
+import Diagram from './Diagram.js';
 
 var text_options_form = document.getElementById("text-options");
 var globalfontsize = 20;
@@ -1355,8 +1356,23 @@ function mergeSetsList(index) {
 
 }
 
-
-updateNWay(nWay);
+const data = [
+    {label: 'Set Number 1', data: [1, 2, 1, 1, 3, 3]},
+    {label: 'Set Number 2', data: [2, 3, 4]},
+    {label: 'Set Number 3', data: [4, 5, 6]},
+    {label: 'Set Number 4', data: [6, 7, 8]}
+]
+const config = {
+    nWay: 5,
+    fontSize: 20,
+    fontOpacity: 0.9,
+    opacity: 0.3,
+    showPercentage: true,
+    unions: ['ab', 'cd'],
+    colors: [],
+}
+console.log('loading diagram');
+const diagram = new Diagram(data, config);
 
 // Check for the various File API support.
 if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -1391,7 +1407,7 @@ function handleFileSelect(evt) {
     }
 }
 
-document.getElementById('files').addEventListener('change', handleFileSelect, false);
+//document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
 function loadSets(f) {
     var reader = new FileReader();
