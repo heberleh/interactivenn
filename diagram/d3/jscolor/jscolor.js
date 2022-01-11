@@ -10,7 +10,7 @@
  */
 
 
-var jscolor = {
+export var jscolor = {
 
 
 	dir : '', // location of jscolor directory (leave empty to autodetect)
