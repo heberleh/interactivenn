@@ -1,3 +1,5 @@
+export const d3 = {};
+
 (function() {
   function d3_class(ctor, properties) {
     try {
@@ -2571,9 +2573,7 @@
       d3_style_setProperty.call(this, name, value + "", priority);
     };
   }
-  d3 = {
-    version: "2.10.1"
-  };
+  d3.version = "2.10.1";
   var d3_array = d3_arraySlice;
   try {
     d3_array(document.documentElement.childNodes)[0].nodeType;
