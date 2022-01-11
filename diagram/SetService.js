@@ -1,5 +1,3 @@
-export default new SetService();
-
 class SetService{
 
   getUnionOfAllSets(setsArray) {
@@ -22,3 +20,5 @@ class SetService{
   }
 
 }
+
+export default new SetService();

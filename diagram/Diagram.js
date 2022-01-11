@@ -1,9 +1,6 @@
 import setService from "./SetService.js";
+import { d3 } from "./d3/d3.v2.js";
 
-// TODO: refactor to an exportable class
-// TODO: refactor so that only svg elements are manipulated by loadDiagram and javascript .js manipulates the dom elements
-// TODO: remove merging logic and migrate to javascript.js
-// TODO: separate out dendrogram maintenance/creation - this should be a separate function
 /**
  * TODO: refactor Diagram constructor to accept three input objects, sets: Array, unions: Array, and config: Object, and remove dependencies on global variables and merging
  *
@@ -27,12 +24,11 @@ import setService from "./SetService.js";
  * }
  *
  * */
-// TODO: build path parser to parse unions
 // TODO: refactor Diagram to export an SVGElement
 
 export default class Diagram {
 
-  contructor (sets, config) {
+  constructor(sets, config) {
     this.config = {
       nWay: 6,
       fontSize: 20, 
@@ -43,19 +39,24 @@ export default class Diagram {
       colors: [],
       ...config
     }
-    this.sets = sets.map((obj, i) => {
-      obj.id = this.setIDs[i];
-      obj.set = Array.from(new Set(obj.data))
-    })
+    this.sets = sets.map((setObject, index) => {
+      setObject.id = this.setIDs[index];
+      setObject.set = Array.from(new Set(setObject.data));
+      return setObject;
+    }) || [];
     this.labelsDiagram = [];
+    this.importedNode = {};
+    this.config.unions = config.unions.map(x => x.toUpperCase());
     
     this.mergeSets();
 
-    this.loadNewDiagram(this.path);
+    console.log('Diagram loaded from data:');
+    this.sets.forEach(x => console.log(x.set));
+    return this.loadNewDiagram(this.path);
   }
 
   get setIDs() {
-    return ['A','B','C','D','E','F']
+    return ['A','B','C','D','E','F'];
   }
 
   get path() {
@@ -100,7 +101,9 @@ export default class Diagram {
   loadNewDiagram(path) {
 
     const handleAddLabel = (str) => this.labelsDiagram.push(str);
-    const setIDs = this;
+    const diagram = this;
+    const { setIDs } = diagram;
+    let { importedNode } = this;
 
     d3.xml(path, "image/svg+xml", function (xml) {
       try {
@@ -146,7 +149,7 @@ export default class Diagram {
             var id = node.id.toUpperCase();
 
             var textName = "<b>[";
-            textName = textName + setIDs[id[0]];
+            textName = textName + id[0];
             for (var i = 1; i < id.length; i++) {
               textName =
                 textName +
@@ -157,9 +160,10 @@ export default class Diagram {
             textName = textName.replace(/:/g, "-");
             var strIntersection = textName + ":</b></br>";
 
-            for (var t = 0; t < intersectionsSet[id].length; t++) {
+            const length = diagram.intersectionsSet[id]?.length || 0;
+            for (var t = 0; t < length; t++) {
               strIntersection =
-                strIntersection + intersectionsSet[id][t] + "</br>";
+                strIntersection + diagram.intersectionsSet[id][t] + "</br>";
             }
 
             var htmlp = "<p>" + strIntersection + "</p>";
@@ -173,16 +177,13 @@ export default class Diagram {
           };
         }
       }
+      diagram.updateLabelsSizes();
+      diagram.updateSetsLabels();
+      diagram.updateDiagram();
+      diagram.updateColors();
+      diagram.updateOpacity();
 
-      updateActiveSets();
-
-      updateLabelsSizes();
-      updateSetsLabels();
-      updateDiagram();
-      updateColors();
-      updateOpacity();
-
-      setMouseOverIntersectionsLabels();
+      diagram.setMouseOverIntersectionsLabels();
     });
   }
 
@@ -191,8 +192,8 @@ export default class Diagram {
    * @param {string} setID The set ID.
    */
   updateSetLabel(index) {
-    var text = this.sets[index]?.label || this.setIDs[index];
-    d3.select("#label" + setID).text(text.replace(/:/g, "-"));
+    var text = this.sets[index]?.label || `Set ${this.setIDs[index]}`;
+    d3.select("#label" + this.setIDs[index]).text(text.replace(/:/g, "-"));
   }
 
   /**
@@ -200,7 +201,7 @@ export default class Diagram {
    */
   updateSetsLabels() {
     for (var i = 0; i < this.config.nWay; i++) {
-      updateSetLabel(i);
+      this.updateSetLabel(i);
     }
   }
 
@@ -260,9 +261,9 @@ export default class Diagram {
    * @description Applies the global opacity on ellipses and texts.
    */
   updateOpacity() {
-    const { config: { nWay, opacity: globalOpacity, fontOpacity: globalFontOpacity }}
+    const { nWay, opacity: globalOpacity, fontOpacity: globalFontOpacity } = this.config;
     for (var i = 0; i < nWay; i++) {
-      var setname = originalAllSetsNames[i];
+      var setname = this.setIDs[i];
       d3.select("#elipse" + setname).style("fill-opacity", globalOpacity);
       d3.select("#label" + setname).style("fill-opacity", globalFontOpacity);
       d3.select("#total" + setname).style("fill-opacity", globalFontOpacity);
@@ -277,7 +278,7 @@ export default class Diagram {
       var setname = this.setIDs[i];
       var ellipse = d3.select("#elipse" + setname);
       if (ellipse != null) {
-        changeColor(setname);
+        this.changeColor(setname);
       }
     }
   }
@@ -288,19 +289,34 @@ export default class Diagram {
    */
   changeColor(setname) {
     const { colors, fontOpacity: globalFontOpacity, opacity: globalOpacity} = this.config;
-    const darker = 0.3;
-    const color = colors[this.setIDs.findIndex(x => x === setname)].replace('#','');
-    d3.select("#elipse" + setname)
-      .style("fill", d3.rgb("#" + color))
+
+    let color = colors.length > 0 ? d3.rgb('#' + colors[this.setIDs.findIndex(x => x === setname)]) : false;
+
+    if (this.config.unions.length > 0) {
+      const union = this.config.unions.find(x => x.includes(setname));
+      union?.split('').forEach((setID, i) => {
+        if (!colors[i] && d3.select(('#elipse' + setID))[0][0]) {
+          color = d3.select(('#elipse' + setID)).style("fill");
+        }
+      })
+    }
+
+    let darker = d3.rgb(color)?.darker(0.3);
+
+    if (color) {
+      d3.select("#elipse" + setname)
+      .style("fill", color.toString())
       .style("fill-opacity", globalOpacity);
-    var darker = d3.rgb("#" + color).darker(globalDarker);
-    var black = d3.rgb(0, 0, 0);
-    d3.select("#label" + setname)
-      .style("fill", darker)
+
+      d3.select("#label" + setname)
+      .style("fill", darker.toString())
       .style("fill-opacity", globalFontOpacity);
-    d3.select("#total" + setname)
-      .style("fill", darker)
-      .style("fill-opacity", globalFontOpacity);
+
+      d3.select("#total" + setname)
+        .style("fill", darker.toString())
+        .style("fill-opacity", globalFontOpacity);
+    }
+
   }
 
   /**
@@ -315,13 +331,13 @@ export default class Diagram {
     if (nWay == 6) {
       fontsize = globalfontsize - 10;
     }
-    const setsVector = sets.map(obj => obj.set);
+    const setsVector = this.sets.map(obj => obj.set);
     const totalSetSize = setService.getUnionOfAllSets(setsVector).size;
 
     for (var i = 0; i < this.labelsDiagram.length; i++) {
       var id = "#" + this.labelsDiagram[i];
-      var size = getIntersection(this.labelsDiagram[i]);
-      selected = d3.select(id);
+      var size = this.intersectionsSet[this.labelsDiagram[i].toUpperCase()]?.length || 0;
+      const selected = d3.select(id);
 
       let translateX = 7;
       if (nWay === 5) translateX += 3;
@@ -349,10 +365,49 @@ export default class Diagram {
    */
   updateLabelsSizes() {
     for (var i = 0; i < this.config.nWay; i++) {
-      var s = this.sets[i]?.label || this.setIDs[i];
+      var s = this.setIDs[i];
       var size = this.sets[i]?.set.length || 0;
       d3.select("#total" + s).text("(" + size + ")");
     }
+  }
+
+  get intersectionsSet() {
+
+    const intersectionsSet = {};
+    //Union of all sets
+    const sets = [];
+    this.sets.forEach(x => sets.push(...x.set));
+    var totalSet = Array.from(new Set(sets));
+
+    //Hash of sets; easy way to know if an element is in a set or not
+    var hash = {};
+    for (var i = 0; i < this.config.nWay; i++) {
+      const id = this.setIDs[i];
+      hash[id] = {};
+    }
+
+    for (var i = 0; i < this.sets.length; i++) {
+        for (var j = 0; j < this.sets[i].set.length; j++) {
+            hash[this.sets[i].id][this.sets[i].set[j]] = true;
+        }
+    }
+
+    //computes all possible intersections
+    for (var j = 0; j < totalSet.length; j++) {
+        var intersectionID = "";
+        var currentElement = totalSet[j];
+        for (var k = 0; k < this.sets.length; k++) {
+            if (hash[this.sets[k].id][currentElement] == true) {
+                intersectionID = intersectionID + this.sets[k].id;
+            }
+        }
+        if (intersectionsSet[intersectionID] == null) {
+            intersectionsSet[intersectionID] = [];
+        }
+        intersectionsSet[intersectionID].push(currentElement);
+    }
+    return intersectionsSet;
+
   }
 
 }
