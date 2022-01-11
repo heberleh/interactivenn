@@ -56,11 +56,13 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
 // TODO: refactor Diagram to export an SVGElement
 // TODO: consolidate list and tree methods
 
+export default class Diagram {
+
   /**
    * @description Loads a diagram and process everything based on it.
    * @param {string} path The path of a .svg diagram
    */
-  export function loadNewDiagramList(path) {
+  loadNewDiagramList(path) {
     d3.xml(path, "image/svg+xml", function (xml) {
       try {
         importedNode = document.importNode(xml.documentElement, true);
@@ -206,7 +208,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates the sets and sets' labels given the texts inputs in the web interface.
    */
-  function updateActiveSetsList() {
+  updateActiveSetsList() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
       modified = true;
       updateSets(originalAllSetsNames[i]);
@@ -218,7 +220,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
    * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
    * @param {string} setID The set ID.
    */
-  function updateSetLabelList(setID) {
+  updateSetLabelList(setID) {
     var text = document.getElementById("name" + setID).value;
     d3.select("#label" + setID).text(text.replace(/:/g, "-"));
     //console.log(updateDendrogram, typeof updateDendrogram);
@@ -228,7 +230,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
    */
-  function updateSetsLabelsList() {
+  updateSetsLabelsList() {
     for (var i = 0; i < nWay; i++) {
       updateSetLabelList(allPossibleSetsNames[i]);
     }
@@ -238,7 +240,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
    * @description Loads a diagram and process everything based on it.
    * @param {string} path The path of a .svg diagram
    */
-  export function loadNewDiagramTree(path) {
+  loadNewDiagramTree(path) {
     d3.xml(path, "image/svg+xml", function (xml) {
       try {
         importedNode = document.importNode(xml.documentElement, true);
@@ -380,7 +382,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
     });
   }
 
-  function setMouseOverIntersectionsLabels() {
+  setMouseOverIntersectionsLabels() {
     for (var i = 0; i < labelsDiagram.length; i++) {
       const label = labelsDiagram[i];
       selected = d3.select("#" + label);
@@ -432,7 +434,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Applies the global opacity on ellipses and texts.
    */
-  function updateOpacity() {
+  updateOpacity() {
     for (var i = 0; i < nWay; i++) {
       var setname = originalAllSetsNames[i];
       d3.select("#elipse" + setname).style("fill-opacity", globalOpacity);
@@ -444,7 +446,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates all colorPickers' colors.
    */
-  function updateColorBox() {
+  updateColorBox() {
     for (var i = 0; i < nWay; i++) {
       var setname = originalAllSetsNames[i];
       var boxname = "color" + setname;
@@ -457,7 +459,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Applies the function changeColor(setname) to all shapes of the diagram.
    */
-  function updateColors() {
+  updateColors() {
     for (var i = 0; i < nWay; i++) {
       var setname = originalAllSetsNames[i];
       var ellipse = d3.select("#elipse" + setname);
@@ -471,7 +473,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
    * @description Changes the color of a shape, that represents "setname", based on the color selected by the user in the website (color picker).
    * @param {string} setname The name (id) of a set.
    */
-  function changeColor(setname) {
+  changeColor(setname) {
     var myPicker = new jscolor.color(
       document.getElementById("color" + setname),
       {}
@@ -493,7 +495,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
    * @description Updates the label of a set in the diagram given the label typed by the user on the web interface.
    * @param {string} setID The set ID.
    */
-  function updateSetLabelTree(setID) {
+  updateSetLabelTree(setID) {
     var text = document.getElementById("name" + setID).value;
     d3.select("#label" + setID).text(text.replace(/:/g, "-"));
   }
@@ -501,7 +503,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates the label of all sets in the diagram given the labels typed by the user on the web interface.
    */
-  function updateSetsLabelsTree() {
+  updateSetsLabelsTree() {
     for (var i = 0; i < nWay; i++) {
       updateSetLabelTree(allPossibleSetsNames[i]);
     }
@@ -510,7 +512,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates the values (numbers) that are shown in the diagram. Identifies all the possible intersections and set a new numeric text to it.
    */
-  function updateDiagram() {
+  updateDiagram() {
     var fontsize = globalfontsize;
     if (nWay == 5) {
       fontsize = globalfontsize - 5;
@@ -551,7 +553,7 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates the texts that indicates the size of each set.
    */
-  function updateLabelsSizes() {
+  updateLabelsSizes() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
       var s = originalAllSetsNames[i];
       var size = sets[s].length;
@@ -562,10 +564,11 @@ exampletree["6"] = "((A,((D,(F,E)),C)),B)";
   /**
    * @description Updates the sets and sets' labels given the texts inputs in the web interface.
    */
-  function updateActiveSetsTree() {
+  updateActiveSetsTree() {
     for (var i = 0; i < originalAllSetsNames.length; i++) {
       modified = true;
       updateSets(originalAllSetsNames[i]);
       updateSetLabelTree(originalAllSetsNames[i]);
     }
   }
+}
