@@ -91,10 +91,9 @@ http://www.interactivenn.net/
 
             <div id="diagramDiv">               
 
-
-
                 <div id="contentContainer">
-                    <div id="leftColumn">    
+                    <div id="leftColumn">   
+                        <!--X
                         <div id="mergeMenu">
                             <div>
                                 <span class="title">List merging code: </span>
@@ -106,15 +105,14 @@ http://www.interactivenn.net/
                                 <button id="upMerge" class="success" onclick="mergeSetsUpList();"> > </button>      
                             </div>                                 
                     <script>                                              
-                    </script>                
+                    </script>           
               
                 
-                        </div>
+                        </div>-->
                         <div id="imageContainer">
                             <div id="diagramframe" ></div>
 
-
-                                    <!--<a style="font-family: Sans-serif; font-size: 9px;" href="javascript:getPicture();">download (works only on Firefox)</a>-->
+                                    <!--    
                                     <form id="svg-options">
                                         <span>Export current diagram:</span>
                                         <label>
@@ -128,8 +126,8 @@ http://www.interactivenn.net/
                                         <button class="success" value="Save" type="button" onclick="getPicture()">Export</button></br>
                                         <p>
                                         Try opening the <b>.svg</b> diagram using <a href="https://inkscape.org/release/" target="_blank">Inkscape</a> to move shapes, resize, change font, colors and more.</p>
-                                    </form>
-                            <div id="displayOptions">
+                                    </form>-->
+                            <!--<div id="displayOptions">
                                 <button id="fontsizedown"  onclick="fontsizedown();">-</button> 
                                 Font-size
                                 <button id="fontsizeup" onclick="fontsizeup();">+</button>
@@ -139,10 +137,10 @@ http://www.interactivenn.net/
                                 <button id="fontsizeup" onclick="opacityUp();">+</button>
                                 <span class="separator">|</span>
                                 <button type="button" class="danger" id="resetDiagram" onclick="resetDiagram()">Reset diagram</button> 
-                            </div>
+                            </div>-->
                         </div>
                     </div>
-                    <div id="rightColumn">
+                    <!--<div id="rightColumn">
                         <div id="newFeatures">                                
                             <input type="checkbox" onchange="togglePercentage()">
                                 <span class="text-sm">Show <b>percentages</b> instead of size</span>
@@ -151,11 +149,10 @@ http://www.interactivenn.net/
                             <br>
                             <span style="margin-left:21px; margin-top: 4px;">Mouse-over numbers highlights their sets</span>
                             <span behavior="alternate" class="text-red"> (new feature!)</span>
-                        </div>
-                        <div id="nWayMenu"> 
+                        </div>-->
+                        <!--<div id="nWayMenu"> 
                             <div class="rightColMargin"><strong>Number of Sets: </strong></div>
                         <form>
-                            <!--<input type="radio" name="nway" value="1">1-->
                             <input id="nway2" type="radio" name="nwayRadio" value="2" onclick="firstLoad = true;updateNWay(2);">2
                             <input id="nway3" type="radio" name="nwayRadio" value="3" onclick="firstLoad = true;updateNWay(3);">3
                             <input id="nway4" type="radio" name="nwayRadio" value="4" onclick="firstLoad = true;updateNWay(4);">4            
@@ -163,9 +160,10 @@ http://www.interactivenn.net/
                             <input id="nway6" type="radio" name="nwayRadio" value="6" onclick="firstLoad = true;updateNWay(6);">6
                         </form>
 
-                    </div>
+                    </div>-->
 
                     <!--<a href="javascript:setExample();">Example</a>.<br><br>-->
+                        <!--
                         <div id="dataMenu">
                             <span id="divlabelA" class="divLabel">A:</span>
                             <input id="nameA" size="15" maxlength="15" value ="Set A" oninput="updateSetLabelList('A');">
@@ -210,7 +208,7 @@ http://www.interactivenn.net/
                             <div id="elementsF" class="elementsN"></div>                                        
                             <textarea id="inputF" class="input" rows="3" onchange="modified = true;
                             updateSets('F');" onfocus="" onblur=""></textarea> 
-                    <!--nameA:e1,e2...; nameB:e1,e2...; nameC:e1,e2...-->
+               
                             <button type="button" id="clearSets" class="danger" onclick="clearSets()">Clear sets</button>
 
                             <div id="saveSetsInput">
@@ -229,7 +227,7 @@ http://www.interactivenn.net/
                                 <a href="test_model.ivenn" download>Simple Model</a><br/> 
                             </p>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div id="citation">
                     <div class="title">Please cite:</div>
