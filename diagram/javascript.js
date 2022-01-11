@@ -32,7 +32,7 @@ import '../d3/canvas-toBlob.js';
 import '../d3/FileSaver.js';
 import '../d3/jquery-1.8.2.js';
 import { jscolor } from '../d3/jscolor/jscolor.js';
-import SetService from './SetService.js';
+import setService from './SetService.js';
 
 var text_options_form = document.getElementById("text-options");
 var globalfontsize = 20;
@@ -42,8 +42,6 @@ var defaultGlobalOpacity = 0.2;
 var globalFontOpacity = 1;
 var globalDarker = 0.3;
 var firstLoad = true;
-
-const setService = new SetService();
 
 var importedNode;
 var begintersectionsset = ["a", "b", "c", "d", "e", "f", "ab", "ac", "ad", "ae", "af", "bc", "bd", "be", "bf", "cd", "ce", "cf", "de", "df", "ef", "abc", "abd", "abe", "abf", "acd", "ace", "acf", "ade", "adf", "aef", "bcd", "bce", "bcf", "bde", "bdf", "bef", "cde", "cdf", "cef", "def", "abcd", "abce", "abcf", "abde", "abdf", "abef", "acde", "acdf", "acef", "adef", "bcde", "bcdf", "bcef", "bdef", "cdef", "abcde", "abcdf", "abcef", "abdef", "acdef", "bcdef"];
