@@ -1,4 +1,6 @@
-export default class SetService{
+export default new SetService();
+
+class SetService{
 
   getUnionOfAllSets(setsArray) {
       const totalSet = new Set();
