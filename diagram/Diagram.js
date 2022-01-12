@@ -23,6 +23,8 @@ import { d3 } from "./d3/d3.v2.js";
  *
  * */
 
+// TODO: Bug fix - fix unions bugs and percentage calculations
+// TODO: Carve out intersections popup as separate method with config options, improve UI, and consider migrating away from opening a new window
 // TODO: Remove dependency on appending importedNode to document before manipulating it, eliminate dependence on D3
 // TODO: Separate loadDiagram into create and render methods
 // TODO: refactor Diagram to create an SVGElement at this.element and contain a render method
