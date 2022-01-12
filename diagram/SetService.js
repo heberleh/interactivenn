@@ -1,3 +1,5 @@
+// TODO: Evaluate whether there are methods from Diagram that can be moved here
+// TODO: Migrate to TypeScript
 class SetService{
 
   getUnionOfAllSets(setsArray) {
