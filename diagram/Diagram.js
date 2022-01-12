@@ -2,8 +2,6 @@ import setService from "./SetService.js";
 import { d3 } from "./d3/d3.v2.js";
 
 /**
- * TODO: refactor Diagram constructor to accept three input objects, sets: Array, unions: Array, and config: Object, and remove dependencies on global variables and merging
- *
  * Sample input formats:
  *
  * sets: [
@@ -24,7 +22,13 @@ import { d3 } from "./d3/d3.v2.js";
  * }
  *
  * */
-// TODO: refactor Diagram to export an SVGElement
+
+// TODO: Remove dependency on appending importedNode to document before manipulating it, eliminate dependence on D3
+// TODO: Separate loadDiagram into create and render methods
+// TODO: refactor Diagram to create an SVGElement at this.element and contain a render method
+// TODO: Consolidate and simplify methods
+// TODO: Improve algorithmic efficiency of intersectionsSet getter
+// TODO: Migrate to TypeScript
 
 export default class Diagram {
 
