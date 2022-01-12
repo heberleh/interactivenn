@@ -1,6 +1,16 @@
+/**
+ * TODO: Convert to class
+ * 
+ * Input: treeCode: string
+ * 
+ * Output: 
+ * near-term: creates a new dendrogram and appends it to #dendrogram
+ * long-term: returns an object with an SVG element at this.element and a render function
+ * 
+ */
+// TODO: Migrate to TypeScript
+
 var dendrogramtree = null;
-
-
 
 var jsonTree = {};
 
