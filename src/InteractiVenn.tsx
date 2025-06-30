@@ -2,7 +2,8 @@
 
 import React, { useState, useRef } from 'react';
 import Header from './components/Header';
-import Controls from './components/Controls';
+import InputPanel from './components/InputPanel';
+import VisualizationPanel from './components/VisualizationPanel';
 import Visualization from './components/Visualization';
 import Footer from './components/Footer';
 
@@ -230,35 +231,30 @@ function App() {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
       <Header />
-      <Controls
-        onAddSet={handleAddSet}
-        onRemoveSet={handleRemoveSet}
-        onReset={handleReset}
-        colors={colors}
-        onColorChange={handleColorChange}
-        onFileLoaded={handleFileLoaded}
-        sets={sets}
-        onSetChange={handleSetChange}
-        onExportSVG={handleExportSVG}
-        onExportPNG={handleExportPNG}
-        onExportIVenn={handleExportIVenn}
-        onUndo={handleUndo}
-        onRedo={handleRedo}
-        canUndo={history.length > 0}
-        canRedo={future.length > 0}
-        opacity={opacity}
-        onOpacityChange={handleOpacityChange}
-        fontSize={fontSize}
-        onFontSizeChange={handleFontSizeChange}
-      />
-      <div ref={visualizationRef}>
-        <Visualization 
-          sets={sets} 
-          colors={colors} 
-          onRegionClick={handleRegionClick}
-          opacity={opacity}
-          fontSize={fontSize}
+      <div style={{ display: 'flex', gap: '20px' }}>
+        <InputPanel
+          onSetChange={(index, elements) => handleSetChange(`Set ${String.fromCharCode(65 + index)}`, elements)}
+          onColorChange={(index, color) => handleColorChange(`Set ${String.fromCharCode(65 + index)}`, color)}
+          onLoadFile={handleFileLoaded}
         />
+        <div style={{ flex: 1 }}>
+          <VisualizationPanel
+            onModeChange={(mode) => console.log('Mode changed:', mode)}
+            onOpacityChange={handleOpacityChange}
+            onFontSizeChange={handleFontSizeChange}
+            onExport={(format) => {
+              if (format === 'svg') handleExportSVG();
+              else if (format === 'png') handleExportPNG();
+            }}
+          />
+          <Visualization
+            sets={sets}
+            colors={colors}
+            onRegionClick={handleRegionClick}
+            opacity={opacity}
+            fontSize={fontSize}
+          />
+        </div>
       </div>
       <RegionModal 
         open={!!modalRegion} 

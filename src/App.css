@@ -1,51 +1,180 @@
 /*
-  InteractiVenn: Übernommenes CSS aus legacy/web/css/main.css
-  (Originalstruktur und -klassen bleiben erhalten)
+  InteractiVenn: Adapted CSS from legacy/web/css/main.css for React application
+  Maintains visual parity with the original InteractiVenn website
 */
 
-@import url('../legacy/web/css/main.css');
+/* Global Styles */
+body {
+  background: #F5F4EF;
+  color: #000305;
+  font-size: 87.5%; /* Base font size: 14px */
+  font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  line-height: 1.429;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  box-sizing: border-box;
+}
 
-#root {
-  max-width: 1280px;
+/* Headings */
+h2 {font-size: 1.571em}	/* 22px */
+h3 {font-size: 1.429em}	/* 20px */
+h4 {font-size: 1.286em}	/* 18px */
+h5 {font-size: 1.143em}	/* 16px */
+h6 {font-size: 1em}		/* 14px */
+
+h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: .8em;
+}
+
+/* Anchors */
+a {outline: 0;}
+a img {border: 0px; text-decoration: none;}
+a:link, a:visited {
+  color: #7889c0;
+  padding: 0 1px;
+  text-decoration: underline;
+}
+a:hover, a:active {
+  background-color: #7889c0;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Paragraphs */
+p {margin-bottom: 1.143em;}
+* p:last-child {margin-bottom: 0;}
+
+strong, b {font-weight: bold;}
+em, i {font-style: italic;}
+
+/* Layout */
+.body {clear: both; margin: 0 auto; width: 1000px}
+
+/* Header */
+#banner {
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0.1em 0 0 0;
+}
+
+#banner h1 {font-size: 3.171em; line-height: .2;}
+#banner h1 a:link, #banner h1 a:visited {
+  color: #000305;
+  display: block;
+  font-weight: bold;
+  margin: 0 0 .2em .2em;
+  text-decoration: none;
+  width: 427px;
+}
+#banner h1 a:hover, #banner h1 a:active {
+  background: none;
+  color: #7889c0;
+  text-shadow: none;
+}
+
+#banner h1 strong {font-size: 0.36em; font-weight: normal;}
+
+/* Navigation */
+#banner nav {
+  background: #000305;
+  font-size: 1.143em;
+  height: 30px;
+  line-height: 20px;
+  margin: 0 auto 1em auto;
+  padding: 0;
+  text-align: center;
+  width: 1000px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+#banner nav ul {list-style: none; margin: 0 auto; width: 1000px;}
+#banner nav li {float: left; display: inline;}
+
+#banner nav a:link, #banner nav a:visited {
+  color: #fff;
+  display: inline-block;
+  height: 20px;
+  padding: 5px 1.5em;
+  text-decoration: none;
+  opacity: 0.7;
+  font-weight: bold;
+}
+#banner nav a:hover, #banner nav a:active,
+#banner nav .active a:link, #banner nav .active a:visited {
+  background: transparent;
+  opacity: 1;
+  text-shadow: none !important;
+}
+
+/* Content */
+#content {
+  background: #fff;
+  margin-bottom: 2em;
+  overflow: hidden;
+  padding: 20px 20px;
+  width: 960px;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+
+/* Forms */
+input {
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+input[type="file"] {
+  border: none;
+}
+
+/* App Layout */
+#root {
+  margin: 0 auto;
+  width: 1000px;
+}
+
+main {
+  display: flex;
+  gap: 20px;
+}
+
+#input-panel {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+}
+
+#visualization-panel {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+}
+
+#visualization {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* Footer */
+#contentinfo {
+  clear: both;
+  margin-top: 2em;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+#contentinfo .photo {
+  margin: 0 auto;
 }
 
 /* Zusätzliche Styles für React-Komponenten können hier ergänzt werden */

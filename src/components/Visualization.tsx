@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { loadAndCustomizeSVGTemplate } from '../utils/svgTemplateLoader';
+import type { Intersection } from '../types';
 
 interface VisualizationProps {
   sets: Record<string, string[]>;
@@ -7,6 +8,8 @@ interface VisualizationProps {
   onRegionClick: (region: string) => void;
   opacity?: number;
   fontSize?: number;
+  intersections?: Record<string, Intersection>;
+  showPercentages?: boolean;
 }
 
 const Visualization: React.FC<VisualizationProps> = ({
@@ -14,7 +17,9 @@ const Visualization: React.FC<VisualizationProps> = ({
   colors,
   onRegionClick,
   opacity = 0.5,
-  fontSize = 18
+  fontSize = 18,
+  intersections = {},
+  showPercentages = false
 }) => {
   const [svgContent, setSvgContent] = useState<string>('');
   const [error, setError] = useState<string | null>(null);

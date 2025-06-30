@@ -30,7 +30,7 @@ This document provides a description of every major file and folder in the Inter
 - **index.css**: Global styles.
 - **vite-env.d.ts**: Vite environment type declarations.
 - **assets/**: Static assets (e.g., SVGs, images) for the app.
-- **components/**: Modular React components (ColorPicker, Controls, FileUpload, Footer, Header, SetInput, Visualization, and tests).
+- **components/**: Modular React components (ColorPicker, FileUpload, Footer, Header, InputPanel, SetInput, Visualization, VisualizationPanel, and tests).
 - **hooks/**: Custom React hooks (e.g., useVennDiagram).
 - **utils/**: Utility functions and tests (set operations, SVG template loader, etc.).
 

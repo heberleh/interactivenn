@@ -1,89 +1,30 @@
 <!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
-# Copilot Custom Instructions für InteractiVenn-Migration
+# Copilot Custom Instructions
+- Use React (with functional components and hooks) and TypeScript for all new code.
+- Maintain strict 1:1 visual and functional parity with the original InteractiVenn web application.
+- Do not introduce new features or legacy code from other branches.
+- Use modular, maintainable, and modern code structure.
+- Use semantic, human-understandable component names (e.g., InputPanel, VisualizationPanel).
+- Keep state management local where possible, and use idiomatic React patterns.
+- Use the original CSS (`main.css`) as a reference for visual parity, but adapt to modern best practices.
+- All static content (Help, Contact, Citation) should be implemented as React components.
+- Always update `PROJECT_STRUCTURE.md` and `MIGRATION_CHECKLIST.md` when making structural or migration-relevant changes.
+- Always try to run the application in dev mode using `npm run dev` (not `npm start`). There is no `npm start` script in this project. If it fails with errors, prioritize fixing them. If the fix is not straightforward, document the errors and your planned next steps in `MIGRATION_CHECKLIST.md` before attempting to migrate more features.
+- If the code cannot be compiled, don't try to migrate more features. Instead, try to fix the problem. Access the 'Problems' report from VSCode if you can.
+- When working on Layout of the website and Look and Feel, always refer to the original legacy website screenshot `legacy/legaccy_screenshot.png` to ensure visual consistency.
+## Folder Structure Overview
 
-## Wichtiger Hinweis zur Projektdokumentation
+- `src/components/`: React components (functional, TypeScript).
+- `src/pages/`: Static and routed pages.
+- `src/utils/`: Utility/helper functions.
+- `src/hooks/`: Custom React hooks.
+- `src/types.ts`: TypeScript type definitions.
+- `src/assets/`: Project-specific static assets (images, icons, etc).
+- `public/`: Publicly served static files.
+- `legacy/web/`: Reference legacy code for migration.
 
-- Bei jeder Aufgabe und jedem Fortschritt ist stets die Datei `PROJECT_STRUCTURE.md` zu konsultieren, um aktuelle Informationen zur Projektstruktur, zu Dateien und zu Migrationshinweisen zu erhalten.
-- Wenn sich im Verlauf der Arbeit relevante Änderungen an der Projektstruktur, an Dateibeschreibungen oder am Migrationsstand ergeben, ist `PROJECT_STRUCTURE.md` entsprechend zu aktualisieren.
-- Wenn Aufgaben aus der Fortschritts-Checkliste erledigt werden, ist diese Datei (`copilot-instructions.md`) ebenfalls zu aktualisieren (Kästchen abhaken, Hinweise ergänzen).
+## Migration Reference
 
-## Projektziel
-
-Dieses Projekt ist eine 1:1-Migration der InteractiVenn-Webanwendung zu React + TypeScript. Ziel ist vollständige visuelle und funktionale Parität mit der Original-Webanwendung. Keine neuen Features, keine Altlasten. Fokus auf sauberen, modernen Code und Komponentenstruktur.
-
-## Neue Anforderungen (Juni 2025)
-
-- **Legacy-Seiten übernehmen:** Die Seiten `help.html`, `contact.html`, `citation.html` aus `legacy/web/` werden als React-Komponenten übernommen und in die App eingebunden (z.B. über ein Menü oder Footer-Links). **TODO:** Inhalte dieser Seiten in neue React-Komponenten übernehmen.
-- **Weitere Inhalte aus Legacy übernehmen:**
-  - **index.html, index2.html:** Logik und Layout für Slider- und Tree-Modus als Grundlage für die neuen Visualisierungskomponenten nutzen. **TODO:** Alle relevanten UI- und Logikbestandteile in React/TypeScript portieren.
-  - **main.css:** Original-Styles für visuelle Parität übernehmen und ggf. anpassen. **TODO:** CSS in das neue Styling-System integrieren.
-  - **javascript.js, slider.js, tree.js:** Set-Operationen, Parsing- und Visualisierungslogik nach TypeScript portieren. **TODO:** Prüfen, ob noch Logik aus diesen Dateien übernommen werden muss.
-  - **SVG- und Diagramm-Templates:** Sicherstellen, dass alle SVG-Templates und Diagrammdateien aus `diagrams/` und `public/templates/` übernommen und im neuen System nutzbar sind. **TODO:** SVG-Import und -Verwendung testen.
-  - **Beispiel-Datensätze (.ivenn):** Lade- und Speicherfunktion für .ivenn-Dateien implementieren und testen. **TODO:** Beispiel-Datensätze für Tests nutzen.
-
-## Vorgehen
-
-1. Inhalte der Legacy-Seiten als React-Komponenten übernehmen und einbinden.
-2. Modus-Selector im Visualisierungsbereich einbauen, der die Ansicht und Controls dynamisch anpasst.
-3. Menü oder Footer-Links zu den statischen Seiten (Hilfe, Kontakt, Zitation) bereitstellen.
-4. `.github/copilot-instructions.md` und Projektdokumentation entsprechend aktualisieren.
-
-## Hinweise für Copilot
-- Keine neuen Features oder Experimente, nur 1:1-Übernahme und Modernisierung.
-- Keine Altlasten aus der dev-Branch übernehmen.
-- Komponentenstruktur und State-Management nach modernen React/TypeScript-Standards.
-- Legacy-Inhalte (Hilfe, Kontakt, Zitation) als statische Komponenten, keine dynamische Logik nötig.
-- Modus-Selector für Tree/Slider lokal im Diagramm-Bereich, nicht als Seitenwechsel.
-- **Immer die Datei `PROJECT_STRUCTURE.md` als Referenz für die Projektstruktur und Aufgaben nutzen und bei Änderungen aktualisieren!**
-
----
-
-## Fortschritts-Checkliste (bitte bei jedem Fortschritt aktualisieren)
-
-- [x] Kernfunktionen und Legacy-Quellen identifiziert
-- [x] Mapping-Tabelle Legacy → React/TypeScript erstellt
-- [x] Projekt mit React, TypeScript, Vite/Webpack korrekt konfiguriert
-- [x] Komponenten-Shells in `InteractiVenn.tsx` angelegt (App, Header, Controls, Visualization, Footer)
-- [x] Set-Operationen (Union, Intersection, Subtract, etc.) nach TypeScript portiert und getestet
-- [x] Typen für Mengen, Labels, Intersections in `types.ts` definiert
-- [x] Utility-Funktionen für Parsing, Duplikat-Entfernung, etc. erstellt
-- [x] State-Management für Mengen, Labels, Farben, Opazität, Font-Size, Visualisierungsmodus, Frame/Level, Intersections, aktuelle Region umgesetzt
-- [ ] Logik für das Parsen und Anwenden von Union-Operationen (Slider/Tree) übernommen
-- [x] Interaktive Features (Mouseover, Klick auf Regionen, Anzeige von Elementlisten) als React-Events umgesetzt
-- [x] HTML-Struktur aus `index.html`/`index2.html` in JSX übersetzt
-- [x] Controls (Buttons, Inputs, Color-Picker, File-Upload, etc.) als React-Komponenten nachgebaut
-- [x] SVG-Diagramm exakt nach Vorlage gerendert (inkl. dynamischer Labels, Farben, Opazität, Font-Size)
-- [ ] Original-CSS (`main.css`) übernommen/angepasst, bis visuelle Parität erreicht ist
-- [x] .ivenn-Dateien laden und speichern (Textformat)
-- [x] Diagramm-Export als SVG und PNG (Canvas-Konvertierung)
-- [x] File-Upload/-Download-Logik in React umgesetzt
-- [ ] Slider-Modus: Navigation durch Union-Frames, Undo/Redo, Anzeige der aktuellen Union
-- [ ] Tree-Modus: Newick-Parser, Tree-Visualisierung, Navigation durch Tree-Level, Dendrogramm-Export
-- [ ] Mouseover-Effekte für Regionen und Labels
-- [x] Klick auf Regionen: Anzeige der enthaltenen Elemente in einem Modal/Dialog
-- [x] Dynamische Aktualisierung aller UI-Elemente bei State-Änderungen
-- [x] Unit-Tests für Set-Operationen und Parsing-Logik (Jest)
-- [ ] End-to-End-Tests für die wichtigsten User-Flows (optional)
-- [ ] Manuelle Prüfung auf vollständige visuelle und funktionale Parität
-- [x] Build-Skripte für Produktion (Vite/Webpack)
-- [ ] Letzter visueller Vergleich mit Original-Webseite
-- [ ] Dokumentation der Migration und Hinweise für zukünftige Wartung
-
-## Referenzdateien für die Migration
-
-Die folgenden Legacy-Dateien dienen als maßgebliche Referenz für die Migration und den visuellen sowie funktionalen Vergleich:
-
-- **legacy/web/index.html**: Original-Startseite im Slider-Modus (Unions by list)
-- **legacy/web/index2.html**: Original-Startseite im Tree-Modus (Unions by tree)
-- **legacy/web/help.html**: Hilfeseite (Help)
-- **legacy/web/contact.html**: Kontaktseite (Contact)
-- **legacy/web/citation.html**: Zitationshinweise (Citation)
-- **legacy/web/css/main.css**: Original-Stylesheet für das Look & Feel
-
-Diese Dateien sind die Grundlage für die 1:1-Übernahme von Layout, Funktionalität und Inhalt. Die neue Anwendung muss in allen Aspekten mit diesen Vorlagen übereinstimmen. Für die Migration der statischen Seiten (Hilfe, Kontakt, Zitation) werden die Inhalte aus den jeweiligen HTML-Dateien übernommen und als React-Komponenten eingebunden. Für die Visualisierung und Controls dienen `index.html` und `index2.html` als Vergleich für die beiden Modi (Slider/Tree).
-
----
-
-**Hinweis:**
-Jedes Mal, wenn eine Aufgabe erledigt ist, bitte das entsprechende Kästchen abhaken (von [ ] auf [x] setzen) und diese Datei aktualisieren.
+- Refer to the legacy files in `legacy/` and subfolders and files for all migration and parity tasks.
+- Use the checklist in `MIGRATION_CHECKLIST.md` to track progress and ensure completeness.

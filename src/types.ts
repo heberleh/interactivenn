@@ -41,24 +41,18 @@ export interface TreeNode {
 export type VisualizationMode = 'slider' | 'tree';
 export type ExportFormat = '.svg' | '.png' | '.txt';
 
-export interface DiagramState {
-  nWay: number;
-  sets: Record<string, VennSet>;
-  intersections: Record<string, Intersection>;
-  merging: boolean;
-  currentLevel: number;
-  probability: boolean;
-  globalFontSize: number;
-  globalOpacity: number;
+export interface AppState {
+  numberOfSets: number;
+  sets: VennSet[];
+  mode: 'list' | 'tree';
+  opacity: number;
+  fontSize: number;
+  showPercentages: boolean;
 }
 
-export interface TreeNode {
-  name: string;
-  children?: TreeNode[];
-  parent?: TreeNode;
-}
-
-export interface SlideFrame {
-  index: number;
-  code: string;
+export interface IntersectionData {
+  id: string;
+  elements: string[];
+  size: number;
+  percentage: number;
 }

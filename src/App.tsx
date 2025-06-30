@@ -1,64 +1,249 @@
+import { useState, useEffect, useMemo } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import InputPanel from './components/InputPanel';
+import VisualizationPanel from './components/VisualizationPanel';
+import Visualization from './components/Visualization';
+import HelpPage from './pages/Help';
+import ContactPage from './pages/Contact';
+import CitationPage from './pages/Citation';
+import { SetService } from './SetService';
+import type { VennSet, Intersection } from './types';
 import './App.css';
 
-// Komponenten-Shells
-function Header() {
-  return (
-    <header id="banner" className="body">
-      <h1><a href="#">InteractiVenn</a></h1>
-      <nav>
-        <ul>
-          <li><a href="#tree">Unions by tree</a></li>
-          <li className="active"><a href="#list">Unions by list</a></li>
-          <li><a href="#citation">Citation</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="#help">Help</a></li>
-        </ul>
-      </nav>
-    </header>
-  );
-}
+const MainPage = () => {
+  const [numberOfSets, setNumberOfSets] = useState(3);
+  const [sets, setSets] = useState<Record<string, string[]>>({
+    'Set A': [],
+    'Set B': [],
+    'Set C': [],
+    'Set D': [],
+    'Set E': [],
+    'Set F': []
+  });
+  const [setNames, setSetNames] = useState<string[]>(['Set A', 'Set B', 'Set C', 'Set D', 'Set E', 'Set F']);
+  const [colors, setColors] = useState<Record<string, string>>({
+    'Set A': '#1f77b4',
+    'Set B': '#ff7f0e', 
+    'Set C': '#2ca02c',
+    'Set D': '#d62728',
+    'Set E': '#9467bd',
+    'Set F': '#8c564b'
+  });
+  const [intersections, setIntersections] = useState<Record<string, Intersection>>({});
+  const [showPercentages, setShowPercentages] = useState(false);
+  const [opacity, setOpacity] = useState(0.5);
+  const [fontSize, setFontSize] = useState(18);
 
-function Controls() {
-  // Platzhalter für alle Steuerelemente (Set-Eingaben, Buttons, etc.)
-  return (
-    <aside id="controls">
-      {/* TODO: Set-Eingaben, Farben, Buttons, Import/Export, etc. */}
-      <p>Controls folgen ...</p>
-    </aside>
-  );
-}
+  const setService = useMemo(() => new SetService(), []);
 
-function Visualization() {
-  // Platzhalter für das SVG-Diagramm
+  useEffect(() => {
+    const activeSets: Record<string, string[]> = {};
+    for (let i = 0; i < numberOfSets; i++) {
+        const setName = setNames[i];
+        if(sets[setName]) {
+            activeSets[setName] = sets[setName];
+        }
+    }
+    const calculatedIntersections = setService.calculateIntersections(activeSets);
+    setIntersections(calculatedIntersections);
+  }, [sets, numberOfSets, setNames, setService]);
+
+  const handleSetChange = (setIndex: number, elements: string[]) => {
+    if (setIndex < setNames.length) {
+      const setName = setNames[setIndex];
+      setSets(prev => ({
+        ...prev,
+        [setName]: elements
+      }));
+    }
+  };
+
+  const handleColorChange = (setIndex: number, color: string) => {
+    if (setIndex < setNames.length) {
+      const setName = setNames[setIndex];
+      setColors(prev => ({
+        ...prev,
+        [setName]: color
+      }));
+    }
+  };
+
+  const handleNameChange = (setIndex: number, name: string) => {
+    if (setIndex < setNames.length) {
+      const oldName = setNames[setIndex];
+      const newNames = [...setNames];
+      newNames[setIndex] = name;
+      setSetNames(newNames);
+      
+      // Update sets and colors with new name
+      setSets(prev => {
+        const newSets = { ...prev };
+        newSets[name] = newSets[oldName] || [];
+        if (name !== oldName) {
+          delete newSets[oldName];
+        }
+        return newSets;
+      });
+      
+      setColors(prev => {
+        const newColors = { ...prev };
+        newColors[name] = newColors[oldName] || '#1f77b4';
+        if (name !== oldName) {
+          delete newColors[oldName];
+        }
+        return newColors;
+      });
+    }
+  };
+
+  const handleNumberOfSetsChange = (newNumber: number) => {
+    setNumberOfSets(newNumber);
+  };
+
+  const handleLoadSets = (loadedSets: VennSet[]) => {
+    setNumberOfSets(loadedSets.length);
+    
+    const newNames = loadedSets.map(s => s.name);
+    const newSets: Record<string, string[]> = {};
+    const newColors: Record<string, string> = {};
+
+    loadedSets.forEach(set => {
+      newSets[set.name] = set.elements;
+      newColors[set.name] = set.color;
+    });
+
+    const originalNames = ['Set A', 'Set B', 'Set C', 'Set D', 'Set E', 'Set F'];
+    const originalColors = {
+        'Set A': '#1f77b4',
+        'Set B': '#ff7f0e',
+        'Set C': '#2ca02c',
+        'Set D': '#d62728',
+        'Set E': '#9467bd',
+        'Set F': '#8c564b'
+    };
+
+    for (let i = loadedSets.length; i < 6; i++) {
+        const name = originalNames[i];
+        newNames.push(name);
+        if (!newSets[name]) newSets[name] = [];
+        if (!newColors[name]) newColors[name] = originalColors[name];
+    }
+
+    setSetNames(newNames);
+    setSets(newSets);
+    setColors(newColors);
+  };
+
+  const handleModeChange = (newMode: 'list' | 'tree') => {
+    console.log('Mode changed:', newMode);
+  };
+
+  const handleOpacityChange = (opacity: number) => {
+    setOpacity(opacity);
+  };
+
+  const handleFontSizeChange = (fontSize: number) => {
+    setFontSize(fontSize);
+  };
+
+  const handleReset = () => {
+    // Reset all sets
+    const resetSets: Record<string, string[]> = {};
+    setNames.forEach(name => {
+      resetSets[name] = [];
+    });
+    setSets(resetSets);
+  };
+
+  const handlePercentageToggle = (show: boolean) => {
+    setShowPercentages(show);
+  };
+
+  const handleRegionClick = (region: string) => {
+    // TODO: Show modal with elements
+    console.log('Region clicked:', region, intersections[region]?.elements);
+  };
+
+  const getSetNamesMapping = (): Record<string, string> => {
+    const mapping: Record<string, string> = {};
+    setNames.slice(0, numberOfSets).forEach((name, index) => {
+      const key = String.fromCharCode(97 + index); // a, b, c, etc.
+      mapping[key] = name;
+    });
+    return mapping;
+  };
+
+  const getActiveSets = () => {
+      const activeSets: Record<string, string[]> = {};
+      for (let i = 0; i < numberOfSets; i++) {
+          const setName = setNames[i];
+          activeSets[setName] = sets[setName] || [];
+      }
+      return activeSets;
+  }
+
   return (
-    <section id="visualization">
-      {/* TODO: SVG-Diagramm, Interaktivität, etc. */}
-      <svg id="diagram" width="600" height="578"></svg>
+    <section id="content" className="body">
+      <div id="diagramDiv">
+        <div id="contentContainer">
+          <div id="leftColumn">
+            <InputPanel
+              numberOfSets={numberOfSets}
+              setNames={setNames}
+              sets={sets}
+              colors={colors}
+              onSetChange={handleSetChange}
+              onColorChange={handleColorChange}
+              onNameChange={handleNameChange}
+              onNumberOfSetsChange={handleNumberOfSetsChange}
+              onLoadSets={handleLoadSets}
+            />
+          </div>
+          <div id="imageContainer">
+            <div id="diagramframe">
+              <Visualization
+                sets={getActiveSets()}
+                colors={colors}
+                onRegionClick={handleRegionClick}
+                opacity={opacity}
+                fontSize={fontSize}
+                intersections={intersections}
+                showPercentages={showPercentages}
+              />
+            </div>
+            <VisualizationPanel
+              onModeChange={handleModeChange}
+              onOpacityChange={handleOpacityChange}
+              onFontSizeChange={handleFontSizeChange}
+              onReset={handleReset}
+              onPercentageToggle={handlePercentageToggle}
+              intersections={intersections}
+              setNamesMapping={getSetNamesMapping()}
+              showPercentages={showPercentages}
+            />
+          </div>
+          <div id="rightColumn">
+            {/* Right column content will be moved here from VisualizationPanel */}
+          </div>
+        </div>
+      </div>
     </section>
   );
-}
-
-function Footer() {
-  return (
-    <footer id="contentinfo" className="body">
-      <address id="about" className="vcard body">
-        <a href="http://vicg.icmc.usp.br/infovis2/InfoVis2">
-          <img src="legacy/web/images/vicg.png" alt="VICG - Visualization, Imaging and Computer Graphics" width="234" height="30" className="photo" />
-        </a>
-      </address>
-    </footer>
-  );
-}
+};
 
 function App() {
-  // State-Management für Sets, Farben, Diagramm, etc. folgt ...
   return (
     <div>
       <Header />
-      <main>
-        <Controls />
-        <Visualization />
-      </main>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/citation" element={<CitationPage />} />
+        <Route path="/tree" element={<MainPage />} />
+      </Routes>
       <Footer />
     </div>
   );
