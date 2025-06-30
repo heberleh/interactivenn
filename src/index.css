@@ -3,7 +3,7 @@
   (Originalstruktur und -klassen bleiben erhalten)
 */
 
-@import url('../legacy/web/css/main.css');
+@import url('./legacy-main.css');
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

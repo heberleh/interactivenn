@@ -189,29 +189,37 @@ const MainPage = () => {
       <div id="diagramDiv">
         <div id="contentContainer">
           <div id="leftColumn">
-            <InputPanel
-              numberOfSets={numberOfSets}
-              setNames={setNames}
-              sets={sets}
-              colors={colors}
-              onSetChange={handleSetChange}
-              onColorChange={handleColorChange}
-              onNameChange={handleNameChange}
-              onNumberOfSetsChange={handleNumberOfSetsChange}
-              onLoadSets={handleLoadSets}
-            />
-          </div>
-          <div id="imageContainer">
-            <div id="diagramframe">
-              <Visualization
-                sets={getActiveSets()}
-                colors={colors}
-                onRegionClick={handleRegionClick}
-                opacity={opacity}
-                fontSize={fontSize}
-                intersections={intersections}
-                showPercentages={showPercentages}
-              />
+            <div id="mergeMenu">
+              <span>
+                <input
+                  type="radio"
+                  name="mergeMode"
+                  value="list"
+                  defaultChecked
+                  onChange={() => handleModeChange('list')}
+                />
+                Unions by list&nbsp;&nbsp;
+                <input
+                  type="radio"
+                  name="mergeMode"
+                  value="tree"
+                  onChange={() => handleModeChange('tree')}
+                />
+                Unions by tree
+              </span>
+            </div>
+            <div id="imageContainer">
+              <div id="diagramframe">
+                <Visualization
+                  sets={getActiveSets()}
+                  colors={colors}
+                  onRegionClick={handleRegionClick}
+                  opacity={opacity}
+                  fontSize={fontSize}
+                  intersections={intersections}
+                  showPercentages={showPercentages}
+                />
+              </div>
             </div>
             <VisualizationPanel
               onModeChange={handleModeChange}
@@ -225,7 +233,17 @@ const MainPage = () => {
             />
           </div>
           <div id="rightColumn">
-            {/* Right column content will be moved here from VisualizationPanel */}
+            <InputPanel
+              numberOfSets={numberOfSets}
+              setNames={setNames}
+              sets={sets}
+              colors={colors}
+              onSetChange={handleSetChange}
+              onColorChange={handleColorChange}
+              onNameChange={handleNameChange}
+              onNumberOfSetsChange={handleNumberOfSetsChange}
+              onLoadSets={handleLoadSets}
+            />
           </div>
         </div>
       </div>

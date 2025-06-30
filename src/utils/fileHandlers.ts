@@ -3,11 +3,7 @@
  * Handles .ivenn file format parsing and saving
  */
 
-export interface VennSet {
-  name: string;
-  elements: string[];
-  color: string;
-}
+import type { VennSet } from '../types';
 
 /**
  * Parse .ivenn file content into VennSet array
@@ -32,6 +28,7 @@ export function parseIvennFile(content: string): VennSet[] {
         .filter(e => e !== "");
       
       sets.push({
+        id: `set_${index}`,
         name,
         elements,
         color: defaultColors[index % defaultColors.length]
