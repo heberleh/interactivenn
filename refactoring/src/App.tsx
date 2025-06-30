@@ -1,5 +1,4 @@
 import './App.css';
-import './legacy.css';
 
 // Komponenten-Shells
 function Header() {

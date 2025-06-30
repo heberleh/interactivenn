@@ -55,32 +55,32 @@ InteractiVenn is an essential web-based tool for the scientific community. This 
 
 ## Fortschritts-Checkliste (bitte bei jedem Fortschritt aktualisieren)
 
-- [ ] Kernfunktionen und Legacy-Quellen identifiziert
-- [ ] Mapping-Tabelle Legacy → React/TypeScript erstellt
-- [ ] Projekt mit React, TypeScript, Vite/Webpack korrekt konfiguriert
-- [ ] Komponenten-Shells in `InteractiVenn.tsx` angelegt (App, Header, Controls, Visualization, Footer)
-- [ ] Set-Operationen (Union, Intersection, Subtract, etc.) nach TypeScript portiert und getestet
-- [ ] Typen für Mengen, Labels, Intersections in `types.ts` definiert
-- [ ] Utility-Funktionen für Parsing, Duplikat-Entfernung, etc. erstellt
-- [ ] State-Management für Mengen, Labels, Farben, Opazität, Font-Size, Visualisierungsmodus, Frame/Level, Intersections, aktuelle Region umgesetzt
+- [x] Kernfunktionen und Legacy-Quellen identifiziert
+- [x] Mapping-Tabelle Legacy → React/TypeScript erstellt
+- [x] Projekt mit React, TypeScript, Vite/Webpack korrekt konfiguriert
+- [x] Komponenten-Shells in `InteractiVenn.tsx` angelegt (App, Header, Controls, Visualization, Footer)
+- [x] Set-Operationen (Union, Intersection, Subtract, etc.) nach TypeScript portiert und getestet
+- [x] Typen für Mengen, Labels, Intersections in `types.ts` definiert
+- [x] Utility-Funktionen für Parsing, Duplikat-Entfernung, etc. erstellt
+- [x] State-Management für Mengen, Labels, Farben, Opazität, Font-Size, Visualisierungsmodus, Frame/Level, Intersections, aktuelle Region umgesetzt
 - [ ] Logik für das Parsen und Anwenden von Union-Operationen (Slider/Tree) übernommen
-- [ ] Interaktive Features (Mouseover, Klick auf Regionen, Anzeige von Elementlisten) als React-Events umgesetzt
-- [ ] HTML-Struktur aus `index.html`/`index2.html` in JSX übersetzt
-- [ ] Controls (Buttons, Inputs, Color-Picker, File-Upload, etc.) als React-Komponenten nachgebaut
-- [ ] SVG-Diagramm exakt nach Vorlage gerendert (inkl. dynamischer Labels, Farben, Opazität, Font-Size)
+- [x] Interaktive Features (Mouseover, Klick auf Regionen, Anzeige von Elementlisten) als React-Events umgesetzt
+- [x] HTML-Struktur aus `index.html`/`index2.html` in JSX übersetzt
+- [x] Controls (Buttons, Inputs, Color-Picker, File-Upload, etc.) als React-Komponenten nachgebaut
+- [x] SVG-Diagramm exakt nach Vorlage gerendert (inkl. dynamischer Labels, Farben, Opazität, Font-Size)
 - [ ] Original-CSS (`main.css`) übernommen/angepasst, bis visuelle Parität erreicht ist
-- [ ] .ivenn-Dateien laden und speichern (Textformat)
-- [ ] Diagramm-Export als SVG und PNG (Canvas-Konvertierung)
-- [ ] File-Upload/-Download-Logik in React umgesetzt
+- [x] .ivenn-Dateien laden und speichern (Textformat)
+- [x] Diagramm-Export als SVG und PNG (Canvas-Konvertierung)
+- [x] File-Upload/-Download-Logik in React umgesetzt
 - [ ] Slider-Modus: Navigation durch Union-Frames, Undo/Redo, Anzeige der aktuellen Union
 - [ ] Tree-Modus: Newick-Parser, Tree-Visualisierung, Navigation durch Tree-Level, Dendrogramm-Export
 - [ ] Mouseover-Effekte für Regionen und Labels
-- [ ] Klick auf Regionen: Anzeige der enthaltenen Elemente in einem Modal/Dialog
-- [ ] Dynamische Aktualisierung aller UI-Elemente bei State-Änderungen
-- [ ] Unit-Tests für Set-Operationen und Parsing-Logik (Jest)
+- [x] Klick auf Regionen: Anzeige der enthaltenen Elemente in einem Modal/Dialog
+- [x] Dynamische Aktualisierung aller UI-Elemente bei State-Änderungen
+- [x] Unit-Tests für Set-Operationen und Parsing-Logik (Jest)
 - [ ] End-to-End-Tests für die wichtigsten User-Flows (optional)
 - [ ] Manuelle Prüfung auf vollständige visuelle und funktionale Parität
-- [ ] Build-Skripte für Produktion (Vite/Webpack)
+- [x] Build-Skripte für Produktion (Vite/Webpack)
 - [ ] Letzter visueller Vergleich mit Original-Webseite
 - [ ] Dokumentation der Migration und Hinweise für zukünftige Wartung
 
