@@ -2,16 +2,25 @@
 
 # Copilot Custom Instructions für InteractiVenn-Migration
 
+## Wichtiger Hinweis zur Projektdokumentation
+
+- Bei jeder Aufgabe und jedem Fortschritt ist stets die Datei `PROJECT_STRUCTURE.md` zu konsultieren, um aktuelle Informationen zur Projektstruktur, zu Dateien und zu Migrationshinweisen zu erhalten.
+- Wenn sich im Verlauf der Arbeit relevante Änderungen an der Projektstruktur, an Dateibeschreibungen oder am Migrationsstand ergeben, ist `PROJECT_STRUCTURE.md` entsprechend zu aktualisieren.
+- Wenn Aufgaben aus der Fortschritts-Checkliste erledigt werden, ist diese Datei (`copilot-instructions.md`) ebenfalls zu aktualisieren (Kästchen abhaken, Hinweise ergänzen).
+
 ## Projektziel
 
 Dieses Projekt ist eine 1:1-Migration der InteractiVenn-Webanwendung zu React + TypeScript. Ziel ist vollständige visuelle und funktionale Parität mit der Original-Webanwendung. Keine neuen Features, keine Altlasten. Fokus auf sauberen, modernen Code und Komponentenstruktur.
 
 ## Neue Anforderungen (Juni 2025)
 
-- **Legacy-Seiten übernehmen:** Die Seiten `help.html`, `contact.html`, `citation.html` aus `legacy/web/` werden als React-Komponenten übernommen und in die App eingebunden (z.B. über ein Menü oder Footer-Links).
-- **Modus-Auswahl (Tree/Slider):** Die Unterscheidung zwischen Tree- und Slider-Modus erfolgt nicht mehr über verschiedene Seiten (`index.html`/`index2.html`), sondern als Modus-Selector (Dropdown, Tabs o.ä.) direkt im Visualisierungsbereich. Die Seite bleibt gleich, nur die Visualisierung und Controls passen sich an. Die Umschaltung des Modus erfolgt lokal im Diagramm-Bereich, ohne Seitenwechsel. Die Visualisierungskomponente rendert je nach Modus die passenden Buttons, Controls und Logik für Tree- bzw. Slider-Ansicht. Die State-Logik für den Modus ist lokal im Visualisierungsbereich zu halten und nicht global als Seitenrouting.
-- **Komponentenstruktur:** Die App bleibt eine SPA. Die Visualisierungskomponente zeigt je nach Modus die passenden Buttons und Controls für Tree oder Slider.
-- **Visuelle Parität:** Die übernommenen Legacy-Seiten sollen im Look & Feel an das neue Design angepasst werden, aber inhaltlich identisch bleiben.
+- **Legacy-Seiten übernehmen:** Die Seiten `help.html`, `contact.html`, `citation.html` aus `legacy/web/` werden als React-Komponenten übernommen und in die App eingebunden (z.B. über ein Menü oder Footer-Links). **TODO:** Inhalte dieser Seiten in neue React-Komponenten übernehmen.
+- **Weitere Inhalte aus Legacy übernehmen:**
+  - **index.html, index2.html:** Logik und Layout für Slider- und Tree-Modus als Grundlage für die neuen Visualisierungskomponenten nutzen. **TODO:** Alle relevanten UI- und Logikbestandteile in React/TypeScript portieren.
+  - **main.css:** Original-Styles für visuelle Parität übernehmen und ggf. anpassen. **TODO:** CSS in das neue Styling-System integrieren.
+  - **javascript.js, slider.js, tree.js:** Set-Operationen, Parsing- und Visualisierungslogik nach TypeScript portieren. **TODO:** Prüfen, ob noch Logik aus diesen Dateien übernommen werden muss.
+  - **SVG- und Diagramm-Templates:** Sicherstellen, dass alle SVG-Templates und Diagrammdateien aus `diagrams/` und `public/templates/` übernommen und im neuen System nutzbar sind. **TODO:** SVG-Import und -Verwendung testen.
+  - **Beispiel-Datensätze (.ivenn):** Lade- und Speicherfunktion für .ivenn-Dateien implementieren und testen. **TODO:** Beispiel-Datensätze für Tests nutzen.
 
 ## Vorgehen
 
@@ -26,6 +35,7 @@ Dieses Projekt ist eine 1:1-Migration der InteractiVenn-Webanwendung zu React + 
 - Komponentenstruktur und State-Management nach modernen React/TypeScript-Standards.
 - Legacy-Inhalte (Hilfe, Kontakt, Zitation) als statische Komponenten, keine dynamische Logik nötig.
 - Modus-Selector für Tree/Slider lokal im Diagramm-Bereich, nicht als Seitenwechsel.
+- **Immer die Datei `PROJECT_STRUCTURE.md` als Referenz für die Projektstruktur und Aufgaben nutzen und bei Änderungen aktualisieren!**
 
 ---
 
