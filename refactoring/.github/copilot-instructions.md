@@ -1,55 +1,31 @@
 <!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
-Dieses Projekt ist eine 1:1-Migration von InteractiVenn zu React + TypeScript. Ziel ist vollständige visuelle und funktionale Parität mit der Original-Webanwendung. Keine neuen Features, keine Altlasten. Fokus auf sauberen, modernen Code und Komponentenstruktur.
-Project Modernization: A Focused Migration of InteractiVenn to React & TypeScript
-Primary Goal: A Clean, 1-to-1 Migration
-The highest priority of this project is a clean and efficient migration of the existing InteractiVenn application to a modern tech stack. The scope is strictly limited to replicating the current functionality and visual appearance in React and TypeScript. New features, such as .xls support, are explicitly out of scope for this phase. The project must result in a clean, maintainable codebase, avoiding the structural issues present in the dev branch.
-1. Overview
-InteractiVenn is an essential web-based tool for the scientific community. This initiative will refactor the application into a modern, single-page application (SPA). All existing functionality will be preserved, and the final product will be visually indistinguishable from the original website.
-2. Core Principles & Constraints for Efficiency
- * Analyze First, Code Second: We will thoroughly audit the existing main and dev branches to extract only the logic required to rebuild the current features.
-  * dev Branch as a Reference Only: The dev branch should be used as a reference for reusable business logic and algorithms. Its file structure, duplicated code, and incomplete features must be ignored. We are starting with a clean project structure.
-   * Visual & Functional Parity: The new application must look and feel exactly like the original. This includes layout, styling, and all user interactions.
-    * Single-File Refactoring (Stage 1): To manage scope and cost, the initial migration will consolidate the application logic into a single .tsx file. If costs are not reduced with taking this approach, then the creation of multiple.tsx is allowed.
-     * Technology Stack: TypeScript, React, and Webpack, set up with npm.
-     3. Step-by-Step Migration Plan
-     Here is a high-level, phased approach designed for a focused and efficient migration.
-     Phase 0: Strategic Analysis & Logic Extraction (Critical First Step)
-     The objective is to create a precise map of the logic needed for a 1-to-1 migration, drawing from the best parts of the existing branches.
-      * Task 0.1: Full Codebase Audit
-         * Review the main branch to map out all core functionality: set operations, SVG drawing, UI interactions, and visualization modes ("Slider" and "Tree").
-            * Review the dev branch to identify any superior or already-migrated TypeScript logic that can be salvaged, while discarding its messy structure.
-             * Task 0.2: Create a Reuse & Integration Map
-                * Document exactly which functions from main and dev will be ported to implement the existing feature set.
-                   * Define a clear strategy for merging these sources into a cohesive whole, preventing any duplication of effort.
-                   Phase 1: Foundational Setup & Component Shells
-                   This phase establishes a clean project foundation, independent of the legacy structure.
-                    * Task 1.1: Project Initialization & Webpack Configuration
-                       * Set up a clean npm project, and configure Webpack and TypeScript.
-                        * Task 1.2: Create the Single Page & App Entrypoint
-                           * Create a clean folder structure (public/, src/).
-                              * Create public/index.html and the main application file: src/InteractiVenn.tsx.
-                               * Task 1.3: Define Component Shells (within the single file)
-                                  * Based on the Phase 0 analysis, create the empty functional components inside InteractiVenn.tsx: App, Header, Controls, Visualization, Footer, etc.
-                                  Phase 2: Porting Core Logic & Achieving Visual Parity
-                                  The focus here is on rebuilding the application's engine and skin.
-                                   * Task 2.1: Port, Refactor & Test Reusable Set Logic
-                                      * Migrate the essential set-theory functions identified in the audit into src/InteractiVenn.tsx as TypeScript functions.
-                                         * Write unit tests for this core logic using Jest to ensure correctness.
-                                          * Task 2.2: Implement the Interactive Diagram Component
-                                             * Port the SVG generation logic, using the strategy decided in Phase 0.
-                                                * Connect the component to React state and event handlers to ensure full interactivity.
-                                                 * Task 2.3: Recreate Original CSS
-                                                    * Create a CSS file and meticulously replicate the styles from the original website to ensure visual parity. The goal is for a user to not notice the underlying technology has changed.
-                                                    Phase 3: Final Integration & Testing
-                                                    This final phase connects all the pieces and ensures the application is a robust and faithful replacement for the original.
-                                                     * Task 3.1: Implement State Management & Data Flow
-                                                        * Use React hooks (useState, useMemo) in the main App component to manage the application state (sets, inputs, visualization mode).
-                                                           * Wire the Controls component's inputs to the state, ensuring the diagram updates reactively.
-                                                            * Task 3.2: End-to-End Functionality Testing
-                                                               * Perform thorough testing on all features: data input, diagram generation for all set numbers, interactivity (hovers, clicks), view switching, and data export/save functionality (as .ivenn).
-                                                                * Task 3.3: Final Polish & Deployment
-                                                                   * Create production build scripts in package.json using Webpack to generate optimized assets for deployment.
+# Copilot Custom Instructions für InteractiVenn-Migration
+
+## Projektziel
+
+Dieses Projekt ist eine 1:1-Migration der InteractiVenn-Webanwendung zu React + TypeScript. Ziel ist vollständige visuelle und funktionale Parität mit der Original-Webanwendung. Keine neuen Features, keine Altlasten. Fokus auf sauberen, modernen Code und Komponentenstruktur.
+
+## Neue Anforderungen (Juni 2025)
+
+- **Legacy-Seiten übernehmen:** Die Seiten `help.html`, `contact.html`, `citation.html` aus `legacy/web/` werden als React-Komponenten übernommen und in die App eingebunden (z.B. über ein Menü oder Footer-Links).
+- **Modus-Auswahl (Tree/Slider):** Die Unterscheidung zwischen Tree- und Slider-Modus erfolgt nicht mehr über verschiedene Seiten (`index.html`/`index2.html`), sondern als Modus-Selector (Dropdown, Tabs o.ä.) direkt im Visualisierungsbereich. Die Seite bleibt gleich, nur die Visualisierung und Controls passen sich an. Die Umschaltung des Modus erfolgt lokal im Diagramm-Bereich, ohne Seitenwechsel. Die Visualisierungskomponente rendert je nach Modus die passenden Buttons, Controls und Logik für Tree- bzw. Slider-Ansicht. Die State-Logik für den Modus ist lokal im Visualisierungsbereich zu halten und nicht global als Seitenrouting.
+- **Komponentenstruktur:** Die App bleibt eine SPA. Die Visualisierungskomponente zeigt je nach Modus die passenden Buttons und Controls für Tree oder Slider.
+- **Visuelle Parität:** Die übernommenen Legacy-Seiten sollen im Look & Feel an das neue Design angepasst werden, aber inhaltlich identisch bleiben.
+
+## Vorgehen
+
+1. Inhalte der Legacy-Seiten als React-Komponenten übernehmen und einbinden.
+2. Modus-Selector im Visualisierungsbereich einbauen, der die Ansicht und Controls dynamisch anpasst.
+3. Menü oder Footer-Links zu den statischen Seiten (Hilfe, Kontakt, Zitation) bereitstellen.
+4. `.github/copilot-instructions.md` und Projektdokumentation entsprechend aktualisieren.
+
+## Hinweise für Copilot
+- Keine neuen Features oder Experimente, nur 1:1-Übernahme und Modernisierung.
+- Keine Altlasten aus der dev-Branch übernehmen.
+- Komponentenstruktur und State-Management nach modernen React/TypeScript-Standards.
+- Legacy-Inhalte (Hilfe, Kontakt, Zitation) als statische Komponenten, keine dynamische Logik nötig.
+- Modus-Selector für Tree/Slider lokal im Diagramm-Bereich, nicht als Seitenwechsel.
 
 ---
 
@@ -83,6 +59,21 @@ InteractiVenn is an essential web-based tool for the scientific community. This 
 - [x] Build-Skripte für Produktion (Vite/Webpack)
 - [ ] Letzter visueller Vergleich mit Original-Webseite
 - [ ] Dokumentation der Migration und Hinweise für zukünftige Wartung
+
+## Referenzdateien für die Migration
+
+Die folgenden Legacy-Dateien dienen als maßgebliche Referenz für die Migration und den visuellen sowie funktionalen Vergleich:
+
+- **legacy/web/index.html**: Original-Startseite im Slider-Modus (Unions by list)
+- **legacy/web/index2.html**: Original-Startseite im Tree-Modus (Unions by tree)
+- **legacy/web/help.html**: Hilfeseite (Help)
+- **legacy/web/contact.html**: Kontaktseite (Contact)
+- **legacy/web/citation.html**: Zitationshinweise (Citation)
+- **legacy/web/css/main.css**: Original-Stylesheet für das Look & Feel
+
+Diese Dateien sind die Grundlage für die 1:1-Übernahme von Layout, Funktionalität und Inhalt. Die neue Anwendung muss in allen Aspekten mit diesen Vorlagen übereinstimmen. Für die Migration der statischen Seiten (Hilfe, Kontakt, Zitation) werden die Inhalte aus den jeweiligen HTML-Dateien übernommen und als React-Komponenten eingebunden. Für die Visualisierung und Controls dienen `index.html` und `index2.html` als Vergleich für die beiden Modi (Slider/Tree).
+
+---
 
 **Hinweis:**
 Jedes Mal, wenn eine Aufgabe erledigt ist, bitte das entsprechende Kästchen abhaken (von [ ] auf [x] setzen) und diese Datei aktualisieren.
