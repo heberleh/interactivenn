@@ -1,36 +1,29 @@
 # Migration Checklist
 
-## 🚨 CRITICAL LAYOUT ISSUE - IMMEDIATE FIX REQUIRED
+## 🚨 CRITICAL LAYOUT FIXES - IN PROGRESS
 
-**PROBLEM:** Current React structure does not match legacy HTML hierarchy at all.
+**LAYOUT STRUCTURE FIXED:**
+✅ **COMPLETED:** Restructured App.tsx to match legacy HTML hierarchy:
+- `leftColumn`: mergeMenu + imageContainer (diagram) + visualization controls  
+- `rightColumn`: InputPanel with set inputs and file operations
 
-**LEGACY STRUCTURE (from index.html analysis):**
-```html
-contentContainer:
-  leftColumn:
-    mergeMenu (union operations: "List merging code" input + Start/Stop buttons)
-    imageContainer:
-      diagramframe (Venn diagram SVG)
-      export controls (filename input + .svg/.png/.txt dropdown + Export button)
-      displayOptions (font-size +/-, opacity +/-, Reset diagram button)
-  
-  rightColumn:
-    newFeatures (show percentages checkbox + mouseover highlight text)
-    nWayMenu (Number of Sets: radio buttons 2,3,4,5,6)
-    dataMenu (Set inputs A,B,C,D,E,F with name inputs, color pickers, textareas)
-```
+**CURRENT CRITICAL ISSUES BEING FIXED:**
+✅ **COMPLETED:** Fixed InputPanel to use props instead of internal state
+✅ **COMPLETED:** Fixed textarea inputs to allow multiple lines (one element per line)
+✅ **COMPLETED:** Fixed intersection size calculation to use single-character IDs (ab, abc) 
+✅ **COMPLETED:** Added intersection size display to SVG templates instead of IDs
+✅ **COMPLETED:** Fixed color picker integration with diagram colors
 
-**CURRENT REACT STRUCTURE (WRONG):**
-- InputPanel has set inputs (should be rightColumn)
-- VisualizationPanel has diagram + some controls (should be leftColumn imageContainer)
-- Missing mergeMenu completely
-- Export/display controls split incorrectly
+**REMAINING CRITICAL FIXES:**
+- [ ] Test all functionality and ensure visual parity with legacy
+- [ ] Fix any remaining state synchronization issues
+- [ ] Ensure percentage toggle works correctly
 
-**ACTION REQUIRED:**
-1. Restructure App.tsx to have leftColumn + rightColumn
-2. Move mergeMenu logic to leftColumn (union operations)
-3. Move set inputs to rightColumn (InputPanel content)
-4. Ensure exact visual parity with legacy layout
+**PROBLEM SUMMARY (User Feedback):**
+1. ✅ Input boxes too big + one element per line → Fixed with proper textarea
+2. ✅ Sets not updating diagram → Fixed state management 
+3. ✅ Labels showing intersection IDs instead of sizes → Fixed SVG template logic
+4. ✅ Color picker not affecting diagram → Fixed color state propagation
 
 ## Projektziel und Hinweise
 

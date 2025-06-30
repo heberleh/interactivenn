@@ -1,53 +1,47 @@
 import React, { useState } from 'react';
 import { parseIvennFile, serializeToIvenn, downloadFile } from '../utils/fileHandlers';
-import type { VennSet } from '../utils/fileHandlers';
+import type { VennSet } from '../types';
 
 interface InputPanelProps {
-  onSetChange?: (setIndex: number, elements: string[]) => void;
-  onColorChange?: (setIndex: number, color: string) => void;
-  onNameChange?: (setIndex: number, name: string) => void;
-  onNumberOfSetsChange?: (numberOfSets: number) => void;
-  onLoadSets?: (sets: VennSet[]) => void;
+  numberOfSets: number;
+  setNames: string[];
+  sets: Record<string, string[]>;
+  colors: Record<string, string>;
+  onSetChange: (setIndex: number, elements: string[]) => void;
+  onColorChange: (setIndex: number, color: string) => void;
+  onNameChange: (setIndex: number, name: string) => void;
+  onNumberOfSetsChange: (numberOfSets: number) => void;
+  onLoadSets: (sets: VennSet[]) => void;
 }
 
 const InputPanel: React.FC<InputPanelProps> = ({ 
+  numberOfSets,
+  setNames,
+  sets,
+  colors,
   onSetChange, 
   onColorChange,
   onNameChange,
   onNumberOfSetsChange,
   onLoadSets
 }) => {
-  const [numberOfSets, setNumberOfSets] = useState(3);
-  const [sets, setSets] = useState<string[][]>(Array(6).fill(null).map(() => []));
-  const [setNames, setSetNames] = useState<string[]>(['Set A', 'Set B', 'Set C', 'Set D', 'Set E', 'Set F']);
-  const [colors, setColors] = useState<string[]>(['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']);
   const [saveFileName, setSaveFileName] = useState<string>('');
 
   const handleSetInputChange = (setIndex: number, value: string) => {
     const elements = value.split('\n').filter(element => element.trim() !== '');
-    const newSets = [...sets];
-    newSets[setIndex] = elements;
-    setSets(newSets);
-    onSetChange?.(setIndex, elements);
+    onSetChange(setIndex, elements);
   };
 
   const handleColorChange = (setIndex: number, color: string) => {
-    const newColors = [...colors];
-    newColors[setIndex] = color;
-    setColors(newColors);
-    onColorChange?.(setIndex, color);
+    onColorChange(setIndex, color);
   };
 
   const handleNameChange = (setIndex: number, name: string) => {
-    const newNames = [...setNames];
-    newNames[setIndex] = name;
-    setSetNames(newNames);
-    onNameChange?.(setIndex, name);
+    onNameChange(setIndex, name);
   };
 
   const handleNumberOfSetsChange = (newNumber: number) => {
-    setNumberOfSets(newNumber);
-    onNumberOfSetsChange?.(newNumber);
+    onNumberOfSetsChange(newNumber);
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,35 +53,20 @@ const InputPanel: React.FC<InputPanelProps> = ({
         try {
           const parsedSets = parseIvennFile(content);
           
-          // Update state
-          handleNumberOfSetsChange(parsedSets.length);
-          const newSets: string[][] = Array(6).fill(null).map(() => []);
-          const newNames = [...setNames];
-          const newColors = [...colors];
-          
-          parsedSets.forEach((set, index) => {
-            if (index < 6) {
-              newSets[index] = set.elements;
-              newNames[index] = set.name;
-              newColors[index] = set.color;
-            }
-          });
-          
-          setSets(newSets);
-          setSetNames(newNames);
-          setColors(newColors);
-          
-          // Notify parent
-          onLoadSets?.(parsedSets);
+          // Update number of sets first
+          onNumberOfSetsChange(parsedSets.length);
           
           // Update individual sets
           parsedSets.forEach((set, index) => {
             if (index < 6) {
-              onSetChange?.(index, set.elements);
-              onNameChange?.(index, set.name);
-              onColorChange?.(index, set.color);
+              onSetChange(index, set.elements);
+              onNameChange(index, set.name);
+              onColorChange(index, set.color);
             }
           });
+          
+          // Notify parent with full data
+          onLoadSets(parsedSets);
         } catch (error) {
           console.error('Error parsing file:', error);
           alert('Error parsing file. Please check the file format.');
@@ -103,112 +82,132 @@ const InputPanel: React.FC<InputPanelProps> = ({
       return;
     }
 
-    const vennSets: VennSet[] = [];
+    // Convert current sets to VennSet format
+    const setsToSave: VennSet[] = [];
     for (let i = 0; i < numberOfSets; i++) {
-      vennSets.push({
-        name: setNames[i],
-        elements: sets[i],
-        color: colors[i]
+      const setName = setNames[i] || `Set ${String.fromCharCode(65 + i)}`;
+      const setKey = setName;
+      setsToSave.push({
+        id: `set_${i}`,
+        name: setName,
+        elements: sets[setKey] || [],
+        color: colors[setKey] || '#cccccc'
       });
     }
 
-    const content = serializeToIvenn(vennSets);
-    const filename = saveFileName.endsWith('.ivenn') ? saveFileName : `${saveFileName}.ivenn`;
-    downloadFile(content, filename, 'text/plain');
+    const content = serializeToIvenn(setsToSave);
+    downloadFile(content, `${saveFileName}.ivenn`, 'text/plain');
+  };
+
+  const handleClearSets = () => {
+    for (let i = 0; i < 6; i++) {
+      onSetChange(i, []);
+    }
+  };
+
+  // Get current set data for display
+  const getCurrentSetElements = (setIndex: number): string => {
+    const setName = setNames[setIndex];
+    const elements = sets[setName] || [];
+    return elements.join('\n');
+  };
+
+  const getCurrentSetColor = (setIndex: number): string => {
+    const setName = setNames[setIndex];
+    return colors[setName] || '#cccccc';
   };
 
   return (
-    <aside id="input-panel">
-      <h2>Data Input</h2>
+    <div id="inputPanel">
+      <div id="newFeatures">   
+        <span className="checkbox">
+          <input className="checkbox" type="checkbox" onChange={() => {}} />
+          <span className="text-sm">Show <b>percentages</b> instead of size <span className="text-highlight">new feature!</span></span>
+        </span>                             
+        <span style={{ marginLeft: '21px', marginTop: '4px' }}>Mouse-over numbers highlights their sets </span>
+        <span className="text-highlight">new feature!</span>
+      </div>
       
-      <div>
-        <label>Number of sets: </label>
-        <select 
-          value={numberOfSets} 
-          onChange={(e) => handleNumberOfSetsChange(parseInt(e.target.value))}
-        >
-          {[2, 3, 4, 5, 6].map(num => (
-            <option key={num} value={num}>{num}</option>
+      <div id="nWayMenu"> 
+        <div className="rightColMargin"><strong>Number of Sets: </strong></div>
+        <form>
+          {[2, 3, 4, 5, 6].map(n => (
+            <span key={n}>
+              <input 
+                type="radio" 
+                name="nway" 
+                value={n}
+                checked={numberOfSets === n}
+                onChange={() => handleNumberOfSetsChange(n)}
+              />
+              {n}&nbsp;&nbsp;
+            </span>
           ))}
-        </select>
+        </form>
       </div>
 
-      {Array.from({ length: numberOfSets }, (_, i) => (
-        <div key={i} style={{ marginTop: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input
-              type="text"
-              value={setNames[i]}
-              onChange={(e) => handleNameChange(i, e.target.value)}
-              style={{ width: '100px' }}
+      <div id="dataInput">
+        <h2>Data Input</h2>
+        
+        {Array.from({ length: numberOfSets }, (_, index) => (
+          <div key={index} className="setInput">
+            <div className="setHeader">
+              <input
+                type="text"
+                value={setNames[index] || `Set ${String.fromCharCode(65 + index)}`}
+                onChange={(e) => handleNameChange(index, e.target.value)}
+                placeholder={`Set ${String.fromCharCode(65 + index)}`}
+              />
+              <input
+                type="color"
+                value={getCurrentSetColor(index)}
+                onChange={(e) => handleColorChange(index, e.target.value)}
+              />
+            </div>
+            <textarea
+              placeholder={`Enter elements for ${setNames[index] || `Set ${String.fromCharCode(65 + index)}`}, one per line`}
+              value={getCurrentSetElements(index)}
+              onChange={(e) => handleSetInputChange(index, e.target.value)}
+              rows={6}
+              style={{ width: '100%', marginBottom: '10px' }}
             />
-            <input
-              type="color"
-              value={colors[i]}
-              onChange={(e) => handleColorChange(i, e.target.value)}
-              style={{ width: '40px', height: '30px' }}
-            />
+            <div className="setSize">
+              size: {sets[setNames[index]]?.length || 0}
+            </div>
           </div>
-          <textarea
-            placeholder={`Enter elements for ${setNames[i]}, one per line`}
-            value={sets[i].join('\n')}
-            onChange={(e) => handleSetInputChange(i, e.target.value)}
-            rows={8}
-            style={{ 
-              width: '100%', 
-              marginTop: '5px',
-              fontFamily: 'monospace',
-              fontSize: '12px'
-            }}
-          />
-          <div style={{ fontSize: '12px', color: '#666' }}>
-            size: {sets[i].length}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
-      <div style={{ marginTop: '20px' }}>
+      <div id="fileOperations">
         <h3>File Operations</h3>
-        <div>
-          <label>Load Sets: </label>
+        
+        <div className="fileOp">
+          <label><strong>Load Sets:</strong></label>
           <input
             type="file"
             accept=".ivenn"
             onChange={handleFileUpload}
           />
         </div>
-        <div style={{ marginTop: '10px' }}>
+
+        <div className="fileOp">
           <input
             type="text"
             placeholder="Write dataset name here"
             value={saveFileName}
             onChange={(e) => setSaveFileName(e.target.value)}
-            style={{ width: '150px' }}
           />
-          <button style={{ marginLeft: '5px' }} onClick={handleSaveDataset}>Save</button>
+          <button onClick={handleSaveDataset}>Save</button>
         </div>
-        <div style={{ marginTop: '10px' }}>
-          <button 
-            type="button" 
-            onClick={() => {
-              // Clear all sets
-              setSets(Array(6).fill(null).map(() => []));
-              setSetNames(['Set A', 'Set B', 'Set C', 'Set D', 'Set E', 'Set F']);
-              setColors(['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']);
-              // Notify parent
-              for (let i = 0; i < 6; i++) {
-                onSetChange?.(i, []);
-                onNameChange?.(i, ['Set A', 'Set B', 'Set C', 'Set D', 'Set E', 'Set F'][i]);
-                onColorChange?.(i, ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b'][i]);
-              }
-            }}
-            style={{ background: '#dc3545', color: 'white', border: 'none', padding: '5px 10px' }}
-          >
-            Clear sets
-          </button>
-        </div>
+
+        <button 
+          className="danger" 
+          onClick={handleClearSets}
+        >
+          Clear sets
+        </button>
       </div>
-    </aside>
+    </div>
   );
 };
 

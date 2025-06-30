@@ -40,18 +40,34 @@ const Visualization: React.FC<VisualizationProps> = ({
       setNames.forEach((name, i) => {
         labelMap[String.fromCharCode(97 + i)] = name;
       });
+      
       // Color-Mapping: a->Farbe von A, ...
       const colorMap: Record<string, string> = {};
       setNames.forEach((name, i) => {
         colorMap[String.fromCharCode(97 + i)] = colors[name] || '#cccccc';
       });
+      
+      // Size-Mapping für Intersections: ab->Anzahl, abc->Anzahl ...
+      const sizeMap: Record<string, string> = {};
+      Object.entries(intersections).forEach(([regionId, intersection]) => {
+        if (showPercentages) {
+          // Calculate percentage of total elements
+          const totalElements = Object.values(sets).flat().length;
+          const percentage = totalElements > 0 ? ((intersection.size * 100) / totalElements).toFixed(1) : '0.0';
+          sizeMap[regionId] = `${percentage}%`;
+        } else {
+          sizeMap[regionId] = intersection.size.toString();
+        }
+      });
+      
       try {
         const svg = await loadAndCustomizeSVGTemplate(
           templateName,
           labelMap,
           colorMap,
           opacity,
-          fontSize
+          fontSize,
+          sizeMap
         );
         setSvgContent(svg);
         setError(null);
@@ -61,7 +77,7 @@ const Visualization: React.FC<VisualizationProps> = ({
       }
     };
     loadSVG();
-  }, [sets, colors, opacity, fontSize]);
+  }, [sets, colors, opacity, fontSize, intersections, showPercentages]);
 
   if (error) return <div>{error}</div>;
   if (!svgContent) return <div>Lade Diagramm ...</div>;

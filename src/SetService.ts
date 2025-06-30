@@ -64,22 +64,30 @@ export class SetService {
       }
     }
 
+    // Create mapping from set names to single characters (a, b, c, etc.)
+    const setNameToChar: Record<string, string> = {};
+    allSetsNames.forEach((setName, index) => {
+      setNameToChar[setName] = String.fromCharCode(97 + index); // 97 is 'a'
+    });
+
     const intersections: Record<string, Intersection> = {};
 
     // Berechne alle möglichen Schnittmengen
     for (const element of totalSet) {
       let intersectionID = "";
+      const memberSets: string[] = [];
       
       for (const setName of allSetsNames) {
         if (hash[setName][element]) {
-          intersectionID += setName;
+          intersectionID += setNameToChar[setName];
+          memberSets.push(setName);
         }
       }
 
       if (!intersections[intersectionID]) {
         intersections[intersectionID] = {
           id: intersectionID,
-          sets: intersectionID.split(''),
+          sets: memberSets,
           elements: [],
           size: 0
         };

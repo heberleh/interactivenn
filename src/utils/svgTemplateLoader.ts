@@ -5,7 +5,8 @@ export async function loadAndCustomizeSVGTemplate(
   labelMap: Record<string, string>,
   colorMap: Record<string, string>,
   opacity: number = 0.5,
-  fontSize: number = 20
+  fontSize: number = 20,
+  sizeMap: Record<string, string> = {}
 ): Promise<string> {
   // SVG-Template laden
   const res = await fetch(`/templates/${templateName}`);
@@ -19,6 +20,16 @@ export async function loadAndCustomizeSVGTemplate(
     // Optional: tspan
     const tspanRegex = new RegExp(`(<tspan[^>]*id=["']${region}["'][^>]*>)(.*?)(</tspan>)`, 'g');
     svg = svg.replace(tspanRegex, `$1${label}$3`);
+  });
+
+  // Intersection sizes ersetzen
+  Object.entries(sizeMap).forEach(([region, size]) => {
+    // Ersetze <text ... id="region">...</text> oder <tspan id="region">...</tspan> mit Größenangaben
+    const regex = new RegExp(`(<text[^>]*id=["']${region}["'][^>]*>)(.*?)(</text>)`, 'g');
+    svg = svg.replace(regex, `$1${size}$3`);
+    // Optional: tspan
+    const tspanRegex = new RegExp(`(<tspan[^>]*id=["']${region}["'][^>]*>)(.*?)(</tspan>)`, 'g');
+    svg = svg.replace(tspanRegex, `$1${size}$3`);
   });
 
   // Farben und Opazität ersetzen (vereinfachtes Beispiel: alle fill-Attribute)
