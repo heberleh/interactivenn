@@ -1,3 +1,0 @@
-python gerar_nomes_de_arquivos_e_comandos.py
-python remove_labels.py
-

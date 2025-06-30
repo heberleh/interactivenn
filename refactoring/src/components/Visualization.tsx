@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { loadSVGTemplate, customizeSVGTemplate, getActiveCombinations } from '../utils/svgTemplates';
+import { loadAndCustomizeSVGTemplate } from '../utils/svgTemplateLoader';
 
 interface VisualizationProps {
   sets: Record<string, string[]>;
@@ -9,96 +9,69 @@ interface VisualizationProps {
   fontSize?: number;
 }
 
-const Visualization: React.FC<VisualizationProps> = ({ 
-  sets, 
-  colors, 
-  onRegionClick, 
-  opacity = 0.5, 
-  fontSize = 18 
+const Visualization: React.FC<VisualizationProps> = ({
+  sets,
+  colors,
+  onRegionClick,
+  opacity = 0.5,
+  fontSize = 18
 }) => {
   const [svgContent, setSvgContent] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadAndCustomizeSVG = async () => {
+    const loadSVG = async () => {
+      const setNames = Object.keys(sets);
+      const n = setNames.length;
+      if (n < 2 || n > 6) {
+        setError('Bitte 2–6 Mengen eingeben.');
+        setSvgContent('');
+        return;
+      }
+      // Template-Name: erst einmal das Standard-Template verwenden
+      const templateName = `${n}waydiagram.svg`;
+      // Label-Mapping: a->A, b->B, c->C ...
+      const labelMap: Record<string, string> = {};
+      setNames.forEach((name, i) => {
+        labelMap[String.fromCharCode(97 + i)] = name;
+      });
+      // Color-Mapping: a->Farbe von A, ...
+      const colorMap: Record<string, string> = {};
+      setNames.forEach((name, i) => {
+        colorMap[String.fromCharCode(97 + i)] = colors[name] || '#cccccc';
+      });
       try {
-        setLoading(true);
-        setError(null);
-
-        const setNames = Object.keys(sets);
-        const n = setNames.length;
-        
-        if (n < 2 || n > 6) {
-          setError('Bitte 2–6 Mengen eingeben.');
-          setLoading(false);
-          return;
-        }
-
-        // Bestimme aktive Kombinationen basierend auf den Set-Daten
-        const activeCombinations = getActiveCombinations(sets);
-        
-        // Lade das passende SVG-Template
-        const templateSVG = await loadSVGTemplate(n, activeCombinations);
-        
-        // Erstelle Set-Labels-Mapping (a -> Set A, b -> Set B, etc.)
-        const setLabels: Record<string, string> = {};
-        setNames.forEach((name, index) => {
-          const key = String.fromCharCode(97 + index); // a, b, c, ...
-          setLabels[key] = name;
-        });
-
-        // Konvertiere Farben für Template-Keys
-        const templateColors: Record<string, string> = {};
-        setNames.forEach((name, index) => {
-          const key = String.fromCharCode(97 + index);
-          templateColors[key] = colors[name] || '#cccccc';
-        });
-
-        // Passe das SVG-Template an
-        const customizedSVG = customizeSVGTemplate(
-          templateSVG,
-          setLabels,
-          templateColors,
+        const svg = await loadAndCustomizeSVGTemplate(
+          templateName,
+          labelMap,
+          colorMap,
           opacity,
           fontSize
         );
-
-        setSvgContent(customizedSVG);
-      } catch (err) {
-        console.error('Fehler beim Laden des SVG-Templates:', err);
-        setError('Fehler beim Laden des Diagramms.');
-      } finally {
-        setLoading(false);
+        setSvgContent(svg);
+        setError(null);
+      } catch (e) {
+        setError('SVG-Template konnte nicht geladen werden.');
+        setSvgContent('');
       }
     };
-
-    loadAndCustomizeSVG();
+    loadSVG();
   }, [sets, colors, opacity, fontSize]);
 
-  // Handle SVG-Klicks
-  const handleSVGClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event.target as SVGElement;
-    
-    // Suche nach klickbaren Elementen mit IDs
-    if (target.id && target.tagName) {
-      onRegionClick(target.id);
-    }
-  };
+  if (error) return <div>{error}</div>;
+  if (!svgContent) return <div>Lade Diagramm ...</div>;
 
-  if (loading) {
-    return <div>Diagramm wird geladen...</div>;
-  }
-
-  if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
-  }
-
+  // SVG als HTML einfügen, Klicks auf Regionen werden über onRegionClick behandelt
   return (
-    <div 
-      onClick={handleSVGClick}
-      style={{ cursor: 'pointer' }}
+    <div
+      style={{ width: '100%', textAlign: 'center' }}
       dangerouslySetInnerHTML={{ __html: svgContent }}
+      onClick={e => {
+        // Klick auf Region: id oder data-region aus SVG extrahieren
+        const target = e.target as HTMLElement;
+        const region = target.getAttribute('id') || target.getAttribute('data-region');
+        if (region) onRegionClick(region);
+      }}
     />
   );
 };

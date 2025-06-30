@@ -162,3 +162,108 @@ export function getActiveCombinations(sets: Record<string, string[]>): string[] 
   
   return activeCombinations;
 }
+
+/**
+ * Lädt und passt ein SVG-Template an die aktuellen Set-Daten an
+ */
+export async function loadAndCustomizeSVG(
+  setCount: number, 
+  sets: Record<string, string[]>, 
+  colors: Record<string, string>,
+  opacity: number = 0.5,
+  fontSize: number = 16
+): Promise<string> {
+  const activeCombinations = getActiveCombinations(sets);
+  
+  try {
+    let svgContent = await loadSVGTemplate(setCount, activeCombinations);
+    
+    // Anpassung der SVG-Eigenschaften
+    svgContent = customizeSVGContent(svgContent, sets, colors, opacity, fontSize);
+    
+    return svgContent;
+  } catch (error) {
+    console.error('Fehler beim Laden des SVG-Templates:', error);
+    return generateFallbackSVG(setCount, sets, colors, opacity, fontSize);
+  }
+}
+
+/**
+ * Passt SVG-Content an (Farben, Labels, Opazität)
+ */
+function customizeSVGContent(
+  svgContent: string,
+  sets: Record<string, string[]>,
+  colors: Record<string, string>,
+  opacity: number,
+  fontSize: number
+): string {
+  let customized = svgContent;
+  
+  // Ersetze Opazität
+  customized = customized.replace(/fill-opacity="[^"]*"/g, `fill-opacity="${opacity}"`);
+  
+  // Ersetze Font-Size
+  customized = customized.replace(/font-size="[^"]*"/g, `font-size="${fontSize}px"`);
+  
+  // Ersetze Farben für Sets
+  Object.entries(colors).forEach(([setName, color]) => {
+    const lowerSetName = setName.toLowerCase();
+    // Ersetze fill-Farben
+    const regex = new RegExp(`(id="[^"]*${lowerSetName}[^"]*"[^>]*fill=")[^"]*(")`,'g');
+    customized = customized.replace(regex, `$1${color}$2`);
+  });
+  
+  // Ersetze Labels mit Mengengröße
+  Object.entries(sets).forEach(([setName, elements]) => {
+    const lowerSetName = setName.toLowerCase();
+    const count = elements.length;
+    
+    // Ersetze Text-Content
+    const labelRegex = new RegExp(`(<text[^>]*id="[^"]*${lowerSetName}[^"]*"[^>]*>[^<]*<tspan[^>]*>)[^<]*(</tspan>)`, 'g');
+    customized = customized.replace(labelRegex, `$1${count}$2`);
+  });
+  
+  return customized;
+}
+
+/**
+ * Generiert Fallback-SVG wenn Template nicht gefunden wird
+ */
+function generateFallbackSVG(
+  setCount: number,
+  sets: Record<string, string[]>,
+  colors: Record<string, string>,
+  opacity: number,
+  fontSize: number
+): string {
+  const width = 400;
+  const height = 300;
+  
+  const layouts: Record<number, {cx: number, cy: number, r: number}[]> = {
+    2: [{cx: 120, cy: 150, r: 80}, {cx: 280, cy: 150, r: 80}],
+    3: [{cx: 200, cy: 100, r: 70}, {cx: 150, cy: 200, r: 70}, {cx: 250, cy: 200, r: 70}],
+    4: [{cx: 120, cy: 100, r: 60}, {cx: 280, cy: 100, r: 60}, {cx: 120, cy: 200, r: 60}, {cx: 280, cy: 200, r: 60}],
+    5: [{cx: 200, cy: 70, r: 50}, {cx: 100, cy: 150, r: 50}, {cx: 150, cy: 230, r: 50}, {cx: 250, cy: 230, r: 50}, {cx: 300, cy: 150, r: 50}],
+    6: [{cx: 200, cy: 60, r: 45}, {cx: 100, cy: 120, r: 45}, {cx: 100, cy: 180, r: 45}, {cx: 200, cy: 240, r: 45}, {cx: 300, cy: 180, r: 45}, {cx: 300, cy: 120, r: 45}]
+  };
+  
+  const layout = layouts[setCount] || layouts[2];
+  const setNames = Object.keys(sets).slice(0, setCount);
+  
+  let circles = '';
+  let labels = '';
+  
+  setNames.forEach((setName, i) => {
+    const pos = layout[i];
+    const color = colors[setName] || '#cccccc';
+    const count = sets[setName]?.length || 0;
+    circles += `<circle cx="${pos.cx}" cy="${pos.cy}" r="${pos.r}" fill="${color}" fill-opacity="${opacity}" stroke="#666" stroke-width="2"/>`;
+    labels += `<text x="${pos.cx}" y="${pos.cy + fontSize/3}" text-anchor="middle" font-size="${fontSize}px" fill="#333">${setName}: ${count}</text>`;
+  });
+  
+  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+    ${circles}
+    ${labels}
+  </svg>`;
+}
