@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="402.97873"
+   height="393.45312"
+   id="5waydiagram">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient5351">
+      <stop
+         id="stop5353"
+         style="stop-color:#000000;stop-opacity:1"
+         offset="0" />
+    </linearGradient>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-79.879143,-138.96335)"
+     id="layer1">
+    <path
+       d="m 195.28125,0.25 c -35.54615,0 -64.375,68.255393 -64.375,152.46875 0,9.02465 0.36533,17.84347 1,26.4375 -17.49608,17.30804 -25.70238,34.99309 -20.9375,49.875 1.47972,4.62154 4.15865,8.72245 7.84375,12.3125 -41.794492,63.16811 -54.723315,126.52762 -28.1875,146.0625 26.43761,19.46258 82.7747,-11.40413 130.5625,-69.65625 45.21269,50.34528 95.43905,75.70408 120,57.6875 26.55588,-19.47995 13.76242,-82.79202 -27.875,-146 59.41225,-26.82193 97.1469,-65.13098 88.09375,-93.40625 C 391.52764,105.17787 329.34471,96.934334 257.6875,115.15625 250.62232,49.11565 225.35349,0.25 195.28125,0.25 z"
+       transform="translate(79.879143,138.96335)"
+       id="elipseA"
+       style="opacity:0.43333333;fill:#fcff72;fill-opacity:1;stroke:#000000;stroke-width:0.472;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       d="m -251.40054,157.34164 a 69.113556,150.32198 0 1 1 -138.22712,0 69.113556,150.32198 0 1 1 138.22712,0 z"
+       transform="matrix(0.29149689,-0.88445245,0.96339337,0.31751416,168.19386,7.0548855)"
+       id="elipseB"
+       style="opacity:0.43333333;fill:#ffba5c;fill-opacity:1;stroke:#000000;stroke-width:0.48563629;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       x="262.69507"
+       y="208.51921"
+       id="a"
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan
+         x="262.69507"
+         y="208.51921"
+         id="tspan5369">a</tspan></text>
+    <text
+       x="417.11832"
+       y="304.07434"
+       id="b"
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan
+         x="417.11832"
+         y="304.07434"
+         id="tspan5373">b</tspan></text>
+    <text
+       x="384.04364"
+       y="484.00467"
+       id="c"
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan
+         x="384.04364"
+         y="484.00467"
+         id="tspan5377">c</tspan></text>
+    <text
+       x="186.69273"
+       y="494.33115"
+       id="d"
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan
+         x="186.69273"
+         y="494.33115"
+         id="tspan5381">d</tspan></text>
+    <text
+       x="114.63724"
+       y="319.13016"
+       id="e"
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan
+         x="114.63724"
+         y="319.13016"
+         id="tspan5385">e</tspan></text>
+    <text
+       x="276.21133"
+       y="363.97742"
+       id="text5423"
+       xml:space="preserve"
+       style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"><tspan
+         x="276.21133"
+         y="363.97742"
+         id="abcde">abcde</tspan></text>
+  </g>
+</svg>
