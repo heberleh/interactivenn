@@ -585,9 +585,9 @@ function loadNewDiagram(path) {
                     var id = node.id.toUpperCase();
 
                     var textName = "<b>[";
-                    textName = textName + document.getElementById("name" + id[0]).value;
+                    textName = textName + escapeHtml(document.getElementById("name" + id[0]).value);
                     for (var i = 1; i < id.length; i++) {
-                        textName = textName + "] and [" + document.getElementById("name" + id[i]).value;
+                        textName = textName + "] and [" + escapeHtml(document.getElementById("name" + id[i]).value);
                     }
                     textName = textName + "]";
                     textName = textName.replace(/:/g, '-');
@@ -595,7 +595,7 @@ function loadNewDiagram(path) {
 
                     for (var t = 0; t < intersectionsSet[id].length; t++)
                     {
-                        strIntersection = strIntersection + intersectionsSet[id][t] + "</br>";
+                        strIntersection = strIntersection + escapeHtml(intersectionsSet[id][t]) + "</br>";
                     }
 
                     var htmlp = "<p>" + strIntersection + "</p>";
