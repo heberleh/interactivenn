@@ -213,29 +213,29 @@ function updateFile2Save() {
 
     for (var i = 0; i < nWay - 1; i++) {
         var setID = allPossibleSetsNames[i];
-        var setname = d3.select("#label" + setID).text();
+        var setname = encodeIvennField(d3.select("#label" + setID).text());
         var dataset = "";
         size = original_sets[setID].length;
         if (size > 0) {
             for (var j = 0; j < size - 1; j++) {
-                dataset = dataset + original_sets[setID][j] + ",";
+                dataset = dataset + encodeIvennField(original_sets[setID][j]) + ",";
             }
-            dataset = dataset + original_sets[setID][size - 1];
+            dataset = dataset + encodeIvennField(original_sets[setID][size - 1]);
         }
         file = file + setname + ":" + dataset + ";\n";
     }
 
     var i = nWay - 1;
     var setID = allPossibleSetsNames[i];
-    var setname = d3.select("#label" + setID).text();
+    var setname = encodeIvennField(d3.select("#label" + setID).text());
     var dataset = "";
 
     size = original_sets[setID].length;
     if (size > 0) {
         for (var j = 0; j < size - 1; j++) {
-            dataset = dataset + original_sets[setID][j] + ",";
+            dataset = dataset + encodeIvennField(original_sets[setID][j]) + ",";
         }
-        dataset = dataset + original_sets[setID][size - 1];
+        dataset = dataset + encodeIvennField(original_sets[setID][size - 1]);
     }
 
     file = file + setname + ":" + dataset;

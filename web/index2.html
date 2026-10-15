@@ -331,7 +331,7 @@ http://www.interactivenn.net/
                     for (var i = 0; i < setsList.length; i++) {
                         var setName = allPossibleSetsNames[i];
                         var setlist = setsList[i].split(":");
-                        setsLabel[setName] = setlist[0];
+                        setsLabel[setName] = decodeIvennField(setlist[0]);
                         setlist[1] = setlist[1].split(",");
                         var list = setlist[1].filter(function (x) {
                             if (x != "")
@@ -347,6 +347,7 @@ http://www.interactivenn.net/
 //                                            sets[setName] = temp;
 //                                            original_sets = temp;
                         //assuming there is no duplicated element as the program check it after again
+                        list = list.map(decodeIvennField);
                         sets[setName] = list;
                         original_sets = list;
                         updateInputTextSet(setName);
