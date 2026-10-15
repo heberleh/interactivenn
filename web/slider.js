@@ -550,6 +550,11 @@ function loadNewDiagram(path) {
             importedNode = document.importNode(xml.documentElement, true);
         } catch (err) {
             alert("\nDiagram not found: " + path + "\n\n Error: " + err.message + ". Please report it to henry at icmc.usp.br\n\n");
+            if (merging) {
+                document.getElementById("upMerge").disabled = currentIndex >= slide.getSize() - 1;
+                document.getElementById("downMerge").disabled = currentIndex <= 0;
+            }
+            return;
         }
 
         diagramReady = false;
