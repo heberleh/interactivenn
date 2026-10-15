@@ -392,7 +392,7 @@ function exportDendrogram() {
         if (choosen_type == ".png") {
 
             var image = new Image();
-            image.src = 'data:image/svg+xml;base64,' + window.btoa(serialized);
+            image.src = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(serialized)));
             image.onload = function () {
                 var scale = 2;
                 var canvas = document.createElement('canvas');
