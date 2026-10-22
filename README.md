@@ -1,3 +1,29 @@
+# Where to use InteractiVenn
+
+| Address | What you get |
+|---|---|
+| **https://interactivenn.net** | InteractiVenn (main address) |
+| **https://interactivenn.fyi** | InteractiVenn (main address) |
+
+Both main addresses are valid. Older versions stay online, so a figure can be redrawn the way it was made:
+
+| Version | Address |
+|---|---|
+| v2 (2026, current) | https://v2.interactivenn.fyi |
+| v1 (2025) | https://v1.interactivenn.fyi |
+| v0 (2015, the original from the article) | https://v0.interactivenn.fyi |
+
+### If interactivenn.net or interactivenn.fyi is down
+
+The same apps are also served straight from their hosts, without our domains. Use these if the addresses above do not open:
+
+| Version | Backup address |
+|---|---|
+| v2 | https://backup.interactivenn.pages.dev |
+| v1 | https://interactivenn-v1.pages.dev |
+| v1 (the host behind interactivenn.net) | https://interactivevenn.appspot.com |
+| v0 | https://interactivenn-v0.pages.dev |
+
 # Please help =)
 This is a system that **many scientists in the World use**. Any contribution will affect thousands!
 
